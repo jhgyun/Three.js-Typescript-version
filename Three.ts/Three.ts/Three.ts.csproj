@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
-    <Content Include="renderers\webgl\WebGLUniforms.js" />
     <Content Include="Three.js" />
     <Content Include="web.config" />
   </ItemGroup>
