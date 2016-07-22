@@ -88,27 +88,23 @@ namespace THREE
         }
         applyToBuffer(buffer: Buffer, offset?: number, length?: number): Buffer
         {
-            var v1 =   new Vector3() ;
+            var v1: Vector3 = Matrix3[".applyToBuffer."] || (Matrix3[".applyToBuffer."] = new Vector3()); 
 
-            var func = Matrix3.prototype.applyToBuffer = function (buffer: Buffer, offset?: number, length?: number)
+            if (offset === undefined) offset = 0;
+            if (length === undefined) length = buffer.length / buffer.itemSize;
+
+            for (var i = 0, j = offset; i < length; i++ , j++)
             {
-                if (offset === undefined) offset = 0;
-                if (length === undefined) length = buffer.length / buffer.itemSize;
+                v1.x = buffer.getX(j);
+                v1.y = buffer.getY(j);
+                v1.z = buffer.getZ(j);
 
-                for (var i = 0, j = offset; i < length; i++ , j++)
-                {
-                    v1.x = buffer.getX(j);
-                    v1.y = buffer.getY(j);
-                    v1.z = buffer.getZ(j);
+                v1.applyMatrix3(this);
 
-                    v1.applyMatrix3(this);
-
-                    buffer.setXYZ(v1.x, v1.y, v1.z);
-                }
-                return buffer;
+                buffer.setXYZ(v1.x, v1.y, v1.z);
             }
+            return buffer;
 
-            return func.apply(this, arguments);
         }
         multiplyScalar(s: number)
         {

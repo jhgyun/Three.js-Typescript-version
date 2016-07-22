@@ -8,7 +8,7 @@ namespace THREE
 {
     export class LineSegments extends Line
     {
-        constructor(geometry?: GeometryType, material?: Material)
+        constructor(geometry?: IGeometry, material?: Material)
         {
             super(geometry, material);
             this.type = 'LineSegments'; 

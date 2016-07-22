@@ -9,9 +9,8 @@
  */
 
 namespace THREE
-{
-    export type GeometryType = Geometry | BufferGeometry | DirectGeometry;
-    export class Geometry extends EventDispatcher
+{ 
+    export class Geometry extends EventDispatcher implements IGeometry
     {
         private _id = GeometryIdCount++;
 

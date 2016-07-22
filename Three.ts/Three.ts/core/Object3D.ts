@@ -48,7 +48,7 @@ namespace THREE
         private _modelViewMatrix = new Matrix4();
         private _normalMatrix = new Matrix3();
 
-        geometry: GeometryType;
+        geometry: IGeometry;
         material: IMaterial;
         matrix = new Matrix4();
         matrixWorld = new Matrix4();

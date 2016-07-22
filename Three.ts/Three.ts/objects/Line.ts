@@ -7,7 +7,7 @@ namespace THREE
 {
     export class Line extends Object3D
     {
-        constructor(geometry?: GeometryType, material?: Material, mode?: number)
+        constructor(geometry?: IGeometry, material?: Material, mode?: number)
         {
             super();
 

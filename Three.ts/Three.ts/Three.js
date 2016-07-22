@@ -2199,22 +2199,19 @@ var THREE;
             return func.apply(this, arguments);
         };
         Matrix3.prototype.applyToBuffer = function (buffer, offset, length) {
-            var v1 = new THREE.Vector3();
-            var func = Matrix3.prototype.applyToBuffer = function (buffer, offset, length) {
-                if (offset === undefined)
-                    offset = 0;
-                if (length === undefined)
-                    length = buffer.length / buffer.itemSize;
-                for (var i = 0, j = offset; i < length; i++, j++) {
-                    v1.x = buffer.getX(j);
-                    v1.y = buffer.getY(j);
-                    v1.z = buffer.getZ(j);
-                    v1.applyMatrix3(this);
-                    buffer.setXYZ(v1.x, v1.y, v1.z);
-                }
-                return buffer;
-            };
-            return func.apply(this, arguments);
+            var v1 = Matrix3[".applyToBuffer."] || (Matrix3[".applyToBuffer."] = new THREE.Vector3());
+            if (offset === undefined)
+                offset = 0;
+            if (length === undefined)
+                length = buffer.length / buffer.itemSize;
+            for (var i = 0, j = offset; i < length; i++, j++) {
+                v1.x = buffer.getX(j);
+                v1.y = buffer.getY(j);
+                v1.z = buffer.getZ(j);
+                v1.applyMatrix3(this);
+                buffer.setXYZ(v1.x, v1.y, v1.z);
+            }
+            return buffer;
         };
         Matrix3.prototype.multiplyScalar = function (s) {
             var te = this.elements;
@@ -16376,6 +16373,90 @@ var THREE;
     THREE.Line3 = Line3;
     ;
 })(THREE || (THREE = {}));
+if (Math.DEG2RAD === undefined) {
+    Math.DEG2RAD = Math.PI / 180;
+    Math.RAD2DEG = 180 / Math.PI;
+    Math.generateUUID = function () {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+        var uuid = new Array(36);
+        var rnd = 0, r;
+        return function generateUUID() {
+            for (var i = 0; i < 36; i++) {
+                if (i === 8 || i === 13 || i === 18 || i === 23) {
+                    uuid[i] = '-';
+                }
+                else if (i === 14) {
+                    uuid[i] = '4';
+                }
+                else {
+                    if (rnd <= 0x02)
+                        rnd = 0x2000000 + (Math.random() * 0x1000000) | 0;
+                    r = rnd & 0xf;
+                    rnd = rnd >> 4;
+                    uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
+                }
+            }
+            return uuid.join('');
+        };
+    }();
+    Math.clamp = function (value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    };
+    Math.euclideanModulo = function (n, m) {
+        return ((n % m) + m) % m;
+    };
+    Math.mapLinear = function (x, a1, a2, b1, b2) {
+        return b1 + (x - a1) * (b2 - b1) / (a2 - a1);
+    };
+    Math.smoothstep = function (x, min, max) {
+        if (x <= min)
+            return 0;
+        if (x >= max)
+            return 1;
+        x = (x - min) / (max - min);
+        return x * x * (3 - 2 * x);
+    };
+    Math.smootherstep = function (x, min, max) {
+        if (x <= min)
+            return 0;
+        if (x >= max)
+            return 1;
+        x = (x - min) / (max - min);
+        return x * x * x * (x * (x * 6 - 15) + 10);
+    };
+    Math.randInt = function (low, high) {
+        return low + Math.floor(Math.random() * (high - low + 1));
+    };
+    Math.randFloat = function (low, high) {
+        return low + Math.random() * (high - low);
+    };
+    Math.randFloatSpread = function (range) {
+        return range * (0.5 - Math.random());
+    };
+    Math.degToRad = function (degrees) {
+        return degrees * Math.DEG2RAD;
+    };
+    Math.radToDeg = function (radians) {
+        return radians * Math.RAD2DEG;
+    };
+    Math.isPowerOfTwo = function (value) {
+        return (value & (value - 1)) === 0 && value !== 0;
+    };
+    Math.nearestPowerOfTwo = function (value) {
+        return Math.pow(2, Math.round(Math.log(value) / Math.LN2));
+    };
+    Math.nextPowerOfTwo = function (value) {
+        value--;
+        value |= value >> 1;
+        value |= value >> 2;
+        value |= value >> 4;
+        value |= value >> 8;
+        value |= value >> 16;
+        value++;
+        return value;
+    };
+}
+THREE["Math"] = Math;
 var THREE;
 (function (THREE) {
     var Plane = (function () {
@@ -16909,111 +16990,102 @@ var THREE;
             return Math.sqrt(this.distanceSqToPoint(point));
         };
         Ray.prototype.distanceSqToPoint = function (point) {
-            var v1 = new THREE.Vector3();
-            var func = Ray.prototype.distanceSqToPoint = function (point) {
-                var directionDistance = v1.subVectors(point, this.origin).dot(this.direction);
-                var r;
-                if (directionDistance < 0) {
-                    r = this.origin.distanceToSquared(point);
-                    return r;
-                }
-                v1.copy(this.direction).multiplyScalar(directionDistance).add(this.origin);
-                r = v1.distanceToSquared(point);
+            var v1 = Ray[".distanceSqToPoint.v1"] || (Ray[".distanceSqToPoint.v1"] = new THREE.Vector3());
+            var directionDistance = v1.subVectors(point, this.origin).dot(this.direction);
+            var r;
+            if (directionDistance < 0) {
+                r = this.origin.distanceToSquared(point);
                 return r;
-            };
-            return func.apply(this, arguments);
+            }
+            v1.copy(this.direction).multiplyScalar(directionDistance).add(this.origin);
+            r = v1.distanceToSquared(point);
+            return r;
         };
         Ray.prototype.distanceSqToSegment = function (v0, v1, optionalPointOnRay, optionalPointOnSegment) {
-            var segCenter = new THREE.Vector3();
-            var segDir = new THREE.Vector3();
-            var diff = new THREE.Vector3();
-            var func = Ray.prototype.distanceSqToSegment = function (v0, v1, optionalPointOnRay, optionalPointOnSegment) {
-                segCenter.copy(v0).add(v1).multiplyScalar(0.5);
-                segDir.copy(v1).sub(v0).normalize();
-                diff.copy(this.origin).sub(segCenter);
-                var segExtent = v0.distanceTo(v1) * 0.5;
-                var a01 = -this.direction.dot(segDir);
-                var b0 = diff.dot(this.direction);
-                var b1 = -diff.dot(segDir);
-                var c = diff.lengthSq();
-                var det = Math.abs(1 - a01 * a01);
-                var s0, s1, sqrDist, extDet;
-                if (det > 0) {
-                    s0 = a01 * b1 - b0;
-                    s1 = a01 * b0 - b1;
-                    extDet = segExtent * det;
-                    if (s0 >= 0) {
-                        if (s1 >= -extDet) {
-                            if (s1 <= extDet) {
-                                var invDet = 1 / det;
-                                s0 *= invDet;
-                                s1 *= invDet;
-                                sqrDist = s0 * (s0 + a01 * s1 + 2 * b0) + s1 * (a01 * s0 + s1 + 2 * b1) + c;
-                            }
-                            else {
-                                s1 = segExtent;
-                                s0 = Math.max(0, -(a01 * s1 + b0));
-                                sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
-                            }
+            var segCenter = Ray[".dst.segCenter"] || (Ray[".dst.segCenter"] = new THREE.Vector3());
+            var segDir = Ray[".dst.segDir"] || (Ray[".dst.segDir"] = new THREE.Vector3());
+            var diff = Ray[".dst.diff"] || (Ray[".dst.diff"] = new THREE.Vector3());
+            segCenter.copy(v0).add(v1).multiplyScalar(0.5);
+            segDir.copy(v1).sub(v0).normalize();
+            diff.copy(this.origin).sub(segCenter);
+            var segExtent = v0.distanceTo(v1) * 0.5;
+            var a01 = -this.direction.dot(segDir);
+            var b0 = diff.dot(this.direction);
+            var b1 = -diff.dot(segDir);
+            var c = diff.lengthSq();
+            var det = Math.abs(1 - a01 * a01);
+            var s0, s1, sqrDist, extDet;
+            if (det > 0) {
+                s0 = a01 * b1 - b0;
+                s1 = a01 * b0 - b1;
+                extDet = segExtent * det;
+                if (s0 >= 0) {
+                    if (s1 >= -extDet) {
+                        if (s1 <= extDet) {
+                            var invDet = 1 / det;
+                            s0 *= invDet;
+                            s1 *= invDet;
+                            sqrDist = s0 * (s0 + a01 * s1 + 2 * b0) + s1 * (a01 * s0 + s1 + 2 * b1) + c;
                         }
                         else {
-                            s1 = -segExtent;
+                            s1 = segExtent;
                             s0 = Math.max(0, -(a01 * s1 + b0));
                             sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                         }
                     }
                     else {
-                        if (s1 <= -extDet) {
-                            s0 = Math.max(0, -(-a01 * segExtent + b0));
-                            s1 = (s0 > 0) ? -segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
-                            sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
-                        }
-                        else if (s1 <= extDet) {
-                            s0 = 0;
-                            s1 = Math.min(Math.max(-segExtent, -b1), segExtent);
-                            sqrDist = s1 * (s1 + 2 * b1) + c;
-                        }
-                        else {
-                            s0 = Math.max(0, -(a01 * segExtent + b0));
-                            s1 = (s0 > 0) ? segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
-                            sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
-                        }
+                        s1 = -segExtent;
+                        s0 = Math.max(0, -(a01 * s1 + b0));
+                        sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                     }
                 }
                 else {
-                    s1 = (a01 > 0) ? -segExtent : segExtent;
-                    s0 = Math.max(0, -(a01 * s1 + b0));
-                    sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
+                    if (s1 <= -extDet) {
+                        s0 = Math.max(0, -(-a01 * segExtent + b0));
+                        s1 = (s0 > 0) ? -segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
+                        sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
+                    }
+                    else if (s1 <= extDet) {
+                        s0 = 0;
+                        s1 = Math.min(Math.max(-segExtent, -b1), segExtent);
+                        sqrDist = s1 * (s1 + 2 * b1) + c;
+                    }
+                    else {
+                        s0 = Math.max(0, -(a01 * segExtent + b0));
+                        s1 = (s0 > 0) ? segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
+                        sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
+                    }
                 }
-                if (optionalPointOnRay) {
-                    optionalPointOnRay.copy(this.direction).multiplyScalar(s0).add(this.origin);
-                }
-                if (optionalPointOnSegment) {
-                    optionalPointOnSegment.copy(segDir).multiplyScalar(s1).add(segCenter);
-                }
-                return sqrDist;
-            };
-            return func.apply(this, arguments);
+            }
+            else {
+                s1 = (a01 > 0) ? -segExtent : segExtent;
+                s0 = Math.max(0, -(a01 * s1 + b0));
+                sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
+            }
+            if (optionalPointOnRay) {
+                optionalPointOnRay.copy(this.direction).multiplyScalar(s0).add(this.origin);
+            }
+            if (optionalPointOnSegment) {
+                optionalPointOnSegment.copy(segDir).multiplyScalar(s1).add(segCenter);
+            }
+            return sqrDist;
         };
         Ray.prototype.intersectSphere = function (sphere, optionalTarget) {
-            var v1 = new THREE.Vector3();
-            var func = Ray.prototype.intersectSphere = function (sphere, optionalTarget) {
-                v1.subVectors(sphere.center, this.origin);
-                var tca = v1.dot(this.direction);
-                var d2 = v1.dot(v1) - tca * tca;
-                var radius2 = sphere.radius * sphere.radius;
-                if (d2 > radius2)
-                    return null;
-                var thc = Math.sqrt(radius2 - d2);
-                var t0 = tca - thc;
-                var t1 = tca + thc;
-                if (t0 < 0 && t1 < 0)
-                    return null;
-                if (t0 < 0)
-                    return this.at(t1, optionalTarget);
-                return this.at(t0, optionalTarget);
-            };
-            return func.apply(this, arguments);
+            var v1 = Ray[".isp.segCenter"] || (Ray[".isp.segCenter"] = new THREE.Vector3());
+            v1.subVectors(sphere.center, this.origin);
+            var tca = v1.dot(this.direction);
+            var d2 = v1.dot(v1) - tca * tca;
+            var radius2 = sphere.radius * sphere.radius;
+            if (d2 > radius2)
+                return null;
+            var thc = Math.sqrt(radius2 - d2);
+            var t0 = tca - thc;
+            var t1 = tca + thc;
+            if (t0 < 0 && t1 < 0)
+                return null;
+            if (t0 < 0)
+                return this.at(t1, optionalTarget);
+            return this.at(t0, optionalTarget);
         };
         Ray.prototype.intersectsSphere = function (sphere) {
             return this.distanceToPoint(sphere.center) <= sphere.radius;
@@ -17092,55 +17164,49 @@ var THREE;
             return this.at(tmin >= 0 ? tmin : tmax, optionalTarget);
         };
         Ray.prototype.intersectsBox = function (box) {
-            var v = new THREE.Vector3();
-            var func = Ray.prototype.intersectsBox = function (box) {
-                var result = this.intersectBox(box, v) !== null;
-                return result;
-            };
-            return func.apply(this, arguments);
+            var v = Ray[".ibx.v"] || (Ray[".ibx.v"] = new THREE.Vector3());
+            var result = this.intersectBox(box, v) !== null;
+            return result;
         };
         Ray.prototype.intersectTriangle = function (a, b, c, backfaceCulling, optionalTarget) {
-            var diff = new THREE.Vector3();
-            var edge1 = new THREE.Vector3();
-            var edge2 = new THREE.Vector3();
-            var normal = new THREE.Vector3();
-            var func = Ray.prototype.intersectTriangle = function (a, b, c, backfaceCulling, optionalTarget) {
-                edge1.subVectors(b, a);
-                edge2.subVectors(c, a);
-                normal.crossVectors(edge1, edge2);
-                var DdN = this.direction.dot(normal);
-                var sign;
-                if (DdN > 0) {
-                    if (backfaceCulling)
-                        return null;
-                    sign = 1;
-                }
-                else if (DdN < 0) {
-                    sign = -1;
-                    DdN = -DdN;
-                }
-                else {
+            var diff = Ray[".itg.1"] || (Ray[".itg.1"] = new THREE.Vector3());
+            var edge1 = Ray[".itg.2"] || (Ray[".itg.2"] = new THREE.Vector3());
+            var edge2 = Ray[".itg.3"] || (Ray[".itg.3"] = new THREE.Vector3());
+            var normal = Ray[".itg.4"] || (Ray[".itg.4"] = new THREE.Vector3());
+            edge1.subVectors(b, a);
+            edge2.subVectors(c, a);
+            normal.crossVectors(edge1, edge2);
+            var DdN = this.direction.dot(normal);
+            var sign;
+            if (DdN > 0) {
+                if (backfaceCulling)
                     return null;
-                }
-                diff.subVectors(this.origin, a);
-                var DdQxE2 = sign * this.direction.dot(edge2.crossVectors(diff, edge2));
-                if (DdQxE2 < 0) {
-                    return null;
-                }
-                var DdE1xQ = sign * this.direction.dot(edge1.cross(diff));
-                if (DdE1xQ < 0) {
-                    return null;
-                }
-                if (DdQxE2 + DdE1xQ > DdN) {
-                    return null;
-                }
-                var QdN = -sign * diff.dot(normal);
-                if (QdN < 0) {
-                    return null;
-                }
-                return this.at(QdN / DdN, optionalTarget);
-            };
-            return func.apply(this, arguments);
+                sign = 1;
+            }
+            else if (DdN < 0) {
+                sign = -1;
+                DdN = -DdN;
+            }
+            else {
+                return null;
+            }
+            diff.subVectors(this.origin, a);
+            var DdQxE2 = sign * this.direction.dot(edge2.crossVectors(diff, edge2));
+            if (DdQxE2 < 0) {
+                return null;
+            }
+            var DdE1xQ = sign * this.direction.dot(edge1.cross(diff));
+            if (DdE1xQ < 0) {
+                return null;
+            }
+            if (DdQxE2 + DdE1xQ > DdN) {
+                return null;
+            }
+            var QdN = -sign * diff.dot(normal);
+            if (QdN < 0) {
+                return null;
+            }
+            return this.at(QdN / DdN, optionalTarget);
         };
         Ray.prototype.applyMatrix4 = function (matrix4) {
             this.direction.add(this.origin).applyMatrix4(matrix4);
@@ -17236,90 +17302,6 @@ var THREE;
     }());
     THREE.Spline = Spline;
 })(THREE || (THREE = {}));
-if (Math.DEG2RAD === undefined) {
-    Math.DEG2RAD = Math.PI / 180;
-    Math.RAD2DEG = 180 / Math.PI;
-    Math.generateUUID = function () {
-        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
-        var uuid = new Array(36);
-        var rnd = 0, r;
-        return function generateUUID() {
-            for (var i = 0; i < 36; i++) {
-                if (i === 8 || i === 13 || i === 18 || i === 23) {
-                    uuid[i] = '-';
-                }
-                else if (i === 14) {
-                    uuid[i] = '4';
-                }
-                else {
-                    if (rnd <= 0x02)
-                        rnd = 0x2000000 + (Math.random() * 0x1000000) | 0;
-                    r = rnd & 0xf;
-                    rnd = rnd >> 4;
-                    uuid[i] = chars[(i === 19) ? (r & 0x3) | 0x8 : r];
-                }
-            }
-            return uuid.join('');
-        };
-    }();
-    Math.clamp = function (value, min, max) {
-        return Math.max(min, Math.min(max, value));
-    };
-    Math.euclideanModulo = function (n, m) {
-        return ((n % m) + m) % m;
-    };
-    Math.mapLinear = function (x, a1, a2, b1, b2) {
-        return b1 + (x - a1) * (b2 - b1) / (a2 - a1);
-    };
-    Math.smoothstep = function (x, min, max) {
-        if (x <= min)
-            return 0;
-        if (x >= max)
-            return 1;
-        x = (x - min) / (max - min);
-        return x * x * (3 - 2 * x);
-    };
-    Math.smootherstep = function (x, min, max) {
-        if (x <= min)
-            return 0;
-        if (x >= max)
-            return 1;
-        x = (x - min) / (max - min);
-        return x * x * x * (x * (x * 6 - 15) + 10);
-    };
-    Math.randInt = function (low, high) {
-        return low + Math.floor(Math.random() * (high - low + 1));
-    };
-    Math.randFloat = function (low, high) {
-        return low + Math.random() * (high - low);
-    };
-    Math.randFloatSpread = function (range) {
-        return range * (0.5 - Math.random());
-    };
-    Math.degToRad = function (degrees) {
-        return degrees * Math.DEG2RAD;
-    };
-    Math.radToDeg = function (radians) {
-        return radians * Math.RAD2DEG;
-    };
-    Math.isPowerOfTwo = function (value) {
-        return (value & (value - 1)) === 0 && value !== 0;
-    };
-    Math.nearestPowerOfTwo = function (value) {
-        return Math.pow(2, Math.round(Math.log(value) / Math.LN2));
-    };
-    Math.nextPowerOfTwo = function (value) {
-        value--;
-        value |= value >> 1;
-        value |= value >> 2;
-        value |= value >> 4;
-        value |= value >> 8;
-        value |= value >> 16;
-        value++;
-        return value;
-    };
-}
-THREE["Math"] = Math;
 var THREE;
 (function (THREE) {
     var Bone = (function (_super) {

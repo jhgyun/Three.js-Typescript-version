@@ -293,8 +293,7 @@ namespace THREE
         // Note: Defining these methods externally, because they come in a bunch
         // and this way their names minify.
 
-        private static setValue1f = function (gl: WebGLRenderingContext, v: number) { gl.uniform1f(this.addr, v); }
-        // Single scalar
+        private static setValue1f = function (gl: WebGLRenderingContext, v: number) { gl.uniform1f(this.addr, v); }        // Single scalar
         private static setValue1i = function (gl: WebGLRenderingContext, v: number) { gl.uniform1i(this.addr, v); }
 
         // Single float vector (from flat array or THREE.VectorN)
@@ -303,7 +302,6 @@ namespace THREE
             if (v.x === undefined) gl.uniform2fv(this.addr, v);
             else gl.uniform2f(this.addr, v.x, v.y);
         }
-
         private static setValue3fv = function (gl: WebGLRenderingContext, v: any)// Vector3 | Vector4 | Color | Float32Array)
         {
             if (v.x !== undefined)
@@ -324,12 +322,10 @@ namespace THREE
         {
             gl.uniformMatrix2fv(this.addr, false, v.elements || v);
         }
-
         private static setValue3fm = function (gl: WebGLRenderingContext, v: any)// Matrix3 | Float32Array)
         {
             gl.uniformMatrix3fv(this.addr, false, v.elements || v);
         }
-
         private static setValue4fm = function (gl: WebGLRenderingContext, v: any)// Matrix4 | Float32Array)
         {
             gl.uniformMatrix4fv(this.addr, false, v.elements || v);
@@ -343,7 +339,6 @@ namespace THREE
             gl.uniform1i(this.addr, unit);
             renderer.setTexture2D(v || emptyTexture, unit);
         }
-
         private static setValueT6 = function (gl: WebGLRenderingContext, v: any, renderer: WebGLRenderer)
         {
             var emptyTexture = WebGLUniforms.emptyTexture;

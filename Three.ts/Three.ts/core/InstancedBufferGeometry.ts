@@ -21,8 +21,7 @@ namespace THREE
                 count: count,
                 instances: instances
             });
-        }
-
+        } 
         copy(source: InstancedBufferGeometry)
         { 
             var index = source.index; 

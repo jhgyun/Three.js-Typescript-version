@@ -1068,7 +1068,7 @@ declare namespace THREE {
         private _scale;
         private _modelViewMatrix;
         private _normalMatrix;
-        geometry: GeometryType;
+        geometry: IGeometry;
         material: IMaterial;
         matrix: Matrix4;
         matrixWorld: Matrix4;
@@ -1369,8 +1369,7 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    type GeometryType = Geometry | BufferGeometry | DirectGeometry;
-    class Geometry extends EventDispatcher {
+    class Geometry extends EventDispatcher implements IGeometry {
         private _id;
         uuid: string;
         name: string;
@@ -1443,7 +1442,7 @@ declare namespace THREE {
         lineDistance?: BufferAttribute;
         skinWeight?: BufferAttribute;
     }
-    class BufferGeometry extends EventDispatcher {
+    class BufferGeometry extends EventDispatcher implements IGeometry {
         uuid: string;
         name: string;
         type: string;
@@ -1511,7 +1510,7 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    class DirectGeometry extends EventDispatcher {
+    class DirectGeometry extends EventDispatcher implements IGeometry {
         private _id;
         id: number;
         uuid: string;
@@ -1558,6 +1557,46 @@ declare namespace THREE {
         __originalFaceNormal: Vector3;
         __originalVertexNormals: Vector3[];
         _id: number;
+    }
+}
+declare namespace THREE {
+    interface IGeometry extends EventDispatcher {
+        uuid?: string;
+        name?: string;
+        type?: string;
+        vertices?: Vector3[];
+        colors?: Color[];
+        faces?: Face3[];
+        faceVertexUvs?: Vector2[][][];
+        morphTargets?: any;
+        morphNormals?: any;
+        skinWeights?: Vector4[];
+        skinIndices?: any[];
+        lineDistances?: number[];
+        boundingBox?: Box3;
+        boundingSphere?: Sphere;
+        verticesNeedUpdate?: boolean;
+        elementsNeedUpdate?: boolean;
+        uvsNeedUpdate?: boolean;
+        normalsNeedUpdate?: boolean;
+        colorsNeedUpdate?: boolean;
+        lineDistancesNeedUpdate?: boolean;
+        groupsNeedUpdate?: boolean;
+        dynamic?: boolean;
+        bones?: Bone[];
+        animations?: any[];
+        id?: number;
+        parameters?: any;
+        index?: BufferAttribute;
+        attributes?: IBufferGeometryAttributes;
+        morphAttributes?: IBufferGeometryAttributes;
+        groups?: IGeometryGroup[];
+        indices?: any[];
+        normals?: Vector3[];
+        uvs?: Vector2[];
+        uvs2?: any[];
+        dispose?(): any;
+        computeBoundingSphere?(): any;
     }
 }
 declare namespace THREE {
@@ -2082,7 +2121,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class Line extends Object3D {
-        constructor(geometry?: GeometryType, material?: Material, mode?: number);
+        constructor(geometry?: IGeometry, material?: Material, mode?: number);
         private static raycast_inverseMatrix;
         private static raycast_ray;
         private static raycast_sphere;
@@ -2092,7 +2131,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class LineSegments extends Line {
-        constructor(geometry?: GeometryType, material?: Material);
+        constructor(geometry?: IGeometry, material?: Material);
     }
 }
 declare namespace THREE {
@@ -2116,7 +2155,7 @@ declare namespace THREE {
         morphTargetBase: any;
         morphTargetInfluences: any;
         morphTargetDictionary: any;
-        constructor(geometry?: GeometryType, material?: IMaterial);
+        constructor(geometry?: IGeometry, material?: IMaterial);
         setDrawMode(value: number): void;
         copy(source: Mesh): this;
         updateMorphTargets(): void;
@@ -2552,49 +2591,6 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    interface IMaterialParams {
-        color?: number;
-        specular?: number;
-        shininess?: number;
-        opacity?: number;
-        shading?: number;
-        map?: Texture;
-        lightMap?: Texture;
-        lightMapIntensity?: number;
-        aoMap?: Texture;
-        aoMapIntensity?: number;
-        emissive?: number;
-        emissiveIntensity?: number;
-        emissiveMap?: Texture;
-        bumpMap?: Texture;
-        bumpScale?: number;
-        normalMap?: Texture;
-        normalScale?: number;
-        displacementMap?: Texture;
-        displacementScale?: number;
-        displacementBias?: number;
-        specularMap?: Texture;
-        alphaMap?: Texture;
-        envMap?: CubeTexture;
-        envMapIntensity?: number;
-        combine?: number;
-        reflectivity?: number;
-        refractionRatio?: number;
-        wireframe?: boolean;
-        wireframeLinewidth?: number;
-        skinning?: boolean;
-        morphTargets?: boolean;
-        morphNormals?: boolean;
-        roughnessMap?: Texture;
-        roughness?: number;
-        metalnessMap?: Texture;
-        metalness?: number;
-        vertexColors?: number;
-        transparent?: boolean;
-        depthTest?: boolean;
-        depthWrite?: boolean;
-        fog?: boolean;
-    }
     interface IMaterial {
         id?: number;
         uuid: string;
@@ -2678,6 +2674,51 @@ declare namespace THREE {
         skinning?: any;
         needsUpdate?: boolean;
         linewidth?: number;
+    }
+}
+declare namespace THREE {
+    interface IMaterialParams {
+        color?: number;
+        specular?: number;
+        shininess?: number;
+        opacity?: number;
+        shading?: number;
+        map?: Texture;
+        lightMap?: Texture;
+        lightMapIntensity?: number;
+        aoMap?: Texture;
+        aoMapIntensity?: number;
+        emissive?: number;
+        emissiveIntensity?: number;
+        emissiveMap?: Texture;
+        bumpMap?: Texture;
+        bumpScale?: number;
+        normalMap?: Texture;
+        normalScale?: number;
+        displacementMap?: Texture;
+        displacementScale?: number;
+        displacementBias?: number;
+        specularMap?: Texture;
+        alphaMap?: Texture;
+        envMap?: CubeTexture;
+        envMapIntensity?: number;
+        combine?: number;
+        reflectivity?: number;
+        refractionRatio?: number;
+        wireframe?: boolean;
+        wireframeLinewidth?: number;
+        skinning?: boolean;
+        morphTargets?: boolean;
+        morphNormals?: boolean;
+        roughnessMap?: Texture;
+        roughness?: number;
+        metalnessMap?: Texture;
+        metalness?: number;
+        vertexColors?: number;
+        transparent?: boolean;
+        depthTest?: boolean;
+        depthWrite?: boolean;
+        fog?: boolean;
     }
     class Material extends EventDispatcher implements IMaterial {
         private _id;
@@ -3178,6 +3219,24 @@ declare namespace THREE {
         equals(line: any): any;
     }
 }
+interface Math {
+    DEG2RAD: number;
+    RAD2DEG: number;
+    generateUUID: () => string;
+    clamp: (value: number, min: number, max: number) => number;
+    euclideanModulo: (n: number, m: number) => number;
+    mapLinear: (x: number, a1: number, a2: number, b1: number, b2: number) => number;
+    smoothstep: (x: number, min: number, max: number) => number;
+    smootherstep: (x: number, min: number, max: number) => number;
+    randInt: (low: number, high: number) => number;
+    randFloat: (low: number, high: number) => number;
+    randFloatSpread: (range: number) => number;
+    degToRad: (degrees: number) => number;
+    radToDeg: (radians: number) => number;
+    isPowerOfTwo: (value: number) => boolean;
+    nearestPowerOfTwo: (value: number) => number;
+    nextPowerOfTwo: (value: number) => number;
+}
 declare namespace THREE {
     class Plane {
         normal: Vector3;
@@ -3287,24 +3346,6 @@ declare namespace THREE {
         static interpolate(p0: number, p1: number, p2: number, p3: number, t: number, t2: number, t3: number): number;
     }
 }
-interface Math {
-    DEG2RAD: number;
-    RAD2DEG: number;
-    generateUUID: () => string;
-    clamp: (value: number, min: number, max: number) => number;
-    euclideanModulo: (n: number, m: number) => number;
-    mapLinear: (x: number, a1: number, a2: number, b1: number, b2: number) => number;
-    smoothstep: (x: number, min: number, max: number) => number;
-    smootherstep: (x: number, min: number, max: number) => number;
-    randInt: (low: number, high: number) => number;
-    randFloat: (low: number, high: number) => number;
-    randFloatSpread: (range: number) => number;
-    degToRad: (degrees: number) => number;
-    radToDeg: (radians: number) => number;
-    isPowerOfTwo: (value: number) => boolean;
-    nearestPowerOfTwo: (value: number) => number;
-    nextPowerOfTwo: (value: number) => number;
-}
 declare namespace THREE {
     class Bone extends Object3D {
         skin: any;
@@ -3349,7 +3390,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class Points extends Object3D {
-        constructor(geometry?: GeometryType, material?: any);
+        constructor(geometry?: IGeometry, material?: any);
         private static raycast_inverseMatrix;
         private static raycast_ray;
         private static raycast_sphere;
@@ -3381,7 +3422,7 @@ declare namespace THREE {
         bindMatrix: Matrix4;
         bindMatrixInverse: Matrix4;
         skeleton: Skeleton;
-        constructor(geometry?: GeometryType, material?: any, useVertexTexture?: boolean);
+        constructor(geometry?: IGeometry, material?: any, useVertexTexture?: boolean);
         bind(skeleton: Skeleton, bindMatrix: Matrix4): void;
         pose(): void;
         normalizeSkinWeights(): void;

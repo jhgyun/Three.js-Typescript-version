@@ -23,6 +23,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="obj\Debug\Three.ts.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\Three.ts.dll" />
+    <Content Include="obj\Debug\Three.ts.pdb" />
     <Content Include="Three.js" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -59,6 +62,7 @@
     <TypeScriptCompile Include="core\Face3.ts" />
     <TypeScriptCompile Include="core\Geometry.ts" />
     <TypeScriptCompile Include="core\IBufferAttribute.ts" />
+    <TypeScriptCompile Include="core\IGeometry.ts" />
     <TypeScriptCompile Include="core\InstancedBufferAttribute.ts" />
     <TypeScriptCompile Include="core\InstancedBufferGeometry.ts" />
     <TypeScriptCompile Include="core\InstancedInterleavedBuffer.ts" />
@@ -160,6 +164,7 @@
     <TypeScriptCompile Include="loaders\ObjectLoader.ts" />
     <TypeScriptCompile Include="loaders\TextureLoader.ts" />
     <TypeScriptCompile Include="loaders\XHRLoader.ts" />
+    <TypeScriptCompile Include="materials\IMaterial.ts" />
     <TypeScriptCompile Include="materials\LineBasicMaterial.ts" />
     <TypeScriptCompile Include="materials\LineDashedMaterial.ts" />
     <TypeScriptCompile Include="materials\Material.ts" />
@@ -357,6 +362,8 @@
     <Content Include="renderers\shaders\ShaderLib\points_vert.glsl" />
     <Content Include="renderers\shaders\ShaderLib\shadow_frag.glsl" />
     <Content Include="renderers\shaders\ShaderLib\shadow_vert.glsl" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\Three.ts.csprojResolveAssemblyReference.cache" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -364,7 +371,15 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="obj\Release\TempPE\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

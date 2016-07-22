@@ -6,7 +6,7 @@ namespace THREE
 {
     export class Points extends Object3D
     {
-        constructor(geometry?: GeometryType, material?)
+        constructor(geometry?: IGeometry, material?)
         {
             super();
 

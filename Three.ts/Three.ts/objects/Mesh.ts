@@ -27,7 +27,7 @@ namespace THREE
         morphTargetInfluences: any;
         morphTargetDictionary: any;
 
-        constructor(geometry?: GeometryType, material?: IMaterial)
+        constructor(geometry?: IGeometry, material?: IMaterial)
         {
             super();
             Mesh.initStatic();

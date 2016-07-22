@@ -1,25 +1,4 @@
-﻿/// <reference path="../three.ts" />
-/// <reference path="box2.ts" />
-/// <reference path="box3.ts" />
-/// <reference path="color.ts" />
-/// <reference path="euler.ts" />
-/// <reference path="frustum.ts" />
-/// <reference path="interpolant.ts" />
-/// <reference path="line3.ts" />
-/// <reference path="matrix3.ts" />
-/// <reference path="matrix4.ts" />
-/// <reference path="plane.ts" />
-/// <reference path="quaternion.ts" />
-/// <reference path="ray.ts" />
-/// <reference path="spherical.ts" />
-/// <reference path="sphere.ts" />
-/// <reference path="spline.ts" />
-/// <reference path="triangle.ts" />
-/// <reference path="vector2.ts" />
-/// <reference path="vector3.ts" />
-/// <reference path="vector4.ts" />
-
-interface Math
+﻿interface Math
 {
     DEG2RAD: number;
     RAD2DEG: number;

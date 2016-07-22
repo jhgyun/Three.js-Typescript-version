@@ -26,7 +26,7 @@ namespace THREE
         skinWeight?: BufferAttribute;
     }
 
-    export class BufferGeometry extends EventDispatcher
+    export class BufferGeometry extends EventDispatcher implements IGeometry
     {
         uuid: string;
         name: string;

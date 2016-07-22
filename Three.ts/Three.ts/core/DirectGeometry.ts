@@ -5,7 +5,7 @@
 
 namespace THREE
 {
-    export class DirectGeometry extends EventDispatcher
+    export class DirectGeometry extends EventDispatcher implements IGeometry
     {
         private _id = GeometryIdCount++;
         get id()

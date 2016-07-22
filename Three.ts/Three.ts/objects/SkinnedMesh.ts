@@ -14,7 +14,7 @@ namespace THREE
         bindMatrixInverse: Matrix4;
         skeleton: Skeleton;
 
-        constructor(geometry?: GeometryType, material?, useVertexTexture?: boolean)
+        constructor(geometry?: IGeometry, material?, useVertexTexture?: boolean)
         {
             super(geometry, material);
 
