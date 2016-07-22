@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{40984C9A-8AA7-4472-8C29-F3CF63B45DD8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.css" />
+    <Content Include="renderers\webgl\WebGLUniforms.js" />
+    <Content Include="Three.js" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="animation\AnimationAction.ts" />
+    <TypeScriptCompile Include="animation\AnimationClip.ts" />
+    <TypeScriptCompile Include="animation\AnimationMixer.ts" />
+    <TypeScriptCompile Include="animation\AnimationObjectGroup.ts" />
+    <TypeScriptCompile Include="animation\AnimationUtils.ts" />
+    <TypeScriptCompile Include="animation\KeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\PropertyBinding.ts" />
+    <TypeScriptCompile Include="animation\PropertyMixer.ts" />
+    <TypeScriptCompile Include="animation\tracks\BooleanKeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\tracks\ColorKeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\tracks\NumberKeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\tracks\QuaternionKeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\tracks\StringKeyframeTrack.ts" />
+    <TypeScriptCompile Include="animation\tracks\VectorKeyframeTrack.ts" />
+    <TypeScriptCompile Include="audio\Audio.ts" />
+    <TypeScriptCompile Include="audio\AudioAnalyser.ts" />
+    <TypeScriptCompile Include="audio\AudioContext.ts" />
+    <TypeScriptCompile Include="audio\AudioListener.ts" />
+    <TypeScriptCompile Include="audio\PositionalAudio.ts" />
+    <TypeScriptCompile Include="cameras\Camera.ts" />
+    <TypeScriptCompile Include="cameras\CubeCamera.ts" />
+    <TypeScriptCompile Include="cameras\OrthographicCamera.ts" />
+    <TypeScriptCompile Include="cameras\PerspectiveCamera.ts" />
+    <TypeScriptCompile Include="cameras\StereoCamera.ts" />
+    <TypeScriptCompile Include="core\BufferAttribute.ts" />
+    <TypeScriptCompile Include="core\BufferGeometry.ts" />
+    <TypeScriptCompile Include="core\Clock.ts" />
+    <TypeScriptCompile Include="core\DirectGeometry.ts" />
+    <TypeScriptCompile Include="core\EventDispatcher.ts" />
+    <TypeScriptCompile Include="core\Face3.ts" />
+    <TypeScriptCompile Include="core\Geometry.ts" />
+    <TypeScriptCompile Include="core\IBufferAttribute.ts" />
+    <TypeScriptCompile Include="core\InstancedBufferAttribute.ts" />
+    <TypeScriptCompile Include="core\InstancedBufferGeometry.ts" />
+    <TypeScriptCompile Include="core\InstancedInterleavedBuffer.ts" />
+    <TypeScriptCompile Include="core\InterleavedBuffer.ts" />
+    <TypeScriptCompile Include="core\InterleavedBufferAttribute.ts" />
+    <TypeScriptCompile Include="core\Layers.ts" />
+    <TypeScriptCompile Include="core\Object3D.ts" />
+    <TypeScriptCompile Include="core\Raycaster.ts" />
+    <TypeScriptCompile Include="core\Uniform.ts" />
+    <TypeScriptCompile Include="extras\core\Curve.ts" />
+    <TypeScriptCompile Include="extras\core\CurvePath.ts" />
+    <TypeScriptCompile Include="extras\core\Font.ts" />
+    <TypeScriptCompile Include="extras\core\Path.ts" />
+    <TypeScriptCompile Include="extras\core\Shape.ts" />
+    <TypeScriptCompile Include="extras\curves\ArcCurve.ts" />
+    <TypeScriptCompile Include="extras\curves\CatmullRomCurve3.ts" />
+    <TypeScriptCompile Include="extras\curves\CubicBezierCurve.ts" />
+    <TypeScriptCompile Include="extras\curves\CubicBezierCurve3.ts" />
+    <TypeScriptCompile Include="extras\curves\EllipseCurve.ts" />
+    <TypeScriptCompile Include="extras\curves\LineCurve.ts" />
+    <TypeScriptCompile Include="extras\curves\LineCurve3.ts" />
+    <TypeScriptCompile Include="extras\curves\QuadraticBezierCurve.ts" />
+    <TypeScriptCompile Include="extras\curves\QuadraticBezierCurve3.ts" />
+    <TypeScriptCompile Include="extras\curves\SplineCurve.ts" />
+    <TypeScriptCompile Include="extras\CurveUtils.ts" />
+    <TypeScriptCompile Include="extras\geometries\BoxBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\BoxGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\CircleBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\CircleGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\ConeBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\ConeGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\CylinderBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\CylinderGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\DodecahedronGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\EdgesGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\ExtrudeGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\IcosahedronGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\LatheBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\LatheGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\OctahedronGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\ParametricGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\PlaneBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\PlaneGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\PolyhedronGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\RingBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\RingGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\ShapeGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\SphereBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\SphereGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TetrahedronGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TextGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TorusBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TorusGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TorusKnotBufferGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TorusKnotGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\TubeGeometry.ts" />
+    <TypeScriptCompile Include="extras\geometries\WireframeGeometry.ts" />
+    <TypeScriptCompile Include="extras\helpers\ArrowHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\AxisHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\BoundingBoxHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\BoxHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\CameraHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\DirectionalLightHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\EdgesHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\FaceNormalsHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\GridHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\HemisphereLightHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\PointLightHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\SkeletonHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\SpotLightHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\VertexNormalsHelper.ts" />
+    <TypeScriptCompile Include="extras\helpers\WireframeHelper.ts" />
+    <TypeScriptCompile Include="extras\objects\ImmediateRenderObject.ts" />
+    <TypeScriptCompile Include="extras\objects\MorphBlendMesh.ts" />
+    <TypeScriptCompile Include="extras\SceneUtils.ts" />
+    <TypeScriptCompile Include="extras\ShapeUtils.ts" />
+    <TypeScriptCompile Include="lights\AmbientLight.ts" />
+    <TypeScriptCompile Include="lights\DirectionalLight.ts" />
+    <TypeScriptCompile Include="lights\DirectionalLightShadow.ts" />
+    <TypeScriptCompile Include="lights\HemisphereLight.ts" />
+    <TypeScriptCompile Include="lights\Light.ts" />
+    <TypeScriptCompile Include="lights\LightShadow.ts" />
+    <TypeScriptCompile Include="lights\PointLight.ts" />
+    <TypeScriptCompile Include="lights\SpotLight.ts" />
+    <TypeScriptCompile Include="lights\SpotLightShadow.ts" />
+    <TypeScriptCompile Include="loaders\AnimationLoader.ts" />
+    <TypeScriptCompile Include="loaders\AudioLoader.ts" />
+    <TypeScriptCompile Include="loaders\BinaryTextureLoader.ts" />
+    <TypeScriptCompile Include="loaders\BufferGeometryLoader.ts" />
+    <TypeScriptCompile Include="loaders\Cache.ts" />
+    <TypeScriptCompile Include="loaders\CompressedTextureLoader.ts" />
+    <TypeScriptCompile Include="loaders\CubeTextureLoader.ts" />
+    <TypeScriptCompile Include="loaders\FontLoader.ts" />
+    <TypeScriptCompile Include="loaders\ImageLoader.ts" />
+    <TypeScriptCompile Include="loaders\JSONLoader.ts" />
+    <TypeScriptCompile Include="loaders\Loader.ts" />
+    <TypeScriptCompile Include="loaders\LoadingManager.ts" />
+    <TypeScriptCompile Include="loaders\MaterialLoader.ts" />
+    <TypeScriptCompile Include="loaders\ObjectLoader.ts" />
+    <TypeScriptCompile Include="loaders\TextureLoader.ts" />
+    <TypeScriptCompile Include="loaders\XHRLoader.ts" />
+    <TypeScriptCompile Include="materials\LineBasicMaterial.ts" />
+    <TypeScriptCompile Include="materials\LineDashedMaterial.ts" />
+    <TypeScriptCompile Include="materials\Material.ts" />
+    <TypeScriptCompile Include="materials\MeshBasicMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshDepthMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshLambertMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshNormalMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshPhongMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshPhysicalMaterial.ts" />
+    <TypeScriptCompile Include="materials\MeshStandardMaterial.ts" />
+    <TypeScriptCompile Include="materials\MultiMaterial.ts" />
+    <TypeScriptCompile Include="materials\PointsMaterial.ts" />
+    <TypeScriptCompile Include="materials\RawShaderMaterial.ts" />
+    <TypeScriptCompile Include="materials\ShaderMaterial.ts" />
+    <TypeScriptCompile Include="materials\ShadowMaterial.ts" />
+    <TypeScriptCompile Include="materials\SpriteMaterial.ts" />
+    <TypeScriptCompile Include="math\Box2.ts" />
+    <TypeScriptCompile Include="math\Box3.ts" />
+    <TypeScriptCompile Include="math\Color.ts" />
+    <TypeScriptCompile Include="math\Euler.ts" />
+    <TypeScriptCompile Include="math\Frustum.ts" />
+    <TypeScriptCompile Include="math\Interpolant.ts" />
+    <TypeScriptCompile Include="math\interpolants\CubicInterpolant.ts" />
+    <TypeScriptCompile Include="math\interpolants\DiscreteInterpolant.ts" />
+    <TypeScriptCompile Include="math\interpolants\LinearInterpolant.ts" />
+    <TypeScriptCompile Include="math\interpolants\QuaternionLinearInterpolant.ts" />
+    <TypeScriptCompile Include="math\Line3.ts" />
+    <TypeScriptCompile Include="math\Math.ts" />
+    <TypeScriptCompile Include="math\Matrix3.ts" />
+    <TypeScriptCompile Include="math\Matrix4.ts" />
+    <TypeScriptCompile Include="math\Plane.ts" />
+    <TypeScriptCompile Include="math\Quaternion.ts" />
+    <TypeScriptCompile Include="math\Ray.ts" />
+    <TypeScriptCompile Include="math\Sphere.ts" />
+    <TypeScriptCompile Include="math\Spherical.ts" />
+    <TypeScriptCompile Include="math\Spline.ts" />
+    <TypeScriptCompile Include="math\Triangle.ts" />
+    <TypeScriptCompile Include="math\Vector2.ts" />
+    <TypeScriptCompile Include="math\Vector3.ts" />
+    <TypeScriptCompile Include="math\Vector4.ts" />
+    <TypeScriptCompile Include="objects\Bone.ts" />
+    <TypeScriptCompile Include="objects\Group.ts" />
+    <TypeScriptCompile Include="objects\LensFlare.ts" />
+    <TypeScriptCompile Include="objects\Line.ts" />
+    <TypeScriptCompile Include="objects\LineSegments.ts" />
+    <TypeScriptCompile Include="objects\LOD.ts" />
+    <TypeScriptCompile Include="objects\Mesh.ts" />
+    <TypeScriptCompile Include="objects\Points.ts" />
+    <TypeScriptCompile Include="objects\Skeleton.ts" />
+    <TypeScriptCompile Include="objects\SkinnedMesh.ts" />
+    <TypeScriptCompile Include="objects\Sprite.ts" />
+    <TypeScriptCompile Include="renderers\shaders\ShaderChunk.ts" />
+    <TypeScriptCompile Include="renderers\shaders\ShaderLib.ts" />
+    <TypeScriptCompile Include="renderers\shaders\UniformsLib.ts" />
+    <TypeScriptCompile Include="renderers\shaders\UniformsUtils.ts" />
+    <TypeScriptCompile Include="renderers\WebGLRenderer.Extension.ts" />
+    <TypeScriptCompile Include="renderers\WebGLRenderer.ts" />
+    <TypeScriptCompile Include="renderers\WebGLRenderTarget.ts" />
+    <TypeScriptCompile Include="renderers\WebGLRenderTargetCube.ts" />
+    <TypeScriptCompile Include="renderers\webgl\plugins\LensFlarePlugin.ts" />
+    <TypeScriptCompile Include="renderers\webgl\plugins\SpritePlugin.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLBufferRenderer.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLCapabilities.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLClipping.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLExtensions.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLGeometries.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLIndexedBufferRenderer.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLLights.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLObjects.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLProgram.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLProgramParameters.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLPrograms.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLProperties.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLShader.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLShadowMap.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLState.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLTextures.ts" />
+    <TypeScriptCompile Include="renderers\webgl\WebGLUniforms.ts" />
+    <TypeScriptCompile Include="scenes\Fog.ts" />
+    <TypeScriptCompile Include="scenes\FogExp2.ts" />
+    <TypeScriptCompile Include="scenes\Scene.ts" />
+    <TypeScriptCompile Include="textures\CanvasTexture.ts" />
+    <TypeScriptCompile Include="textures\CompressedTexture.ts" />
+    <TypeScriptCompile Include="textures\CubeTexture.ts" />
+    <TypeScriptCompile Include="textures\DataTexture.ts" />
+    <TypeScriptCompile Include="textures\DepthTexture.ts" />
+    <TypeScriptCompile Include="textures\Texture.ts" />
+    <TypeScriptCompile Include="textures\VideoTexture.ts" />
+    <TypeScriptCompile Include="Three.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="renderers\shaders\ShaderChunk\alphamap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\alphamap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\alphatest_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\ambient_pars.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\aomap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\aomap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\beginnormal_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\begin_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\bsdfs.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\bumpmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\clipping_planes_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\clipping_planes_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\clipping_planes_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\clipping_planes_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\color_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\color_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\color_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\color_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\common.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\cube_uv_reflection_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\defaultnormal_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\displacementmap_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\displacementmap_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\emissivemap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\emissivemap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\encodings_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\encodings_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\envmap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\envmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\envmap_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\envmap_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\fog_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\fog_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lightmap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lightmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_lambert_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_pars.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_phong_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_phong_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_physical_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_physical_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\lights_template.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\logdepthbuf_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\logdepthbuf_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\logdepthbuf_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\logdepthbuf_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\map_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\map_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\map_particle_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\map_particle_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\metalnessmap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\metalnessmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\morphnormal_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\morphtarget_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\morphtarget_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\normalmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\normal_flip.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\normal_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\packing.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\premultiplied_alpha_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\project_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\roughnessmap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\roughnessmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\shadowmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\shadowmap_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\shadowmap_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\shadowmask_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\skinbase_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\skinning_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\skinning_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\skinnormal_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\specularmap_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\specularmap_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\tonemapping_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\tonemapping_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv2_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv2_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv2_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv_pars_fragment.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv_pars_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\uv_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderChunk\worldpos_vertex.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\cube_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\cube_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\depth_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\depth_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\distanceRGBA_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\distanceRGBA_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\equirect_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\equirect_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\linedashed_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\linedashed_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshbasic_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshbasic_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshlambert_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshlambert_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshphong_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshphong_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshphysical_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\meshphysical_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\normal_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\normal_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\points_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\points_vert.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\shadow_frag.glsl" />
+    <Content Include="renderers\shaders\ShaderLib\shadow_vert.glsl" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Three.ts</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60047</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60047/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind />
+    <TypeScriptOutFile>Three.js</TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>
