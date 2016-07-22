@@ -232,8 +232,7 @@ namespace THREE
             }
 
         }
-         
-
+          
         // Array Caches (provide typed arrays for temporary by size)
         private static uncacheTemporaryArrays()
         {

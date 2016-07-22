@@ -4,12 +4,17 @@
 
 namespace THREE
 {
+    interface IAttributeProperties
+    {
+        __webglBuffer?: WebGLBuffer;
+        version?: number;
+    }
     export class WebGLObjects
     {
-        gl: WebGLRenderingContext;
-        properties: WebGLProperties;
-        info: WebGLRendererInfo;
-        geometries: WebGLGeometries;
+        private gl: WebGLRenderingContext;
+        private properties: WebGLProperties;
+        private info: WebGLRendererInfo;
+        private geometries: WebGLGeometries;
 
         constructor(gl: WebGLRenderingContext, properties: WebGLProperties, info: WebGLRendererInfo)
         { 
@@ -21,7 +26,7 @@ namespace THREE
   
         }
 
-        public updateAttribute(attribute: BufferAttribute | InterleavedBufferAttribute , bufferType)
+        private updateAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, bufferType: number)
         {
             var properties = this.properties;
             
@@ -29,7 +34,7 @@ namespace THREE
             if (attribute instanceof InterleavedBufferAttribute)
                 data = attribute.data;
 
-            var attributeProperties = properties.get(data);
+            var attributeProperties = properties.get(data) as IAttributeProperties;
 
             if (attributeProperties.__webglBuffer === undefined)
             { 
@@ -40,7 +45,7 @@ namespace THREE
                 this.updateBuffer(attributeProperties, data, bufferType); 
             } 
         }
-        public createBuffer(attributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
+        private createBuffer(attributeProperties: IAttributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
         {
             var gl = this.gl;
 
@@ -54,7 +59,7 @@ namespace THREE
             attributeProperties.version = data.version;
 
         }
-        public updateBuffer(attributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
+        private updateBuffer(attributeProperties: IAttributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
         {
             var gl = this.gl;
 
@@ -80,19 +85,44 @@ namespace THREE
             attributeProperties.version = data.version;
 
         }
-        public getAttributeBuffer(attribute: BufferAttribute | InterleavedBufferAttribute)
+        private checkEdge(edges: { [index: string]: number[] }, a: number, b: number)
         {
-            var properties = this.properties;
-            if (attribute instanceof InterleavedBufferAttribute)
-            { 
-                return properties.get(attribute.data).__webglBuffer; 
+            if (a > b)
+            {
+                var tmp = a;
+                a = b;
+                b = tmp;
             }
 
-            return properties.get(attribute).__webglBuffer;
+            var list = edges[a];
+
+            if (list === undefined)
+            {
+                edges[a] = [b];
+                return true;
+            }
+            else if (list.indexOf(b) === -1)
+            {
+                list.push(b);
+                return true;
+            }
+
+            return false;
 
         }
 
-        getWireframeAttribute(geometry: BufferGeometry)
+        public getAttributeBuffer(attribute: BufferAttribute | InterleavedBufferAttribute): WebGLBuffer
+        {
+            var properties = this.properties;
+            if (attribute instanceof InterleavedBufferAttribute)
+            {
+                return (properties.get(attribute.data) as IAttributeProperties).__webglBuffer; 
+            }
+
+            return (properties.get(attribute) as IAttributeProperties).__webglBuffer;
+
+        } 
+        public getWireframeAttribute(geometry: BufferGeometry): BufferAttribute
         {
             var properties = this.properties;
             var checkEdge = this.checkEdge;
@@ -149,32 +179,8 @@ namespace THREE
             return attribute;
 
         }
-        checkEdge(edges: { [index: string]: number[] }, a: number, b: number)
-        { 
-            if (a > b)
-            { 
-                var tmp = a;
-                a = b;
-                b = tmp; 
-            }
 
-            var list = edges[a];
-
-            if (list === undefined)
-            { 
-                edges[a] = [b];
-                return true; 
-            }
-            else if (list.indexOf(b) === -1)
-            { 
-                list.push(b);
-                return true; 
-            }
-
-            return false;
-
-        }
-        update(object: Object3D)
+        public update(object: Object3D)
         { 
             // TODO: Avoid updating twice (when using shadowMap). Maybe add frame counter.
             var gl = this.gl;
@@ -202,7 +208,6 @@ namespace THREE
             // morph targets
 
             var morphAttributes = geometry.morphAttributes;
-
             for (var name in morphAttributes)
             { 
                 var array = morphAttributes[name];
@@ -212,9 +217,7 @@ namespace THREE
                     this.updateAttribute(array[i], gl.ARRAY_BUFFER); 
                 } 
             }
-
             return geometry;
-
         }
 
     }

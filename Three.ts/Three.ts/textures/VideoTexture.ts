@@ -9,7 +9,7 @@ namespace THREE
     {
         constructor(
             video?,
-            mapping?,
+            mapping?: number,
             wrapS?: number,
             wrapT?: number,
             magFilter?: number,

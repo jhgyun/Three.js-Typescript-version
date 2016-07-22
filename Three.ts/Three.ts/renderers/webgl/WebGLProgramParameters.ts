@@ -1,6 +1,6 @@
 ﻿namespace THREE
 {
-    export interface WebGLProgramParameters
+    export interface IWebGLProgramParameters
     {
         shaderID?: string;
         precision?: string;
@@ -51,7 +51,7 @@
         alphaTest?: number;
         doubleSided?: boolean;
         flipSided?: boolean;
-        depthPacking?: boolean;
+        depthPacking?: boolean | number;
 
     }
 }

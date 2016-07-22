@@ -66,7 +66,7 @@ namespace THREE
             return "vec3 " + functionName + "( vec3 color ) { return " + toneMappingName + "ToneMapping( color ); }";
 
         }
-        private static generateExtensions(extensions, parameters: WebGLProgramParameters, rendererExtensions: WebGLExtensions)
+        private static generateExtensions(extensions, parameters: IWebGLProgramParameters, rendererExtensions: WebGLExtensions)
         { 
             extensions = extensions || {};
 
@@ -92,8 +92,8 @@ namespace THREE
             return chunks.join('\n'); 
         }
         private static fetchAttributeLocations(gl: WebGLRenderingContext, program: _WebGLProgram, identifiers?)
-        { 
-            var attributes = {}; 
+        {
+            var attributes: { [index: string]: number } = {}; 
             var n = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
 
             for (var i = 0; i < n; i++)
@@ -161,7 +161,7 @@ namespace THREE
         private renderer: WebGLRenderer;
         public code: string;
         private material;
-        private parameters: WebGLProgramParameters;
+        private parameters: IWebGLProgramParameters;
         public usedTimes: number;
         public vertexShader: WebGLShader;
         public fragmentShader: WebGLShader;
@@ -169,24 +169,14 @@ namespace THREE
         constructor(renderer: WebGLRenderer,
             code: string,
             material: IMaterial,
-            parameters: WebGLProgramParameters)
+            parameters: IWebGLProgramParameters)
         {
             this.renderer = renderer;
             this.code = code;
             this.material = material;
             this.parameters = parameters;
-
-            var getEncodingComponents = WebGLProgram.getEncodingComponents;
-            var getTexelDecodingFunction = WebGLProgram.getTexelDecodingFunction;
-            var getTexelEncodingFunction = WebGLProgram.getTexelEncodingFunction;
-            var getToneMappingFunction = WebGLProgram.getToneMappingFunction;
-            var generateExtensions = WebGLProgram.generateExtensions;
-            var generateDefines = WebGLProgram.generateDefines;
-            var fetchAttributeLocations = WebGLProgram.fetchAttributeLocations;
-            var filterEmptyLine = WebGLProgram.filterEmptyLine;
-            var replaceLightNums = WebGLProgram.replaceLightNums;
-            var parseIncludes = WebGLProgram.parseIncludes;
-            var unrollLoops = WebGLProgram.unrollLoops;
+             
+            var filterEmptyLine = WebGLProgram.filterEmptyLine;   
 
             var gl = this.gl = renderer.context;
 
@@ -212,11 +202,9 @@ namespace THREE
             var envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
 
             if (parameters.envMap)
-            {
-
+            { 
                 switch (material.envMap.mapping)
-                {
-
+                { 
                     case CubeReflectionMapping:
                     case CubeRefractionMapping:
                         envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
@@ -266,8 +254,8 @@ namespace THREE
 
             // console.log( 'building new program ' ); 
             // 
-            var customExtensions = generateExtensions(extensions, parameters, renderer.extensions); 
-            var customDefines = generateDefines(defines); 
+            var customExtensions = WebGLProgram.generateExtensions(extensions, parameters, renderer.extensions); 
+            var customDefines = WebGLProgram.generateDefines(defines); 
             //
 
             var program = gl.createProgram();
@@ -447,13 +435,13 @@ namespace THREE
 
                     (parameters.toneMapping !== NoToneMapping) ? "#define TONE_MAPPING" : '',
                     (parameters.toneMapping !== NoToneMapping) ? ShaderChunk['tonemapping_pars_fragment'] : '',  // this code is required here because it is used by the toneMapping() function defined below
-                    (parameters.toneMapping !== NoToneMapping) ? getToneMappingFunction("toneMapping", parameters.toneMapping) : '',
+                    (parameters.toneMapping !== NoToneMapping) ? WebGLProgram.getToneMappingFunction("toneMapping", parameters.toneMapping) : '',
 
                     (parameters.outputEncoding || parameters.mapEncoding || parameters.envMapEncoding || parameters.emissiveMapEncoding) ? ShaderChunk['encodings_pars_fragment'] : '', // this code is required here because it is used by the various encoding/decoding function defined below
-                    parameters.mapEncoding ? getTexelDecodingFunction('mapTexelToLinear', parameters.mapEncoding) : '',
-                    parameters.envMapEncoding ? getTexelDecodingFunction('envMapTexelToLinear', parameters.envMapEncoding) : '',
-                    parameters.emissiveMapEncoding ? getTexelDecodingFunction('emissiveMapTexelToLinear', parameters.emissiveMapEncoding) : '',
-                    parameters.outputEncoding ? getTexelEncodingFunction("linearToOutputTexel", parameters.outputEncoding) : '',
+                    parameters.mapEncoding ? WebGLProgram.getTexelDecodingFunction('mapTexelToLinear', parameters.mapEncoding) : '',
+                    parameters.envMapEncoding ? WebGLProgram.getTexelDecodingFunction('envMapTexelToLinear', parameters.envMapEncoding) : '',
+                    parameters.emissiveMapEncoding ? WebGLProgram.getTexelDecodingFunction('emissiveMapTexelToLinear', parameters.emissiveMapEncoding) : '',
+                    parameters.outputEncoding ? WebGLProgram.getTexelEncodingFunction("linearToOutputTexel", parameters.outputEncoding) : '',
 
                     parameters.depthPacking ? "#define DEPTH_PACKING " + material.depthPacking : '',
 
@@ -463,16 +451,16 @@ namespace THREE
 
             }
 
-            vertexShader = parseIncludes(vertexShader, parameters);
-            vertexShader = replaceLightNums(vertexShader, parameters);
+            vertexShader = WebGLProgram.parseIncludes(vertexShader, parameters);
+            vertexShader = WebGLProgram.replaceLightNums(vertexShader, parameters);
 
-            fragmentShader = parseIncludes(fragmentShader, parameters);
-            fragmentShader = replaceLightNums(fragmentShader, parameters);
+            fragmentShader = WebGLProgram.parseIncludes(fragmentShader, parameters);
+            fragmentShader = WebGLProgram.replaceLightNums(fragmentShader, parameters);
 
             if (material instanceof ShaderMaterial === false)
             { 
-                vertexShader = unrollLoops(vertexShader);
-                fragmentShader = unrollLoops(fragmentShader); 
+                vertexShader = WebGLProgram.unrollLoops(vertexShader);
+                fragmentShader = WebGLProgram.unrollLoops(fragmentShader); 
             }
 
             var vertexGlsl = prefixVertex + vertexShader;
@@ -570,7 +558,10 @@ namespace THREE
         public id = WebGLProgram.programIdCount++;
         public diagnostics: any; 
 
-        private cachedAttributes; 
+        /**
+        * {[index:string] : number}
+        */
+        private cachedAttributes;
         public getAttributes()
         { 
             if (this.cachedAttributes === undefined)

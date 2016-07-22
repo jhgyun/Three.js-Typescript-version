@@ -149,7 +149,7 @@ namespace THREE
         extensions?;
         defines?;
         combine?: number;
-        depthPacking?: boolean;
+        depthPacking?: number | boolean;
         index0AttributeName?;
 
         addEventListener?(type: string, listener: EventListener, _this?: any);
@@ -160,7 +160,8 @@ namespace THREE
         morphNormals?;
         numSupportedMorphNormals?: number;
         skinning?;
-        needsUpdate?: boolean; 
+        needsUpdate?: boolean;
+        linewidth?: number;
     }
 
     export class Material extends EventDispatcher

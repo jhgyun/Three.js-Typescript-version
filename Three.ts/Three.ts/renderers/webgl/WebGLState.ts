@@ -112,6 +112,7 @@ namespace THREE
             }
             return texture;
         }
+
         enableAttribute(attribute)
         {
             this.newAttributes[attribute] = 1;
@@ -572,8 +573,7 @@ namespace THREE
 
             this.buffers.color.reset();
             this.buffers.depth.reset();
-            this.buffers.stencil.reset();
-
+            this.buffers.stencil.reset(); 
         } 
     }
 

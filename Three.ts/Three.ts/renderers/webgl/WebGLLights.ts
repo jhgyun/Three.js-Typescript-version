@@ -4,13 +4,29 @@
 
 namespace THREE
 {
+    export interface ILightUniforms
+    {
+        position?: Vector3;
+        direction?: Vector3;
+        color?: Color;
+        shadow?: boolean;
+        shadowBias?: number;
+        shadowRadius?: number;
+        shadowMapSize?: Vector2;
+        distance?: number;
+        coneCos?: number;
+        penumbraCos?: number;
+        decay?: number;
+        skyColor?: Color;
+        groundColor?: Color;
+    }
     export class WebGLLights
     {
-        lights: { [index: number]: Light } = {};
+        lights: { [index: number]: ILightUniforms } = {};
         constructor()
         {
         };
-        get(light: Light)
+        get(light: Light): ILightUniforms
         {
             var lights = this.lights; 
             if (lights[light.id] !== undefined)
@@ -18,12 +34,12 @@ namespace THREE
                 return lights[light.id];
             }
 
-            var uniforms;
+            var uniforms: ILightUniforms;
 
             switch (light.type)
             { 
                 case 'DirectionalLight':
-                    uniforms = {
+                    uniforms  = {
                         direction: new Vector3(),
                         color: new Color(),
 

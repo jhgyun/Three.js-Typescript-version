@@ -124,7 +124,7 @@
 
             var currentRenderTarget = renderer.getCurrentRenderTarget();
 
-            var parameters: WebGLProgramParameters = {
+            var parameters: IWebGLProgramParameters = {
                 shaderID: shaderID, 
                 precision: precision,
                 supportsVertexTextures: capabilities.vertexTextures,
@@ -226,7 +226,7 @@
             return array.join();
 
         };
-        public acquireProgram(material, parameters: WebGLProgramParameters, code: string)
+        public acquireProgram(material, parameters: IWebGLProgramParameters, code: string)
         {
             var programs = this.programs;
             var program: WebGLProgram;

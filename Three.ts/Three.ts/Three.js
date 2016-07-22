@@ -11496,15 +11496,13 @@ var THREE;
         };
         Mesh.prototype.updateMorphTargets = function () {
             var geometry = this.geometry;
-            if (geometry instanceof THREE.DirectGeometry) {
-                if (geometry.morphTargets !== undefined && geometry.morphTargets.length > 0) {
-                    this.morphTargetBase = -1;
-                    this.morphTargetInfluences = [];
-                    this.morphTargetDictionary = {};
-                    for (var m = 0, ml = geometry.morphTargets.length; m < ml; m++) {
-                        this.morphTargetInfluences.push(0);
-                        this.morphTargetDictionary[geometry.morphTargets[m].name] = m;
-                    }
+            if (geometry.morphTargets !== undefined && geometry.morphTargets.length > 0) {
+                this.morphTargetBase = -1;
+                this.morphTargetInfluences = [];
+                this.morphTargetDictionary = {};
+                for (var m = 0, ml = geometry.morphTargets.length; m < ml; m++) {
+                    this.morphTargetInfluences.push(0);
+                    this.morphTargetDictionary[geometry.morphTargets[m].name] = m;
                 }
             }
         };
@@ -18682,30 +18680,30 @@ var THREE;
             };
             this.init_context();
             this.init_extensions();
-            var capabilities = this.capabilities = new THREE.WebGLCapabilities(this.context, this.extensions, parameters);
+            this.capabilities = new THREE.WebGLCapabilities(this.context, this.extensions, parameters);
             this.state = new THREE.WebGLState(this);
             this.properties = new THREE.WebGLProperties();
             this.textures = new THREE.WebGLTextures(this);
             this.objects = new THREE.WebGLObjects(this.context, this.properties, this.info);
-            this.programCache = new THREE.WebGLPrograms(this, capabilities);
+            this.programCache = new THREE.WebGLPrograms(this, this.capabilities);
             this.lightCache = new THREE.WebGLLights();
             this.info.programs = this.programCache.programs;
-            var bufferRenderer = this.bufferRenderer = new THREE.WebGLBufferRenderer(this.context, this.extensions, this._infoRender);
-            var indexedBufferRenderer = this.indexedBufferRenderer = new THREE.WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
-            var backgroundCamera = this.backgroundCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            var backgroundCamera2 = this.backgroundCamera2 = new THREE.PerspectiveCamera();
-            var backgroundPlaneMesh = this.backgroundPlaneMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial({ depthTest: false, depthWrite: false }));
-            var backgroundBoxShader = this.backgroundBoxShader = THREE.ShaderLib['cube'];
-            var backgroundBoxMesh = this.backgroundBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(5, 5, 5), new THREE.ShaderMaterial({
-                uniforms: backgroundBoxShader.uniforms,
-                vertexShader: backgroundBoxShader.vertexShader,
-                fragmentShader: backgroundBoxShader.fragmentShader,
+            this.bufferRenderer = new THREE.WebGLBufferRenderer(this.context, this.extensions, this._infoRender);
+            this.indexedBufferRenderer = new THREE.WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
+            this.backgroundCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            this.backgroundCamera2 = new THREE.PerspectiveCamera();
+            this.backgroundPlaneMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial({ depthTest: false, depthWrite: false }));
+            this.backgroundBoxShader = THREE.ShaderLib['cube'];
+            this.backgroundBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(5, 5, 5), new THREE.ShaderMaterial({
+                uniforms: this.backgroundBoxShader.uniforms,
+                vertexShader: this.backgroundBoxShader.vertexShader,
+                fragmentShader: this.backgroundBoxShader.fragmentShader,
                 depthTest: false,
                 depthWrite: false,
                 side: THREE.BackSide
             }));
-            this.objects.update(backgroundPlaneMesh);
-            this.objects.update(backgroundBoxMesh);
+            this.objects.update(this.backgroundPlaneMesh);
+            this.objects.update(this.backgroundBoxMesh);
             this.setDefaultGLState();
             this.shadowMap = new THREE.WebGLShadowMap(this, this._lights, this.objects);
             this.spritePlugin = new THREE.SpritePlugin(this);
@@ -19009,11 +19007,11 @@ var THREE;
                     var influence = activeInfluences[i];
                     this.morphInfluences[i] = influence[0];
                     if (influence[0] !== 0) {
-                        var index = influence[1];
+                        var index_1 = influence[1];
                         if (material.morphTargets === true && morphAttributes.position)
-                            geometry.addAttribute('morphTarget' + i, morphAttributes.position[index]);
+                            geometry.addAttribute('morphTarget' + i, morphAttributes.position[index_1]);
                         if (material.morphNormals === true && morphAttributes.normal)
-                            geometry.addAttribute('morphNormal' + i, morphAttributes.normal[index]);
+                            geometry.addAttribute('morphNormal' + i, morphAttributes.normal[index_1]);
                     }
                     else {
                         if (material.morphTargets === true)
@@ -19889,7 +19887,9 @@ var THREE;
             var _lights = this._lights;
             var _vector3 = this._vector3;
             var lightCache = this.lightCache;
-            var l, ll, light, r = 0, g = 0, b = 0, color, intensity, distance, shadowMap, viewMatrix = camera.matrixWorldInverse, directionalLength = 0, pointLength = 0, spotLength = 0, hemiLength = 0;
+            var l, ll;
+            var light;
+            var r = 0, g = 0, b = 0, color, intensity, distance, shadowMap, viewMatrix = camera.matrixWorldInverse, directionalLength = 0, pointLength = 0, spotLength = 0, hemiLength = 0;
             for (l = 0, ll = lights.length; l < ll; l++) {
                 light = lights[l];
                 color = light.color;
@@ -20881,7 +20881,6 @@ var THREE;
             this.properties = properties;
             this.info = info;
         }
-        ;
         WebGLGeometries.prototype.onGeometryDispose = function (event) {
             var geometries = this.geometries;
             var properties = this.properties;
@@ -21128,6 +21127,23 @@ var THREE;
             }
             attributeProperties.version = data.version;
         };
+        WebGLObjects.prototype.checkEdge = function (edges, a, b) {
+            if (a > b) {
+                var tmp = a;
+                a = b;
+                b = tmp;
+            }
+            var list = edges[a];
+            if (list === undefined) {
+                edges[a] = [b];
+                return true;
+            }
+            else if (list.indexOf(b) === -1) {
+                list.push(b);
+                return true;
+            }
+            return false;
+        };
         WebGLObjects.prototype.getAttributeBuffer = function (attribute) {
             var properties = this.properties;
             if (attribute instanceof THREE.InterleavedBufferAttribute) {
@@ -21177,23 +21193,6 @@ var THREE;
             property.wireframe = attribute;
             return attribute;
         };
-        WebGLObjects.prototype.checkEdge = function (edges, a, b) {
-            if (a > b) {
-                var tmp = a;
-                a = b;
-                b = tmp;
-            }
-            var list = edges[a];
-            if (list === undefined) {
-                edges[a] = [b];
-                return true;
-            }
-            else if (list.indexOf(b) === -1) {
-                list.push(b);
-                return true;
-            }
-            return false;
-        };
         WebGLObjects.prototype.update = function (object) {
             var gl = this.gl;
             var geometry = this.geometries.get(object);
@@ -21230,17 +21229,7 @@ var THREE;
             this.code = code;
             this.material = material;
             this.parameters = parameters;
-            var getEncodingComponents = WebGLProgram.getEncodingComponents;
-            var getTexelDecodingFunction = WebGLProgram.getTexelDecodingFunction;
-            var getTexelEncodingFunction = WebGLProgram.getTexelEncodingFunction;
-            var getToneMappingFunction = WebGLProgram.getToneMappingFunction;
-            var generateExtensions = WebGLProgram.generateExtensions;
-            var generateDefines = WebGLProgram.generateDefines;
-            var fetchAttributeLocations = WebGLProgram.fetchAttributeLocations;
             var filterEmptyLine = WebGLProgram.filterEmptyLine;
-            var replaceLightNums = WebGLProgram.replaceLightNums;
-            var parseIncludes = WebGLProgram.parseIncludes;
-            var unrollLoops = WebGLProgram.unrollLoops;
             var gl = this.gl = renderer.context;
             var extensions = material.extensions;
             var defines = material.defines;
@@ -21293,8 +21282,8 @@ var THREE;
                 }
             }
             var gammaFactorDefine = (renderer.gammaFactor > 0) ? renderer.gammaFactor : 1.0;
-            var customExtensions = generateExtensions(extensions, parameters, renderer.extensions);
-            var customDefines = generateDefines(defines);
+            var customExtensions = WebGLProgram.generateExtensions(extensions, parameters, renderer.extensions);
+            var customDefines = WebGLProgram.generateDefines(defines);
             var program = gl.createProgram();
             var prefixVertex;
             var prefixFragment;
@@ -21417,23 +21406,23 @@ var THREE;
                     'uniform vec3 cameraPosition;',
                     (parameters.toneMapping !== THREE.NoToneMapping) ? "#define TONE_MAPPING" : '',
                     (parameters.toneMapping !== THREE.NoToneMapping) ? THREE.ShaderChunk['tonemapping_pars_fragment'] : '',
-                    (parameters.toneMapping !== THREE.NoToneMapping) ? getToneMappingFunction("toneMapping", parameters.toneMapping) : '',
+                    (parameters.toneMapping !== THREE.NoToneMapping) ? WebGLProgram.getToneMappingFunction("toneMapping", parameters.toneMapping) : '',
                     (parameters.outputEncoding || parameters.mapEncoding || parameters.envMapEncoding || parameters.emissiveMapEncoding) ? THREE.ShaderChunk['encodings_pars_fragment'] : '',
-                    parameters.mapEncoding ? getTexelDecodingFunction('mapTexelToLinear', parameters.mapEncoding) : '',
-                    parameters.envMapEncoding ? getTexelDecodingFunction('envMapTexelToLinear', parameters.envMapEncoding) : '',
-                    parameters.emissiveMapEncoding ? getTexelDecodingFunction('emissiveMapTexelToLinear', parameters.emissiveMapEncoding) : '',
-                    parameters.outputEncoding ? getTexelEncodingFunction("linearToOutputTexel", parameters.outputEncoding) : '',
+                    parameters.mapEncoding ? WebGLProgram.getTexelDecodingFunction('mapTexelToLinear', parameters.mapEncoding) : '',
+                    parameters.envMapEncoding ? WebGLProgram.getTexelDecodingFunction('envMapTexelToLinear', parameters.envMapEncoding) : '',
+                    parameters.emissiveMapEncoding ? WebGLProgram.getTexelDecodingFunction('emissiveMapTexelToLinear', parameters.emissiveMapEncoding) : '',
+                    parameters.outputEncoding ? WebGLProgram.getTexelEncodingFunction("linearToOutputTexel", parameters.outputEncoding) : '',
                     parameters.depthPacking ? "#define DEPTH_PACKING " + material.depthPacking : '',
                     '\n'
                 ].filter(filterEmptyLine).join('\n');
             }
-            vertexShader = parseIncludes(vertexShader, parameters);
-            vertexShader = replaceLightNums(vertexShader, parameters);
-            fragmentShader = parseIncludes(fragmentShader, parameters);
-            fragmentShader = replaceLightNums(fragmentShader, parameters);
+            vertexShader = WebGLProgram.parseIncludes(vertexShader, parameters);
+            vertexShader = WebGLProgram.replaceLightNums(vertexShader, parameters);
+            fragmentShader = WebGLProgram.parseIncludes(fragmentShader, parameters);
+            fragmentShader = WebGLProgram.replaceLightNums(fragmentShader, parameters);
             if (material instanceof THREE.ShaderMaterial === false) {
-                vertexShader = unrollLoops(vertexShader);
-                fragmentShader = unrollLoops(fragmentShader);
+                vertexShader = WebGLProgram.unrollLoops(vertexShader);
+                fragmentShader = WebGLProgram.unrollLoops(fragmentShader);
             }
             var vertexGlsl = prefixVertex + vertexShader;
             var fragmentGlsl = prefixFragment + fragmentShader;
@@ -21901,7 +21890,7 @@ var THREE;
                 new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 1, 0),
                 new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1)
             ];
-            var cube2DViewPorts = [
+            this.cube2DViewPorts = [
                 new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4(),
                 new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()
             ];
@@ -21930,7 +21919,6 @@ var THREE;
                 });
                 this._distanceMaterials[i] = distanceMaterial;
             }
-            var scope = this;
             this.enabled = false;
             this.autoUpdate = true;
             this.needsUpdate = false;
@@ -21948,7 +21936,7 @@ var THREE;
             var _materialCache = this._materialCache;
             var scope = this;
             var geometry = object.geometry;
-            var result = null;
+            var result;
             var materialVariants = _depthMaterials;
             var customMaterial = object.customDepthMaterial;
             if (isPointLight) {
@@ -22027,7 +22015,6 @@ var THREE;
             }
         };
         WebGLShadowMap.prototype.render = function (scene, camera) {
-            var scope = this;
             var _lightShadows = this._lightShadows;
             var _state = this._state;
             var _gl = this._gl;
@@ -22042,9 +22029,9 @@ var THREE;
             var _frustum = this._frustum;
             var _renderList = this._renderList;
             var _objects = this._objects;
-            if (scope.enabled === false)
+            if (this.enabled === false)
                 return;
-            if (scope.autoUpdate === false && scope.needsUpdate === false)
+            if (this.autoUpdate === false && this.needsUpdate === false)
                 return;
             if (_lightShadows.length === 0)
                 return;
@@ -22052,7 +22039,8 @@ var THREE;
             _state.disable(_gl.BLEND);
             _state.setDepthTest(true);
             _state.setScissorTest(false);
-            var faceCount, isPointLight;
+            var faceCount;
+            var isPointLight;
             for (var i = 0, il = _lightShadows.length; i < il; i++) {
                 var light = _lightShadows[i];
                 var shadow = light.shadow;
@@ -22139,9 +22127,10 @@ var THREE;
                     }
                 }
             }
-            var clearColor = _renderer.getClearColor(), clearAlpha = _renderer.getClearAlpha();
+            var clearColor = _renderer.getClearColor();
+            var clearAlpha = _renderer.getClearAlpha();
             _renderer.setClearColor(clearColor, clearAlpha);
-            scope.needsUpdate = false;
+            this.needsUpdate = false;
         };
         ;
         return WebGLShadowMap;
@@ -22742,8 +22731,8 @@ var THREE;
             this.properties = renderer.properties;
             this.capabilities = renderer.capabilities;
             this.info = renderer.info;
-            var _infoMemory = this._infoMemory = this.info.memory;
-            var _isWebGL2 = this._isWebGL2 = (typeof WebGL2RenderingContext !== 'undefined' && this._gl instanceof WebGL2RenderingContext);
+            this._infoMemory = this.info.memory;
+            this._isWebGL2 = (typeof WebGL2RenderingContext !== 'undefined' && this._gl instanceof WebGL2RenderingContext);
         }
         ;
         WebGLTextures.prototype.clampToMaxSize = function (image, maxSize) {
@@ -22841,101 +22830,6 @@ var THREE;
             properties.delete(renderTarget.texture);
             properties.delete(renderTarget);
         };
-        WebGLTextures.prototype.setTexture2D = function (texture, slot) {
-            var textureProperties = this.properties.get(texture);
-            var _gl = this._gl;
-            if (texture.version > 0 && textureProperties.__version !== texture.version) {
-                var image = texture.image;
-                if (image === undefined) {
-                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is undefined', texture);
-                }
-                else if (image.complete === false) {
-                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is incomplete', texture);
-                }
-                else {
-                    this.uploadTexture(textureProperties, texture, slot);
-                    return;
-                }
-            }
-            this.state.activeTexture(_gl.TEXTURE0 + slot);
-            this.state.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture);
-        };
-        WebGLTextures.prototype.setTextureCube = function (texture, slot) {
-            var properties = this.properties;
-            var _gl = this._gl;
-            var state = this.state;
-            var textureProperties = properties.get(texture);
-            var capabilities = this.capabilities;
-            if (texture.image.length === 6) {
-                if (texture.version > 0 && textureProperties.__version !== texture.version) {
-                    if (!textureProperties.__image__webglTextureCube) {
-                        texture.addEventListener('dispose', this.onTextureDispose, this);
-                        textureProperties.__image__webglTextureCube = _gl.createTexture();
-                        this._infoMemory.textures++;
-                    }
-                    state.activeTexture(_gl.TEXTURE0 + slot);
-                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
-                    _gl.pixelStorei(_gl.UNPACK_FLIP_Y_WEBGL, texture.flipY ? 1 : 0);
-                    var isCompressed = texture instanceof THREE.CompressedTexture;
-                    var isDataTexture = texture.image[0] instanceof THREE.DataTexture;
-                    var cubeImage = [];
-                    for (var i = 0; i < 6; i++) {
-                        if (!isCompressed && !isDataTexture) {
-                            cubeImage[i] = this.clampToMaxSize(texture.image[i], capabilities.maxCubemapSize);
-                        }
-                        else {
-                            cubeImage[i] = isDataTexture ? texture.image[i].image : texture.image[i];
-                        }
-                    }
-                    var image = cubeImage[0], isPowerOfTwoImage = this.isPowerOfTwo(image), glFormat = THREE.paramThreeToGL(this._renderer, texture.format), glType = THREE.paramThreeToGL(this._renderer, texture.type);
-                    this.setTextureParameters(_gl.TEXTURE_CUBE_MAP, texture, isPowerOfTwoImage);
-                    for (var i = 0; i < 6; i++) {
-                        if (!isCompressed) {
-                            if (isDataTexture) {
-                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
-                            }
-                            else {
-                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, glFormat, glType, cubeImage[i]);
-                            }
-                        }
-                        else {
-                            var mipmap, mipmaps = cubeImage[i].mipmaps;
-                            for (var j = 0, jl = mipmaps.length; j < jl; j++) {
-                                mipmap = mipmaps[j];
-                                if (texture.format !== THREE.RGBAFormat && texture.format !== THREE.RGBFormat) {
-                                    if (state.getCompressedTextureFormats().indexOf(glFormat) > -1) {
-                                        state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
-                                    }
-                                    else {
-                                        console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()");
-                                    }
-                                }
-                                else {
-                                    state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
-                                }
-                            }
-                        }
-                    }
-                    if (texture.generateMipmaps && isPowerOfTwoImage) {
-                        _gl.generateMipmap(_gl.TEXTURE_CUBE_MAP);
-                    }
-                    textureProperties.__version = texture.version;
-                    if (texture.onUpdate)
-                        texture.onUpdate(texture);
-                }
-                else {
-                    state.activeTexture(_gl.TEXTURE0 + slot);
-                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
-                }
-            }
-        };
-        WebGLTextures.prototype.setTextureCubeDynamic = function (texture, slot) {
-            var state = this.state;
-            var _gl = this._gl;
-            var properties = this.properties;
-            state.activeTexture(_gl.TEXTURE0 + slot);
-            state.bindTexture(_gl.TEXTURE_CUBE_MAP, properties.get(texture).__webglTexture);
-        };
         WebGLTextures.prototype.setTextureParameters = function (textureType, texture, isPowerOfTwoImage) {
             var _gl = this._gl;
             var extensions = this.extensions;
@@ -22975,7 +22869,6 @@ var THREE;
             var _gl = this._gl;
             var _infoMemory = this._infoMemory;
             var state = this.state;
-            var clampToMaxSize = this.clampToMaxSize;
             var capabilities = this.capabilities;
             var _isWebGL2 = this._isWebGL2;
             if (textureProperties.__webglInit === undefined) {
@@ -22989,7 +22882,7 @@ var THREE;
             _gl.pixelStorei(_gl.UNPACK_FLIP_Y_WEBGL, texture.flipY ? 1 : 0);
             _gl.pixelStorei(_gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultiplyAlpha ? 1 : 0);
             _gl.pixelStorei(_gl.UNPACK_ALIGNMENT, texture.unpackAlignment);
-            var image = clampToMaxSize(texture.image, capabilities.maxTextureSize);
+            var image = this.clampToMaxSize(texture.image, capabilities.maxTextureSize);
             if (this.textureNeedsPowerOfTwo(texture) && this.isPowerOfTwo(image) === false) {
                 image = this.makePowerOfTwo(image);
             }
@@ -23125,6 +23018,101 @@ var THREE;
                 }
             }
             _gl.bindFramebuffer(_gl.FRAMEBUFFER, null);
+        };
+        WebGLTextures.prototype.setTexture2D = function (texture, slot) {
+            var textureProperties = this.properties.get(texture);
+            var _gl = this._gl;
+            if (texture.version > 0 && textureProperties.__version !== texture.version) {
+                var image = texture.image;
+                if (image === undefined) {
+                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is undefined', texture);
+                }
+                else if (image.complete === false) {
+                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is incomplete', texture);
+                }
+                else {
+                    this.uploadTexture(textureProperties, texture, slot);
+                    return;
+                }
+            }
+            this.state.activeTexture(_gl.TEXTURE0 + slot);
+            this.state.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture);
+        };
+        WebGLTextures.prototype.setTextureCube = function (texture, slot) {
+            var properties = this.properties;
+            var _gl = this._gl;
+            var state = this.state;
+            var textureProperties = properties.get(texture);
+            var capabilities = this.capabilities;
+            if (texture.image.length === 6) {
+                if (texture.version > 0 && textureProperties.__version !== texture.version) {
+                    if (!textureProperties.__image__webglTextureCube) {
+                        texture.addEventListener('dispose', this.onTextureDispose, this);
+                        textureProperties.__image__webglTextureCube = _gl.createTexture();
+                        this._infoMemory.textures++;
+                    }
+                    state.activeTexture(_gl.TEXTURE0 + slot);
+                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
+                    _gl.pixelStorei(_gl.UNPACK_FLIP_Y_WEBGL, texture.flipY ? 1 : 0);
+                    var isCompressed = texture instanceof THREE.CompressedTexture;
+                    var isDataTexture = texture.image[0] instanceof THREE.DataTexture;
+                    var cubeImage = [];
+                    for (var i = 0; i < 6; i++) {
+                        if (!isCompressed && !isDataTexture) {
+                            cubeImage[i] = this.clampToMaxSize(texture.image[i], capabilities.maxCubemapSize);
+                        }
+                        else {
+                            cubeImage[i] = isDataTexture ? texture.image[i].image : texture.image[i];
+                        }
+                    }
+                    var image = cubeImage[0], isPowerOfTwoImage = this.isPowerOfTwo(image), glFormat = THREE.paramThreeToGL(this._renderer, texture.format), glType = THREE.paramThreeToGL(this._renderer, texture.type);
+                    this.setTextureParameters(_gl.TEXTURE_CUBE_MAP, texture, isPowerOfTwoImage);
+                    for (var i = 0; i < 6; i++) {
+                        if (!isCompressed) {
+                            if (isDataTexture) {
+                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
+                            }
+                            else {
+                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, glFormat, glType, cubeImage[i]);
+                            }
+                        }
+                        else {
+                            var mipmap, mipmaps = cubeImage[i].mipmaps;
+                            for (var j = 0, jl = mipmaps.length; j < jl; j++) {
+                                mipmap = mipmaps[j];
+                                if (texture.format !== THREE.RGBAFormat && texture.format !== THREE.RGBFormat) {
+                                    if (state.getCompressedTextureFormats().indexOf(glFormat) > -1) {
+                                        state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
+                                    }
+                                    else {
+                                        console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()");
+                                    }
+                                }
+                                else {
+                                    state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
+                                }
+                            }
+                        }
+                    }
+                    if (texture.generateMipmaps && isPowerOfTwoImage) {
+                        _gl.generateMipmap(_gl.TEXTURE_CUBE_MAP);
+                    }
+                    textureProperties.__version = texture.version;
+                    if (texture.onUpdate)
+                        texture.onUpdate(texture);
+                }
+                else {
+                    state.activeTexture(_gl.TEXTURE0 + slot);
+                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
+                }
+            }
+        };
+        WebGLTextures.prototype.setTextureCubeDynamic = function (texture, slot) {
+            var state = this.state;
+            var _gl = this._gl;
+            var properties = this.properties;
+            state.activeTexture(_gl.TEXTURE0 + slot);
+            state.bindTexture(_gl.TEXTURE_CUBE_MAP, properties.get(texture).__webglTexture);
         };
         WebGLTextures.prototype.setupRenderTarget = function (renderTarget) {
             var properties = this.properties;

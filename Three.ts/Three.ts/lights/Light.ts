@@ -5,7 +5,7 @@
  */
 
 namespace THREE
-{
+{ 
     export class Light extends Object3D
     {
         color: Color;
@@ -16,6 +16,9 @@ namespace THREE
         decay: number;
         penumbra: number;
 
+        shadow: LightShadow;
+        target: Object3D;
+
         constructor(color: number, intensity?: number)
         {
             super();
@@ -24,8 +27,7 @@ namespace THREE
             this.color = new Color(color);
             this.intensity = intensity !== undefined ? intensity : 1;
             this.receiveShadow = undefined;
-        };
-
+        }; 
         copy(source: Light)
         {
             super.copy(source);
@@ -33,8 +35,7 @@ namespace THREE
             this.intensity = source.intensity;
 
             return this;
-        }
-
+        } 
         toJSON(meta)
         {
             var data = super.toJSON(meta);

@@ -17,10 +17,8 @@ namespace THREE
             anisotropy?: number,
             encoding?: number)
         {
-
             images = images !== undefined ? images : [];
             mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
-
             super(images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding);
 
             this.flipY = false;

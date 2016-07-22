@@ -57,20 +57,18 @@ namespace THREE
 
         updateMorphTargets()
         {
-            var geometry = this.geometry;
-            if (geometry instanceof DirectGeometry)
-            {
-                if (geometry.morphTargets !== undefined && geometry.morphTargets.length > 0)
-                {
-                    this.morphTargetBase = - 1;
-                    this.morphTargetInfluences = [];
-                    this.morphTargetDictionary = {};
+            var geometry = this.geometry as any;
 
-                    for (var m = 0, ml = geometry.morphTargets.length; m < ml; m++)
-                    {
-                        this.morphTargetInfluences.push(0);
-                        this.morphTargetDictionary[geometry.morphTargets[m].name] = m;
-                    }
+            if (geometry.morphTargets !== undefined && geometry.morphTargets.length > 0)
+            {
+                this.morphTargetBase = - 1;
+                this.morphTargetInfluences = [];
+                this.morphTargetDictionary = {};
+
+                for (var m = 0, ml = geometry.morphTargets.length; m < ml; m++)
+                {
+                    this.morphTargetInfluences.push(0);
+                    this.morphTargetDictionary[geometry.morphTargets[m].name] = m;
                 }
             }
         }

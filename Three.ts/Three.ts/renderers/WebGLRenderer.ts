@@ -30,7 +30,7 @@ namespace THREE
     {
         hash: string;
         ambient: number[];
-        directional: number[];
+        directional: any[];
         directionalShadowMap: any[];
         directionalShadowMatrix: any[];
         spot: any[];
@@ -40,7 +40,7 @@ namespace THREE
         pointShadowMap: any[];
         pointShadowMatrix: any[];
         hemi: any[];
-        shadows: any[]
+        shadows: Light[]
     }
     interface TmpMaterialProperty
     {
@@ -51,6 +51,7 @@ namespace THREE
         uniformsList?;
         dynamicUniforms?;
     }
+     
     export interface WebGLRendererParams
     {
         canvas?: HTMLCanvasElement,
@@ -306,42 +307,42 @@ namespace THREE
             this.init_context();
             this.init_extensions();
               
-            var capabilities = this.capabilities = new WebGLCapabilities(this.context, this.extensions, parameters);
+            this.capabilities = new WebGLCapabilities(this.context, this.extensions, parameters);
             this.state = new WebGLState(this);
             this.properties = new WebGLProperties();
             this.textures = new WebGLTextures(this);
             this.objects = new WebGLObjects(this.context, this.properties, this.info);
-            this.programCache = new WebGLPrograms(this, capabilities);
+            this.programCache = new WebGLPrograms(this, this.capabilities);
             this.lightCache = new WebGLLights();
 
             this.info.programs = this.programCache.programs;
 
-            var bufferRenderer = this.bufferRenderer = new WebGLBufferRenderer(this.context, this.extensions, this._infoRender);
-            var indexedBufferRenderer = this.indexedBufferRenderer = new WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
+            this.bufferRenderer = new WebGLBufferRenderer(this.context, this.extensions, this._infoRender);
+            this.indexedBufferRenderer = new WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
 
             // 
-            var backgroundCamera = this.backgroundCamera = new OrthographicCamera(- 1, 1, 1, - 1, 0, 1);
-            var backgroundCamera2 = this.backgroundCamera2 = new PerspectiveCamera();
-            var backgroundPlaneMesh = this.backgroundPlaneMesh = new Mesh(
+            this.backgroundCamera = new OrthographicCamera(- 1, 1, 1, - 1, 0, 1);
+            this.backgroundCamera2 = new PerspectiveCamera();
+            this.backgroundPlaneMesh = new Mesh(
                 new PlaneBufferGeometry(2, 2),
                 new MeshBasicMaterial({ depthTest: false, depthWrite: false })
             );
-            var backgroundBoxShader = this.backgroundBoxShader = ShaderLib['cube'];
-            var backgroundBoxMesh = this.backgroundBoxMesh = new Mesh(
+
+            this.backgroundBoxShader = ShaderLib['cube'];
+            this.backgroundBoxMesh = new Mesh(
                 new BoxBufferGeometry(5, 5, 5),
                 new ShaderMaterial({
-                    uniforms: backgroundBoxShader.uniforms,
-                    vertexShader: backgroundBoxShader.vertexShader,
-                    fragmentShader: backgroundBoxShader.fragmentShader,
+                    uniforms: this.backgroundBoxShader.uniforms,
+                    vertexShader: this.backgroundBoxShader.vertexShader,
+                    fragmentShader: this.backgroundBoxShader.fragmentShader,
                     depthTest: false,
                     depthWrite: false,
                     side: BackSide
                 })
             );
-            this.objects.update(backgroundPlaneMesh);
-            this.objects.update(backgroundBoxMesh); 
-            //
-
+            this.objects.update(this.backgroundPlaneMesh);
+            this.objects.update(this.backgroundBoxMesh); 
+            // 
             this.setDefaultGLState();
                  
 
@@ -716,7 +717,7 @@ namespace THREE
             object.count = 0;
 
         }
-        public renderBufferDirect(camera, fog, geometry, material, object, group)
+        public renderBufferDirect(camera, fog, geometry: any, material, object, group: IGeometryGroup)
         {
             var _gl = this.context;
 
@@ -764,7 +765,7 @@ namespace THREE
 
                     if (influence[0] !== 0)
                     {
-                        var index = influence[1];
+                        let index = influence[1];
 
                         if (material.morphTargets === true && morphAttributes.position) geometry.addAttribute('morphTarget' + i, morphAttributes.position[index]);
                         if (material.morphNormals === true && morphAttributes.normal) geometry.addAttribute('morphNormal' + i, morphAttributes.normal[index]);
@@ -790,10 +791,8 @@ namespace THREE
             var position = geometry.attributes.position;
 
             if (material.wireframe === true)
-            {
-
-                index = this.objects.getWireframeAttribute(geometry);
-
+            { 
+                index = this.objects.getWireframeAttribute(geometry); 
             }
 
             var renderer: IWebGLBufferRenderer;
@@ -1469,8 +1468,7 @@ namespace THREE
             if (program === undefined)
             {
                 // new material
-                material.addEventListener('dispose', this.onMaterialDispose_);
-
+                material.addEventListener('dispose', this.onMaterialDispose_); 
             }
             else if (program.code !== code)
             {
@@ -2169,7 +2167,9 @@ namespace THREE
             var _vector3 = this._vector3;
             var lightCache = this.lightCache;
 
-            var l, ll, light,
+            var l, ll;
+            var light;
+            var
                 r = 0, g = 0, b = 0,
                 color,
                 intensity,
@@ -2185,8 +2185,7 @@ namespace THREE
 
             for (l = 0, ll = lights.length; l < ll; l++)
             {
-
-                light = lights[l];
+                light = lights[l]  ;
 
                 color = light.color;
                 intensity = light.intensity;

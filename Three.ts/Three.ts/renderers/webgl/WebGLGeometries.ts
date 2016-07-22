@@ -20,7 +20,8 @@ namespace THREE
             this.properties = properties;
             this.info = info;
               
-        };
+        }
+
         private onGeometryDispose(event)
         {
             var geometries = this.geometries;
@@ -102,9 +103,8 @@ namespace THREE
             } 
         }
 
-        get(object: Object3D): BufferGeometry
-        {
-
+        public get(object: Object3D): BufferGeometry
+        { 
             var geometry = object.geometry;
             var geometries = this.geometries;
 
@@ -134,8 +134,7 @@ namespace THREE
             geometries[geometry.id] = buffergeometry;
 
             this.info.memory.geometries++;
-            return buffergeometry;
-
+            return buffergeometry; 
         }
     }
 }

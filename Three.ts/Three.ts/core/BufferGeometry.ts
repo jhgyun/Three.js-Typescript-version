@@ -8,6 +8,23 @@
 namespace THREE
 {
     export type BufferAttributeType = BufferAttribute | InterleavedBufferAttribute;
+    export interface IGeometryGroup
+    {
+        start?: number;
+        count?: number;
+        materialIndex?: number;
+        instances?: number; 
+    }
+    export interface IBufferGeometryAttributes
+    {
+        position?: BufferAttribute;
+        normal?: BufferAttribute;
+        color?: BufferAttribute;
+        uv?: BufferAttribute;
+        uv2?: BufferAttribute;
+        lineDistance?: BufferAttribute;
+        skinWeight?: BufferAttribute;
+    }
 
     export class BufferGeometry extends EventDispatcher
     {
@@ -15,24 +32,10 @@ namespace THREE
         name: string;
         type = 'BufferGeometry';
         index: BufferAttribute = null;
-        attributes: {
-            position?: BufferAttribute,
-            normal?: BufferAttribute,
-            color?: BufferAttribute,
-            uv?: BufferAttribute,
-            uv2?: BufferAttribute,
-            lineDistance?: BufferAttribute
-            skinWeight?: BufferAttribute
-        } = {};
-
-        morphAttributes: { [index: string]: BufferAttribute[] } = {};
-        groups: {
-            start?: number,
-            count?: number,
-            materialIndex?: number,
-            instances?: number
-        }[] = [];
-
+        attributes: IBufferGeometryAttributes = {}; 
+ 
+        morphAttributes: IBufferGeometryAttributes = {};
+        groups: IGeometryGroup[] = []; 
         boundingBox: Box3 = null;
         boundingSphere = null;
         drawRange = { start: 0, count: Infinity };

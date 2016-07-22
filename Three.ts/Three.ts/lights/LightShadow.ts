@@ -10,7 +10,7 @@ namespace THREE
         bias: number;
         radius: number;
         mapSize: Vector2;
-        map;
+        map: WebGLRenderTarget;
         matrix: Matrix4;
 
         constructor(camera)

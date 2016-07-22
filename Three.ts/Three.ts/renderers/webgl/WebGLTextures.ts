@@ -5,31 +5,32 @@
 declare var WebGL2RenderingContext; 
 namespace THREE
 {
+    interface ITextureProperties
+    {
+        __webglInit?: boolean;
+        __webglTexture?: WebGLTexture;
+        __image__webglTextureCube?: WebGLTexture;
+        __version?: number;
+    }
+    interface IRenderTargetProperties
+    {
+        __webglDepthbuffer?: WebGLRenderbuffer | WebGLRenderbuffer[];
+        __webglFramebuffer?: WebGLFramebuffer | WebGLFramebuffer[];
+    }
     export class WebGLTextures
     {
         private _gl: WebGLRenderingContext;
         private extensions: WebGLExtensions;
         private state: WebGLState;
         private properties: WebGLProperties;
-        private capabilities: WebGLCapabilities; 
-        private info;
+        private capabilities: WebGLCapabilities;
+        private info: WebGLRendererInfo;
         private _infoMemory;
         private _isWebGL2: boolean;
         private _renderer: WebGLRenderer;
 
-        constructor(
-            renderer: WebGLRenderer)
-        { 
-            /*
-
-            _gl: WebGLRenderingContext,
-            extensions: WebGLExtensions,
-            state: WebGLState,
-            properties: WebGLProperties,
-            capabilities: WebGLCapabilities,
-            paramThreeToGL,
-            info*/
-
+        constructor( renderer: WebGLRenderer)
+        {  
             this._renderer = renderer;
             this._gl = renderer.context;
             this.extensions = renderer.extensions;
@@ -38,12 +39,11 @@ namespace THREE
             this.capabilities = renderer.capabilities; 
             this.info = renderer.info;
 
-            var _infoMemory = this._infoMemory = this.info.memory;
-            var _isWebGL2 = this._isWebGL2 = (typeof WebGL2RenderingContext !== 'undefined' && this._gl instanceof WebGL2RenderingContext);
-              
+            this._infoMemory = this.info.memory;
+            this._isWebGL2 = (typeof WebGL2RenderingContext !== 'undefined' && this._gl instanceof WebGL2RenderingContext);
         };
 
-        public clampToMaxSize(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, maxSize: number)
+        private clampToMaxSize(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, maxSize: number)
         { 
             if (image.width > maxSize || image.height > maxSize)
             { 
@@ -65,11 +65,11 @@ namespace THREE
 
             return image; 
         }
-        public isPowerOfTwo(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | WebGLRenderTarget)
+        private isPowerOfTwo(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | WebGLRenderTarget)
         { 
             return Math.isPowerOfTwo(image.width) && Math.isPowerOfTwo(image.height); 
         }
-        public makePowerOfTwo(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement)
+        private makePowerOfTwo(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement)
         {
             if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement)
             {
@@ -88,14 +88,14 @@ namespace THREE
             return image;
 
         }
-        public textureNeedsPowerOfTwo(texture: Texture)
+        private textureNeedsPowerOfTwo(texture: Texture)
         { 
             if (texture.wrapS !== ClampToEdgeWrapping || texture.wrapT !== ClampToEdgeWrapping) return true;
             if (texture.minFilter !== NearestFilter && texture.minFilter !== LinearFilter) return true;
 
             return false; 
         }
-        public filterFallback(f: number)
+        private filterFallback(f: number)
         { 
             if (f === NearestFilter || f === NearestMipMapNearestFilter || f === NearestMipMapLinearFilter)
             { 
@@ -103,27 +103,28 @@ namespace THREE
             } 
             return this._gl.LINEAR; 
         }
-        public onTextureDispose(event)
+
+        private onTextureDispose(event)
         {
             var texture = event.target;
             texture.removeEventListener('dispose', this.onTextureDispose, this);
             this.deallocateTexture(texture);
             this._infoMemory.textures--;
-        }
-
-        public onRenderTargetDispose(event)
+        } 
+        private onRenderTargetDispose(event)
         {
             var renderTarget = event.target;
             renderTarget.removeEventListener('dispose', this.onRenderTargetDispose,this);
             this.deallocateRenderTarget(renderTarget);
             this._infoMemory.textures--;
         }
-        public deallocateTexture(texture: Texture)
+
+        private deallocateTexture(texture: Texture)
         {
             var _gl = this._gl;
             var properties = this.properties;
 
-            var textureProperties = properties.get(texture);
+            var textureProperties = properties.get(texture) as ITextureProperties;
             if (texture.image && textureProperties.__image__webglTextureCube)
             {
                 // cube texture 
@@ -139,12 +140,12 @@ namespace THREE
             // remove all webgl properties
             properties.delete(texture); 
         }
-        public deallocateRenderTarget(renderTarget: WebGLRenderTarget)
+        private deallocateRenderTarget(renderTarget: WebGLRenderTarget)
         {
             var properties = this.properties;
             var _gl = this._gl;
-            var renderTargetProperties = properties.get(renderTarget);
-            var textureProperties = properties.get(renderTarget.texture);
+            var renderTargetProperties = properties.get(renderTarget) as IRenderTargetProperties;
+            var textureProperties = properties.get(renderTarget.texture) as ITextureProperties;
 
             if (!renderTarget) return;
 
@@ -175,152 +176,8 @@ namespace THREE
             properties.delete(renderTarget.texture);
             properties.delete(renderTarget); 
         }
-        public setTexture2D(texture: Texture, slot: number)
-        { 
-            var textureProperties = this.properties.get(texture);
-            var _gl = this._gl;
-            if (texture.version > 0 && textureProperties.__version !== texture.version)
-            { 
-                var image = texture.image;  
-                if (image === undefined)
-                { 
-                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is undefined', texture);
-                }
-                else if (image.complete === false)
-                { 
-                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is incomplete', texture);
-                }
-                else
-                { 
-                    this.uploadTexture(textureProperties, texture, slot);
-                    return; 
-                } 
-            }
-
-            this.state.activeTexture(_gl.TEXTURE0 + slot);
-            this.state.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture);
-
-        }
-        public setTextureCube(texture: CubeTexture, slot: number)
-        { 
-            var properties = this.properties;
-            var _gl = this._gl;
-            var state = this.state;
-
-            var textureProperties = properties.get(texture);
-            var capabilities = this.capabilities; 
-
-            if (texture.image.length === 6)
-            { 
-                if (texture.version > 0 && textureProperties.__version !== texture.version)
-                { 
-                    if (!textureProperties.__image__webglTextureCube)
-                    { 
-                        texture.addEventListener('dispose', this.onTextureDispose, this); 
-                        textureProperties.__image__webglTextureCube = _gl.createTexture(); 
-                        this._infoMemory.textures++; 
-                    }
-
-                    state.activeTexture(_gl.TEXTURE0 + slot);
-                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
-
-                    _gl.pixelStorei(_gl.UNPACK_FLIP_Y_WEBGL, texture.flipY ? 1 : 0);
-
-                    var isCompressed = texture instanceof CompressedTexture;
-                    var isDataTexture = texture.image[0] instanceof DataTexture;
-
-                    var cubeImage = [];
-
-                    for (var i = 0; i < 6; i++)
-                    { 
-                        if (!isCompressed && !isDataTexture)
-                        {
-                            cubeImage[i] = this.clampToMaxSize(texture.image[i], capabilities.maxCubemapSize);
-                        }
-                        else
-                        { 
-                            cubeImage[i] = isDataTexture ? texture.image[i].image : texture.image[i];
-                        }
-
-                    }
-
-                    var image = cubeImage[0],
-                        isPowerOfTwoImage = this.isPowerOfTwo(image),
-                        glFormat = paramThreeToGL(this._renderer, texture.format),
-                        glType = paramThreeToGL(this._renderer,texture.type);
-
-                    this.setTextureParameters(_gl.TEXTURE_CUBE_MAP, texture, isPowerOfTwoImage);
-
-                    for (var i = 0; i < 6; i++)
-                    {
-                        if (!isCompressed)
-                        {
-                            if (isDataTexture)
-                            {
-                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
-                            }
-                            else
-                            {
-                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, glFormat, glType, cubeImage[i]);
-
-                            } 
-                        }
-                        else
-                        { 
-                            var mipmap, mipmaps = cubeImage[i].mipmaps;
-
-                            for (var j = 0, jl = mipmaps.length; j < jl; j++)
-                            { 
-                                mipmap = mipmaps[j];
-
-                                if (texture.format !== RGBAFormat && texture.format !== RGBFormat)
-                                {
-
-                                    if (state.getCompressedTextureFormats().indexOf(glFormat) > - 1)
-                                    { 
-                                        state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
-                                    }
-                                    else
-                                    { 
-                                        console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()");
-                                    } 
-                                }
-                                else
-                                { 
-                                    state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
-
-                                } 
-                            } 
-                        } 
-                    }
-
-                    if (texture.generateMipmaps && isPowerOfTwoImage)
-                    { 
-                        _gl.generateMipmap(_gl.TEXTURE_CUBE_MAP); 
-                    }
-
-                    textureProperties.__version = texture.version; 
-                    if (texture.onUpdate) texture.onUpdate(texture); 
-                }
-                else
-                { 
-                    state.activeTexture(_gl.TEXTURE0 + slot);
-                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
-                }
-
-            }
-
-        }
-        public setTextureCubeDynamic(texture: CubeTexture, slot: number)
-        {
-            var state = this.state;
-            var _gl = this._gl;
-            var properties = this.properties;
-
-            state.activeTexture(_gl.TEXTURE0 + slot);
-            state.bindTexture(_gl.TEXTURE_CUBE_MAP, properties.get(texture).__webglTexture); 
-        }
-        public setTextureParameters(textureType: number, texture: Texture, isPowerOfTwoImage?: boolean)
+       
+        private setTextureParameters(textureType: number, texture: Texture, isPowerOfTwoImage?: boolean)
         {
 
             var _gl = this._gl;  
@@ -372,26 +229,20 @@ namespace THREE
             }
 
         }
-        public uploadTexture(textureProperties, texture: Texture, slot: number)
+        private uploadTexture(textureProperties: ITextureProperties, texture: Texture, slot: number)
         {
             var _gl = this._gl;
             var _infoMemory = this._infoMemory;
-            var state = this.state;
-            var clampToMaxSize = this.clampToMaxSize;
+            var state = this.state; 
             var capabilities = this.capabilities; 
             var _isWebGL2 = this._isWebGL2;
 
             if (textureProperties.__webglInit === undefined)
-            {
-
-                textureProperties.__webglInit = true;
-
-                texture.addEventListener('dispose', this.onTextureDispose, this);
-
-                textureProperties.__webglTexture = _gl.createTexture();
-
-                _infoMemory.textures++;
-
+            { 
+                textureProperties.__webglInit = true; 
+                texture.addEventListener('dispose', this.onTextureDispose, this); 
+                textureProperties.__webglTexture = _gl.createTexture(); 
+                _infoMemory.textures++; 
             }
 
             state.activeTexture(_gl.TEXTURE0 + slot);
@@ -401,7 +252,7 @@ namespace THREE
             _gl.pixelStorei(_gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultiplyAlpha?1:0);
             _gl.pixelStorei(_gl.UNPACK_ALIGNMENT, texture.unpackAlignment);
 
-            var image = clampToMaxSize(texture.image, capabilities.maxTextureSize);
+            var image = this.clampToMaxSize(texture.image, capabilities.maxTextureSize);
 
             if (this.textureNeedsPowerOfTwo(texture) && this.isPowerOfTwo(image) === false)
             {
@@ -512,7 +363,7 @@ namespace THREE
 
         }
         // Setup storage for target texture and bind it to correct framebuffer
-        public setupFrameBufferTexture(
+        private setupFrameBufferTexture(
             framebuffer: WebGLFramebuffer,
             renderTarget: WebGLRenderTarget,
             attachment: number,
@@ -528,7 +379,7 @@ namespace THREE
         }
 
         // Setup storage for internal depth/stencil buffers and bind to correct framebuffer
-        public setupRenderBufferStorage(renderbuffer: WebGLRenderbuffer, renderTarget: WebGLRenderTarget)
+        private setupRenderBufferStorage(renderbuffer: WebGLRenderbuffer, renderTarget: WebGLRenderTarget)
         {
             var _gl = this._gl;
 
@@ -553,7 +404,7 @@ namespace THREE
             _gl.bindRenderbuffer(_gl.RENDERBUFFER, null); 
         }
         // Setup resources for a Depth Texture for a FBO (needs an extension)
-        public setupDepthTexture(framebuffer: WebGLFramebuffer, renderTarget: WebGLRenderTarget)
+        private setupDepthTexture(framebuffer: WebGLFramebuffer, renderTarget: WebGLRenderTarget)
         {
             var _gl = this._gl;
             var properties = this.properties;
@@ -585,11 +436,11 @@ namespace THREE
 
         }
         // Setup GL resources for a non-texture depth buffer
-        public setupDepthRenderbuffer(renderTarget: WebGLRenderTarget)
+        private setupDepthRenderbuffer(renderTarget: WebGLRenderTarget)
         {
             var properties = this.properties; 
-            var _gl = this._gl;  
-            var renderTargetProperties = properties.get(renderTarget);
+            var _gl = this._gl;
+            var renderTargetProperties = properties.get(renderTarget) as IRenderTargetProperties;
 
             var isCube = (renderTarget instanceof WebGLRenderTargetCube);
 
@@ -622,11 +473,158 @@ namespace THREE
 
             _gl.bindFramebuffer(_gl.FRAMEBUFFER, null); 
         }
+
+        public setTexture2D(texture: Texture, slot: number)
+        {
+            var textureProperties = this.properties.get(texture);
+            var _gl = this._gl;
+            if (texture.version > 0 && textureProperties.__version !== texture.version)
+            {
+                var image = texture.image;
+                if (image === undefined)
+                {
+                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is undefined', texture);
+                }
+                else if (image.complete === false)
+                {
+                    console.warn('THREE.WebGLRenderer: Texture marked for update but image is incomplete', texture);
+                }
+                else
+                {
+                    this.uploadTexture(textureProperties, texture, slot);
+                    return;
+                }
+            }
+
+            this.state.activeTexture(_gl.TEXTURE0 + slot);
+            this.state.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture);
+
+        }
+        public setTextureCube(texture: CubeTexture, slot: number)
+        {
+            var properties = this.properties;
+            var _gl = this._gl;
+            var state = this.state;
+
+            var textureProperties = properties.get(texture);
+            var capabilities = this.capabilities;
+
+            if (texture.image.length === 6)
+            {
+                if (texture.version > 0 && textureProperties.__version !== texture.version)
+                {
+                    if (!textureProperties.__image__webglTextureCube)
+                    {
+                        texture.addEventListener('dispose', this.onTextureDispose, this);
+                        textureProperties.__image__webglTextureCube = _gl.createTexture();
+                        this._infoMemory.textures++;
+                    }
+
+                    state.activeTexture(_gl.TEXTURE0 + slot);
+                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
+
+                    _gl.pixelStorei(_gl.UNPACK_FLIP_Y_WEBGL, texture.flipY ? 1 : 0);
+
+                    var isCompressed = texture instanceof CompressedTexture;
+                    var isDataTexture = texture.image[0] instanceof DataTexture;
+
+                    var cubeImage = [];
+
+                    for (var i = 0; i < 6; i++)
+                    {
+                        if (!isCompressed && !isDataTexture)
+                        {
+                            cubeImage[i] = this.clampToMaxSize(texture.image[i], capabilities.maxCubemapSize);
+                        }
+                        else
+                        {
+                            cubeImage[i] = isDataTexture ? texture.image[i].image : texture.image[i];
+                        }
+
+                    }
+
+                    var image = cubeImage[0],
+                        isPowerOfTwoImage = this.isPowerOfTwo(image),
+                        glFormat = paramThreeToGL(this._renderer, texture.format),
+                        glType = paramThreeToGL(this._renderer, texture.type);
+
+                    this.setTextureParameters(_gl.TEXTURE_CUBE_MAP, texture, isPowerOfTwoImage);
+
+                    for (var i = 0; i < 6; i++)
+                    {
+                        if (!isCompressed)
+                        {
+                            if (isDataTexture)
+                            {
+                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
+                            }
+                            else
+                            {
+                                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glFormat, glFormat, glType, cubeImage[i]);
+
+                            }
+                        }
+                        else
+                        {
+                            var mipmap, mipmaps = cubeImage[i].mipmaps;
+
+                            for (var j = 0, jl = mipmaps.length; j < jl; j++)
+                            {
+                                mipmap = mipmaps[j];
+
+                                if (texture.format !== RGBAFormat && texture.format !== RGBFormat)
+                                {
+
+                                    if (state.getCompressedTextureFormats().indexOf(glFormat) > - 1)
+                                    {
+                                        state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, mipmap.data);
+                                    }
+                                    else
+                                    {
+                                        console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()");
+                                    }
+                                }
+                                else
+                                {
+                                    state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
+
+                                }
+                            }
+                        }
+                    }
+
+                    if (texture.generateMipmaps && isPowerOfTwoImage)
+                    {
+                        _gl.generateMipmap(_gl.TEXTURE_CUBE_MAP);
+                    }
+
+                    textureProperties.__version = texture.version;
+                    if (texture.onUpdate) texture.onUpdate(texture);
+                }
+                else
+                {
+                    state.activeTexture(_gl.TEXTURE0 + slot);
+                    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__image__webglTextureCube);
+                }
+
+            }
+
+        }
+        public setTextureCubeDynamic(texture: CubeTexture, slot: number)
+        {
+            var state = this.state;
+            var _gl = this._gl;
+            var properties = this.properties;
+
+            state.activeTexture(_gl.TEXTURE0 + slot);
+            state.bindTexture(_gl.TEXTURE_CUBE_MAP, properties.get(texture).__webglTexture);
+        }
+
         public setupRenderTarget(renderTarget: WebGLRenderTarget)
         {
             var properties = this.properties;
-            var renderTargetProperties = properties.get(renderTarget);
-            var textureProperties = properties.get(renderTarget.texture);
+            var renderTargetProperties = properties.get(renderTarget) as IRenderTargetProperties;
+            var textureProperties = properties.get(renderTarget.texture) as ITextureProperties;
             var _gl = this._gl;
             var _infoMemory = this._infoMemory; 
             var state = this.state; 
@@ -681,8 +679,7 @@ namespace THREE
 
             }
 
-            // Setup depth and stencil buffers
-
+            // Setup depth and stencil buffers 
             if (renderTarget.depthBuffer)
             { 
                 this.setupDepthRenderbuffer(renderTarget); 
@@ -701,7 +698,7 @@ namespace THREE
                 texture.minFilter !== LinearFilter)
             { 
                 var target = renderTarget instanceof WebGLRenderTargetCube ? _gl.TEXTURE_CUBE_MAP : _gl.TEXTURE_2D;
-                var webglTexture = properties.get(texture).__webglTexture;
+                var webglTexture = (properties.get(texture) as ITextureProperties).__webglTexture;
 
                 state.bindTexture(target, webglTexture);
                 _gl.generateMipmap(target);

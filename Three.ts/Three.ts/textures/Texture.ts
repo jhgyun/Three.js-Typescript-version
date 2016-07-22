@@ -19,7 +19,7 @@ namespace THREE
         sourceFile = '';
         image: any;
         mipmaps = [];
-        mapping: any;
+        mapping: number;
         wrapS: number;
         wrapT: number;
         magFilter: number;
@@ -40,7 +40,8 @@ namespace THREE
         version = 0;
         onUpdate: any = null;
 
-        constructor(image?, mapping?,
+        constructor(image?,
+            mapping?: number,
             wrapS?: number,
             wrapT?: number,
             magFilter?: number,

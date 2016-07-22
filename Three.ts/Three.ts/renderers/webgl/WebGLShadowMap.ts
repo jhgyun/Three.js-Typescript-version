@@ -8,13 +8,13 @@ namespace THREE
     export class WebGLShadowMap
     {
         private _renderer: WebGLRenderer;
-        private _lights: any;
-        private _objects: any;
+        private _lights: LightArrayCache;
+        private _objects: WebGLObjects;
         private _gl: WebGLRenderingContext;
-        private _state;
+        private _state: WebGLState;
         private _frustum: Frustum;
         private _projScreenMatrix: Matrix4;
-        private _lightShadows
+        private _lightShadows: Light[];
         private _shadowMapSize: Vector2;
         private _lookTarget: Vector3;
         private _lightPositionWorld: Vector3;
@@ -22,8 +22,8 @@ namespace THREE
         private _MorphingFlag: number;
         private _SkinningFlag: number;
         private _NumberOfMaterialVariants: number;
-        private _depthMaterials: any[];
-        private _distanceMaterials: any[];
+        private _depthMaterials: MeshDepthMaterial[];
+        private _distanceMaterials: ShaderMaterial[];
         private _materialCache: any;
         private cubeDirections: Vector3[];
         private cubeUps: Vector3[];
@@ -49,8 +49,7 @@ namespace THREE
             this._frustum = new Frustum();
             this._projScreenMatrix = new Matrix4();
 
-            this._lightShadows = _lights.shadows;
-
+            this._lightShadows = _lights.shadows; 
             this._shadowMapSize = new Vector2();
 
             this._lookTarget = new Vector3();
@@ -78,13 +77,12 @@ namespace THREE
                 new Vector3(0, 1, 0), new Vector3(0, 0, 1), new Vector3(0, 0, - 1)
             ];
 
-            var cube2DViewPorts = [
+            this.cube2DViewPorts = [
                 new Vector4(), new Vector4(), new Vector4(),
                 new Vector4(), new Vector4(), new Vector4()
             ];
 
-            // init
-
+            // init 
             var depthMaterialTemplate = this.depthMaterialTemplate = new MeshDepthMaterial();
             depthMaterialTemplate.depthPacking = RGBADepthPacking;
             depthMaterialTemplate.clipping = true;
@@ -115,26 +113,20 @@ namespace THREE
                     clipping: true
                 });
 
-                this._distanceMaterials[i] = distanceMaterial;
-
+                this._distanceMaterials[i] = distanceMaterial; 
             }
 
             //
-
-            var scope = this;
-
-            this.enabled = false;
-
+             
+            this.enabled = false; 
             this.autoUpdate = true;
-            this.needsUpdate = false;
-
-            this.type = PCFShadowMap;
-
+            this.needsUpdate = false; 
+            this.type = PCFShadowMap; 
             this.renderReverseSided = true;
             this.renderSingleSided = true; 
         };
 
-        private getDepthMaterial(object, material, isPointLight, lightPositionWorld)
+        private getDepthMaterial(object, material: IMaterial, isPointLight: boolean, lightPositionWorld: Vector3)
         {
             var _depthMaterials = this._depthMaterials;
             var _MorphingFlag = this._MorphingFlag;
@@ -146,9 +138,9 @@ namespace THREE
 
             var geometry = object.geometry;
 
-            var result = null;
+            var result;
 
-            var materialVariants = _depthMaterials;
+            var materialVariants: IMaterial[] = _depthMaterials;
             var customMaterial = object.customDepthMaterial;
 
             if (isPointLight)
@@ -158,8 +150,7 @@ namespace THREE
             }
 
             if (!customMaterial)
-            {
-
+            { 
                 var useMorphing = geometry.morphTargets !== undefined &&
                     geometry.morphTargets.length > 0 && material.morphTargets;
 
@@ -262,9 +253,8 @@ namespace THREE
                 this.projectObject(children[i], camera, shadowCamera);
             }
         }
-        public render(scene, camera)
-        {
-            var scope = this;
+        public render(scene: Scene, camera: Camera)
+        { 
             var _lightShadows = this._lightShadows;
             var _state = this._state;
             var _gl = this._gl;
@@ -280,8 +270,8 @@ namespace THREE
             var _renderList = this._renderList;
             var _objects = this._objects;
 
-            if (scope.enabled === false) return;
-            if (scope.autoUpdate === false && scope.needsUpdate === false) return;
+            if (this.enabled === false) return;
+            if (this.autoUpdate === false && this.needsUpdate === false) return;
 
             if (_lightShadows.length === 0) return;
 
@@ -293,11 +283,12 @@ namespace THREE
 
             // render depth map
 
-            var faceCount, isPointLight;
+            var faceCount;
+            var isPointLight: boolean;
 
             for (var i = 0, il = _lightShadows.length; i < il; i++)
             {
-                var light = _lightShadows[i];
+                var light  = _lightShadows[i];
                 var shadow = light.shadow;
                 if (shadow === undefined)
                 {
@@ -345,12 +336,11 @@ namespace THREE
                     _shadowMapSize.x *= 4.0;
                     _shadowMapSize.y *= 2.0;
 
-                } else
-                {
-
+                }
+                else
+                { 
                     faceCount = 1;
-                    isPointLight = false;
-
+                    isPointLight = false; 
                 }
 
                 if (shadow.map === null)
@@ -363,7 +353,7 @@ namespace THREE
 
                 if (shadow instanceof SpotLightShadow)
                 {
-                    shadow.update(light);
+                    shadow.update(light as SpotLight);
                 }
 
                 var shadowMap = shadow.map;
@@ -379,11 +369,9 @@ namespace THREE
                 // run a single pass if not
 
                 for (var face = 0; face < faceCount; face++)
-                {
-
+                { 
                     if (isPointLight)
-                    {
-
+                    { 
                         _lookTarget.copy(shadowCamera.position);
                         _lookTarget.add(cubeDirections[face]);
                         shadowCamera.up.copy(cubeUps[face]);
@@ -392,12 +380,11 @@ namespace THREE
                         var vpDimensions = cube2DViewPorts[face];
                         _state.viewport(vpDimensions);
 
-                    } else
-                    {
-
+                    }
+                    else
+                    { 
                         _lookTarget.setFromMatrixPosition(light.target.matrixWorld);
-                        shadowCamera.lookAt(_lookTarget);
-
+                        shadowCamera.lookAt(_lookTarget); 
                     }
 
                     shadowCamera.updateMatrixWorld();
@@ -430,8 +417,7 @@ namespace THREE
                     // render regular objects
 
                     for (var j = 0, jl = _renderList.length; j < jl; j++)
-                    {
-
+                    { 
                         var object = _renderList[j];
                         var geometry = _objects.update(object);
                         var material = object.material;
@@ -439,7 +425,7 @@ namespace THREE
                         if (material instanceof MultiMaterial)
                         {
                             var groups = geometry.groups;
-                            var materials = material.materials;
+                            var materials = (material as MultiMaterial).materials;
 
                             for (var k = 0, kl = groups.length; k < kl; k++)
                             {
@@ -447,21 +433,17 @@ namespace THREE
                                 var groupMaterial = materials[group.materialIndex];
 
                                 if (groupMaterial.visible === true)
-                                {
-
+                                { 
                                     var depthMaterial = this.getDepthMaterial(object, groupMaterial, isPointLight, _lightPositionWorld);
-                                    _renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, object, group);
-
-                                }
-
+                                    _renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, object, group); 
+                                } 
                             }
 
-                        } else
-                        {
-
+                        }
+                        else
+                        { 
                             var depthMaterial = this.getDepthMaterial(object, material, isPointLight, _lightPositionWorld);
                             _renderer.renderBufferDirect(shadowCamera, null, geometry, depthMaterial, object, null);
-
                         }
 
                     }
@@ -471,11 +453,11 @@ namespace THREE
             }
 
             // Restore GL state.
-            var clearColor = _renderer.getClearColor(),
-                clearAlpha = _renderer.getClearAlpha();
+            var clearColor = _renderer.getClearColor();
+            var clearAlpha = _renderer.getClearAlpha();
             _renderer.setClearColor(clearColor, clearAlpha);
 
-            scope.needsUpdate = false;
+            this.needsUpdate = false;
 
         };
     }
