@@ -567,8 +567,7 @@ namespace THREE
 
                 case 'Sprite':
 
-                    object = new THREE.Sprite(getMaterial(data.material));
-
+                    object = new THREE.Sprite(getMaterial(data.material)); 
                     break;
 
                 case 'Group':

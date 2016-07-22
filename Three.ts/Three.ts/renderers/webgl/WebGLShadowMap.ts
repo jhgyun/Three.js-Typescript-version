@@ -39,7 +39,7 @@ namespace THREE
         public renderReverseSided: boolean;
         public renderSingleSided: boolean;
 
-        constructor(_renderer: WebGLRenderer, _lights: TmpLights, _objects)
+        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects)
         {
             this._renderer = _renderer;
             this._objects = _objects;

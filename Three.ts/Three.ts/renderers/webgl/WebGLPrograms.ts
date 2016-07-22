@@ -98,7 +98,7 @@
 
             return encoding;
         }
-        public getParameters(material: IMaterial, lights: TmpLights, fog, nClipPlanes, object)
+        public getParameters(material: IMaterial, lights: LightArrayCache, fog, nClipPlanes, object)
         {
             var renderer = this.renderer;
             var shaderIDs = this.shaderIDs; 

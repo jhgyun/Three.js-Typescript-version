@@ -8,6 +8,7 @@ namespace THREE
 {
     export class Sprite extends Object3D
     {
+        z: number;
         constructor(material)
         {
             super();

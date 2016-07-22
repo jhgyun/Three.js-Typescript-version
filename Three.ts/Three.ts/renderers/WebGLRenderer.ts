@@ -26,7 +26,7 @@ namespace THREE
         memory: InfoMemory,
         programs: any
     }
-    export interface TmpLights
+    export interface LightArrayCache
     {
         hash: string;
         ambient: number[];
@@ -104,8 +104,8 @@ namespace THREE
         transparentObjects;
         transparentObjectsLastIndex: number;
         morphInfluences: Float32Array;
-        sprites;
-        lensFlares; 
+        sprites: Sprite[];
+        lensFlares: LensFlare[]; 
         _currentRenderTarget: WebGLRenderTarget;
         _currentProgram: number;
         _currentFramebuffer;
@@ -132,7 +132,7 @@ namespace THREE
         private _sphere: Sphere;
         private _projScreenMatrix: Matrix4;
         private _vector3: Vector3;
-        private _lights: TmpLights;
+        private _lights: LightArrayCache;
 
         private _infoRender: InfoRenderer;
         private textures: WebGLTextures;
@@ -158,24 +158,24 @@ namespace THREE
             var _canvas: HTMLCanvasElement = this._canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas') as HTMLCanvasElement;
             var _context = this._context = parameters.context !== undefined ? parameters.context : null;
 
-            var _alpha = this._alpha = parameters.alpha !== undefined ? parameters.alpha : false;
-            var _depth = this._depth = parameters.depth !== undefined ? parameters.depth : true;
-            var _stencil = this._stencil = parameters.stencil !== undefined ? parameters.stencil : true;
-            var _antialias = this._antialias = parameters.antialias !== undefined ? parameters.antialias : false;
-            var _premultipliedAlpha = this._premultipliedAlpha = parameters.premultipliedAlpha !== undefined ? parameters.premultipliedAlpha : true;
-            var _preserveDrawingBuffer = parameters.preserveDrawingBuffer !== undefined ? parameters.preserveDrawingBuffer : false;
+            this._alpha = parameters.alpha !== undefined ? parameters.alpha : false;
+            this._depth = parameters.depth !== undefined ? parameters.depth : true;
+            this._stencil = parameters.stencil !== undefined ? parameters.stencil : true;
+            this._antialias = parameters.antialias !== undefined ? parameters.antialias : false;
+            this._premultipliedAlpha = parameters.premultipliedAlpha !== undefined ? parameters.premultipliedAlpha : true;
+            this._preserveDrawingBuffer = parameters.preserveDrawingBuffer !== undefined ? parameters.preserveDrawingBuffer : false;
 
-            var lights = this.lights = [];
+            this.lights = [];
 
-            var opaqueObjects = this.opaqueObjects = [];
-            var opaqueObjectsLastIndex = this.opaqueObjectsLastIndex = - 1;
-            var transparentObjects = this.transparentObjects = [];
-            var transparentObjectsLastIndex = this.transparentObjectsLastIndex = - 1;
+            this.opaqueObjects = [];
+            this.opaqueObjectsLastIndex = - 1;
+            this.transparentObjects = [];
+            this.transparentObjectsLastIndex = - 1;
 
-            var morphInfluences = this.morphInfluences = new Float32Array(8);
+            this.morphInfluences = new Float32Array(8);
 
-            var sprites = this.sprites = [];
-            var lensFlares = this.lensFlares = [];
+            this.sprites = [];
+            this.lensFlares = [];
 
             // public properties
 
@@ -220,58 +220,54 @@ namespace THREE
             // internal properties
 
 
-            // internal state cache
+            // internal state cache 
+            this._currentProgram = null;
+            this._currentRenderTarget = null;
+            this._currentFramebuffer = null;
+            this._currentMaterialId = - 1;
+            this._currentGeometryProgram = '';
+            this._currentCamera = null;
 
-            var _currentProgram = this._currentProgram = null;
-            var _currentRenderTarget = this._currentRenderTarget = null;
-            var _currentFramebuffer = this._currentFramebuffer = null;
-            var _currentMaterialId = this._currentMaterialId = - 1;
-            var _currentGeometryProgram = this._currentGeometryProgram = '';
-            var _currentCamera = this._currentCamera = null;
+            this._currentScissor = new Vector4();
+            this._currentScissorTest = null;
 
-            var _currentScissor = this._currentScissor = new Vector4();
-            var _currentScissorTest = _currentScissorTest = null;
-
-            var _currentViewport = this._currentViewport = new Vector4();
+            this._currentViewport = new Vector4();
 
             // 
-            var _usedTextureUnits = this._usedTextureUnits = 0;
+            this._usedTextureUnits = 0;
 
             //
 
-            var _clearColor = this._clearColor = new Color(0x000000);
-            var _clearAlpha = this._clearAlpha = 0;
+            this._clearColor = new Color(0x000000);
+            this._clearAlpha = 0;
 
-            var _width = this._width = _canvas.width;
-            var _height = this._height = _canvas.height;
+            this._width = _canvas.width;
+            this._height = _canvas.height;
 
             var _pixelRatio = this._pixelRatio = 1;
 
-            var _scissor = this._scissor = new Vector4(0, 0, _width, _height);
+            var _scissor = this._scissor = new Vector4(0, 0, this._width, this._height);
             var _scissorTest = this._scissorTest = false;
 
-            var _viewport = this._viewport = new Vector4(0, 0, _width, _height);
+            var _viewport = this._viewport = new Vector4(0, 0, this._width, this._height);
 
-            // frustum
+            // frustum 
+            this._frustum = new Frustum();
 
-            var _frustum = this._frustum = new Frustum();
+            // clipping 
+            this._clipping = new WebGLClipping();
+            this._clippingEnabled = false;
+            this._localClippingEnabled = false;
 
-            // clipping
-
-            var _clipping = this._clipping = new WebGLClipping();
-            var _clippingEnabled = this._clippingEnabled = false;
-            var _localClippingEnabled = this._localClippingEnabled = false;
-
-            var _sphere = this._sphere = new Sphere();
+            this._sphere = new Sphere();
 
             // camera matrices cache 
-            var _projScreenMatrix = this._projScreenMatrix = new Matrix4();
+            this._projScreenMatrix = new Matrix4();
 
-            var _vector3 = this._vector3 = new Vector3();
+            this._vector3 = new Vector3();
 
-            // light arrays cache
-
-            var _lights = this._lights = {
+            // light arrays cache 
+            this._lights = {
                 hash: '',
                 ambient: [0, 0, 0],
                 directional: [],
@@ -287,9 +283,8 @@ namespace THREE
                 shadows: []
             };
 
-            // info
-
-            var _infoRender: InfoRenderer = this._infoRender = {
+            // info 
+            this._infoRender = {
                 calls: 0,
                 vertices: 0,
                 faces: 0,
@@ -297,7 +292,7 @@ namespace THREE
             };
 
             this.info = {
-                render: _infoRender,
+                render: this._infoRender,
                 memory: {
                     geometries: 0,
                     textures: 0
@@ -310,22 +305,19 @@ namespace THREE
 
             this.init_context();
             this.init_extensions();
+              
+            var capabilities = this.capabilities = new WebGLCapabilities(this.context, this.extensions, parameters);
+            this.state = new WebGLState(this);
+            this.properties = new WebGLProperties();
+            this.textures = new WebGLTextures(this);
+            this.objects = new WebGLObjects(this.context, this.properties, this.info);
+            this.programCache = new WebGLPrograms(this, capabilities);
+            this.lightCache = new WebGLLights();
 
-            var _gl = this.context;
-            var extensions = this.extensions;
+            this.info.programs = this.programCache.programs;
 
-            var capabilities = this.capabilities = new WebGLCapabilities(_gl, extensions, parameters);
-            var state = this.state = new WebGLState(this);
-            var properties = this.properties = new WebGLProperties();
-            var textures = this.textures = new WebGLTextures(this);
-            var objects = this.objects = new WebGLObjects(_gl, properties, this.info);
-            var programCache = this.programCache = new WebGLPrograms(this, capabilities);
-            var lightCache = this.lightCache = new WebGLLights();
-
-            this.info.programs = programCache.programs;
-
-            var bufferRenderer = this.bufferRenderer = new WebGLBufferRenderer(_gl, extensions, _infoRender);
-            var indexedBufferRenderer = this.indexedBufferRenderer = new WebGLIndexedBufferRenderer(_gl, extensions, _infoRender);
+            var bufferRenderer = this.bufferRenderer = new WebGLBufferRenderer(this.context, this.extensions, this._infoRender);
+            var indexedBufferRenderer = this.indexedBufferRenderer = new WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
 
             // 
             var backgroundCamera = this.backgroundCamera = new OrthographicCamera(- 1, 1, 1, - 1, 0, 1);
@@ -346,30 +338,25 @@ namespace THREE
                     side: BackSide
                 })
             );
-            objects.update(backgroundPlaneMesh);
-            objects.update(backgroundBoxMesh);
-
+            this.objects.update(backgroundPlaneMesh);
+            this.objects.update(backgroundBoxMesh); 
             //
 
             this.setDefaultGLState();
-               
-            this.properties = properties;
-            this.state = state;
+                 
 
-            // shadow map
-
-            var shadowMap = this.shadowMap = new WebGLShadowMap(this, _lights, objects);
-
-
+            // shadow map 
+            this.shadowMap = new WebGLShadowMap(this, this._lights, this.objects);
+             
             // Plugins 
-            var spritePlugin = this.spritePlugin = new SpritePlugin(this, sprites);
-            var lensFlarePlugin = this.lensFlarePlugin = new LensFlarePlugin(this, lensFlares);
+            this.spritePlugin = new SpritePlugin(this);
+            this.lensFlarePlugin = new LensFlarePlugin(this);
 
+            //event handlers use lambda expression to cache 'this' scope 
             this.onContextLost_ = (event) =>
             {
                 this.onContextLost(event);
-            }
-
+            } 
             this.onMaterialDispose_ = (event) =>
             {
                 this.onContextLost(event);
@@ -602,12 +589,10 @@ namespace THREE
             this.opaqueObjectsLastIndex = -1;
             this._canvas.removeEventListener('webglcontextlost', this.onContextLost_, false);
         };
-
-
-
+         
+        // Events
         private onContextLost_: (event) => void;
         private onMaterialDispose_: (event) => void;
-        // Events
 
         private onContextLost(event)
         {
@@ -617,7 +602,6 @@ namespace THREE
             this.setDefaultGLState();
             this.properties.clear();
         }
-
         private onMaterialDispose(event)
         {
             var material = event.target;
@@ -644,7 +628,6 @@ namespace THREE
         }
 
         // Buffer rendering
-
         public renderBufferImmediate(object, program: WebGLProgram, material: IMaterial)
         {
             var state = this.state;
@@ -1068,12 +1051,10 @@ namespace THREE
         }
 
         // Sorting
-
         private absNumericalSort(a, b)
         {
             return Math.abs(b[0]) - Math.abs(a[0]);
         }
-
         private painterSortStable(a, b)
         {
             if (a.object.renderOrder !== b.object.renderOrder)
@@ -1093,7 +1074,6 @@ namespace THREE
                 return a.id - b.id;
             }
         }
-
         private reversePainterSortStable(a, b)
         {
             if (a.object.renderOrder !== b.object.renderOrder)
@@ -1112,7 +1092,6 @@ namespace THREE
         }
 
         // Rendering
-
         public render(scene, camera, renderTarget, forceClear)
         {
             if (camera instanceof Camera === false)
@@ -1247,13 +1226,11 @@ namespace THREE
                 this.renderObjects(this.transparentObjects, camera, fog);
             }
 
-            // custom render plugins (post pass)
-
+            // custom render plugins (post pass) 
             this.spritePlugin.render(scene, camera);
             this.lensFlarePlugin.render(scene, camera, this._currentViewport);
 
-            // Generate mipmap if we're using any kind of mipmap filtering
-
+            // Generate mipmap if we're using any kind of mipmap filtering 
             if (renderTarget)
             {
                 this.textures.updateRenderTargetMipmap(renderTarget);
@@ -1312,7 +1289,6 @@ namespace THREE
         }
 
         // TODO Duplicated code (Frustum)
-
         private isObjectViewable(object)
         {
             var geometry = object.geometry;
@@ -1325,7 +1301,6 @@ namespace THREE
 
             return this.isSphereViewable(this._sphere);
         }
-
         private isSpriteViewable(sprite)
         {
             this._sphere.center.set(0, 0, 0);
@@ -1335,7 +1310,6 @@ namespace THREE
             return this.isSphereViewable(this._sphere);
 
         }
-
         private isSphereViewable(sphere)
         {
             if (!this._frustum.intersectsSphere(sphere)) return false;
@@ -1359,8 +1333,7 @@ namespace THREE
             return true;
 
         }
-
-        private projectObject(object, camera)
+        private projectObject(object: Object3D, camera: Camera)
         {
             var _vector3 = this._vector3;
             if (object.visible === false) return;
@@ -1376,8 +1349,7 @@ namespace THREE
                     if (object.frustumCulled === false || this.isSpriteViewable(object) === true)
                     {
                         this.sprites.push(object);
-                    }
-
+                    } 
                 }
                 else if (object instanceof LensFlare)
                 {
@@ -1451,7 +1423,6 @@ namespace THREE
                 this.projectObject(children[i], camera);
             }
         }
-
         private renderObjects(renderList, camera, fog, overrideMaterial?)
         {
             for (var i = 0, l = renderList.length; i < l; i++)
@@ -1483,7 +1454,6 @@ namespace THREE
                 }
             }
         }
-
         private initMaterial(material: IMaterial, fog, object)
         {
             var materialProperties = this.properties.get(material) as TmpMaterialProperty;
@@ -1621,7 +1591,6 @@ namespace THREE
                 WebGLUniforms.splitDynamic(uniformsList, uniforms);
 
         }
-
         private setMaterial(material)
         {
             var state = this.state;
@@ -1649,7 +1618,6 @@ namespace THREE
             state.setColorWrite(material.colorWrite);
             state.setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
         }
-
         private setProgram(camera, fog, material: IMaterial, object)
         {
             this._usedTextureUnits = 0;
@@ -1920,7 +1888,6 @@ namespace THREE
         }
 
         // Uniforms (refresh uniforms objects)
-
         private refreshUniformsCommon(uniforms, material)
         {
             uniforms.opacity.value = material.opacity;
@@ -2015,20 +1982,17 @@ namespace THREE
             uniforms.refractionRatio.value = material.refractionRatio;
 
         }
-
         private refreshUniformsLine(uniforms, material)
         {
             uniforms.diffuse.value = material.color;
             uniforms.opacity.value = material.opacity;
         }
-
         private refreshUniformsDash(uniforms, material)
         {
             uniforms.dashSize.value = material.dashSize;
             uniforms.totalSize.value = material.dashSize + material.gapSize;
             uniforms.scale.value = material.scale;
         }
-
         private refreshUniformsPoints(uniforms, material)
         {
             uniforms.diffuse.value = material.color;
@@ -2047,7 +2011,6 @@ namespace THREE
             }
 
         }
-
         private refreshUniformsFog(uniforms, fog)
         {
             uniforms.fogColor.value = fog.color;
@@ -2064,7 +2027,6 @@ namespace THREE
             }
 
         }
-
         private refreshUniformsLambert(uniforms, material)
         {
             if (material.lightMap)
@@ -2078,7 +2040,6 @@ namespace THREE
                 uniforms.emissiveMap.value = material.emissiveMap;
             }
         }
-
         private refreshUniformsPhong(uniforms, material)
         {
             uniforms.specular.value = material.specular;
@@ -2114,7 +2075,6 @@ namespace THREE
                 uniforms.displacementBias.value = material.displacementBias;
             }
         }
-
         private refreshUniformsStandard(uniforms, material)
         {
             uniforms.roughness.value = material.roughness;
@@ -2166,7 +2126,6 @@ namespace THREE
                 uniforms.envMapIntensity.value = material.envMapIntensity;
             }
         }
-
         private refreshUniformsPhysical(uniforms, material)
         {
             uniforms.clearCoat.value = material.clearCoat;
@@ -2177,7 +2136,6 @@ namespace THREE
         }
 
         // If uniforms are marked as clean, they don't need to be loaded to the GPU.
-
         private markUniformsLightsNeedsUpdate(uniforms, value)
         {
             uniforms.ambientLightColor.needsUpdate = value;
@@ -2189,7 +2147,6 @@ namespace THREE
         }
 
         // Lighting
-
         private setupShadows(lights: Light[])
         {
             var lightShadowsLength = 0;
@@ -2206,8 +2163,7 @@ namespace THREE
 
             this._lights.shadows.length = lightShadowsLength;
         }
-
-        private setupLights(lights, camera)
+        private setupLights(lights: Light[], camera: Camera)
         {
             var _lights = this._lights;
             var _vector3 = this._vector3;
@@ -2239,15 +2195,14 @@ namespace THREE
                 shadowMap = (light.shadow && light.shadow.map) ? light.shadow.map.texture : null;
 
                 if (light instanceof AmbientLight)
-                {
-
+                { 
                     r += color.r * intensity;
                     g += color.g * intensity;
                     b += color.b * intensity;
 
-                } else if (light instanceof DirectionalLight)
-                {
-
+                }
+                else if (light instanceof DirectionalLight)
+                { 
                     var uniforms = lightCache.get(light);
 
                     uniforms.color.copy(light.color).multiplyScalar(light.intensity);
@@ -2259,12 +2214,10 @@ namespace THREE
                     uniforms.shadow = light.castShadow;
 
                     if (light.castShadow)
-                    {
-
+                    { 
                         uniforms.shadowBias = light.shadow.bias;
                         uniforms.shadowRadius = light.shadow.radius;
-                        uniforms.shadowMapSize = light.shadow.mapSize;
-
+                        uniforms.shadowMapSize = light.shadow.mapSize; 
                     }
 
                     _lights.directionalShadowMap[directionalLength] = shadowMap;
@@ -2372,7 +2325,7 @@ namespace THREE
         }
 
         // GL state setting 
-        public setFaceCulling(cullFace, frontFaceDirection)
+        public setFaceCulling(cullFace: number, frontFaceDirection?: number)
         {
             var state = this.state;
             state.setCullFace(cullFace);
@@ -2445,7 +2398,6 @@ namespace THREE
         {
             return this._currentRenderTarget;
         };
-
         public setRenderTarget(renderTarget: WebGLRenderTarget)
         {
             var properties = this.properties;
@@ -2516,7 +2468,6 @@ namespace THREE
             }
 
         };
-
         public readRenderTargetPixels(
             renderTarget: WebGLRenderTarget,
             x: number, y: number, width: number, height: number,

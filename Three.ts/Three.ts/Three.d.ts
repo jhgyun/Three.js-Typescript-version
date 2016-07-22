@@ -315,9 +315,6 @@ declare namespace THREE {
         constructor(name: any, times?: any, values?: any, interpolation?: any);
     }
 }
-/**
-* @author mrdoob / http://mrdoob.com/
-*/
 interface NumberConstructor {
     EPSILON?: number;
 }
@@ -580,9 +577,6 @@ declare namespace THREE {
         length(): number;
         lengthManhattan(): number;
         normalize(): this;
-        /**
-         * computes the angle in radians with respect to the positive x-axis
-         */
         angle(): number;
         distanceTo(v: Vector2): number;
         distanceToSquared(v: Vector2): number;
@@ -1281,57 +1275,11 @@ declare namespace THREE {
         filmOffset: number;
         constructor(fov?: number, aspect?: number, near?: number, far?: number);
         copy(source: PerspectiveCamera): this;
-        /**
-         * Sets the FOV by focal length in respect to the current .filmGauge.
-         *
-         * The default film gauge is 35, so that the focal length can be specified for
-         * a 35mm (full frame) camera.
-         *
-         * Values for focal length and film gauge must have the same unit.
-         */
         setFocalLength(focalLength: number): void;
-        /**
-         * Calculates the focal length from the current .fov and .filmGauge.
-         */
         getFocalLength(): number;
         getEffectiveFOV(): number;
         getFilmWidth(): number;
         getFilmHeight(): number;
-        /**
-         * Sets an offset in a larger frustum. This is useful for multi-window or
-         * multi-monitor/multi-machine setups.
-         *
-         * For example, if you have 3x2 monitors and each monitor is 1920x1080 and
-         * the monitors are in grid like this
-         *
-         *   +---+---+---+
-         *   | A | B | C |
-         *   +---+---+---+
-         *   | D | E | F |
-         *   +---+---+---+
-         *
-         * then for each monitor you would call it like this
-         *
-         *   var w = 1920;
-         *   var h = 1080;
-         *   var fullWidth = w * 3;
-         *   var fullHeight = h * 2;
-         *
-         *   --A--
-         *   camera.setOffset( fullWidth, fullHeight, w * 0, h * 0, w, h );
-         *   --B--
-         *   camera.setOffset( fullWidth, fullHeight, w * 1, h * 0, w, h );
-         *   --C--
-         *   camera.setOffset( fullWidth, fullHeight, w * 2, h * 0, w, h );
-         *   --D--
-         *   camera.setOffset( fullWidth, fullHeight, w * 0, h * 1, w, h );
-         *   --E--
-         *   camera.setOffset( fullWidth, fullHeight, w * 1, h * 1, w, h );
-         *   --F--
-         *   camera.setOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
-         *
-         *   Note there is no reason monitors have to be the same size or in a grid.
-         */
         setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): void;
         clearViewOffset(): void;
         updateProjectionMatrix(): void;
@@ -1735,28 +1683,16 @@ declare namespace THREE {
         private cacheArcLengths;
         protected needsUpdate: boolean;
         constructor();
-        /** Virtual base class method to overwrite and implement in subclasses
-        *	- t [0 .. 1] */
         getPoint(t?: number): T;
-        /** Get point at relative position in curve according to arc length
-          - u [0 .. 1] */
         getPointAt(u?: number): T;
-        /** Get sequence of points using getPoint( t ) */
         getPoints(divisions?: number): T[];
-        /** Get sequence of points using getPointAt( u )*/
         getSpacedPoints(divisions?: number): any[];
-        /**  Get total curve arc length */
         getLength(): any;
-        /** Get list of cumulative segment lengths */
         getLengths(divisions?: number): any;
         updateArcLengths(): void;
-        /** Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant*/
         getUtoTmapping(u: any, distance?: number): number;
         getTangent(t: number): T;
         getTangentAt(u: number): T;
-        /**************************************************************
-         *	3D Curves
-         **************************************************************/
         static create: (constructor: any, getPointFunc: any) => any;
     }
 }
@@ -1768,19 +1704,7 @@ declare namespace THREE {
         constructor();
         add(curve: any): void;
         closePath(): void;
-        /** To get accurate point with reference to
-        // entire path distance at time t,
-        // following has to be done:
-
-        // 1. Length of each sub path have to be known
-        // 2. Locate and identify type of curve
-        // 3. Get t for the curve
-        // 4. Return curve.getPointAt(t')
-        */
         getPoint(t: number): Vector2;
-        /** We cannot use the default THREE.Curve getPoint() with getLength() because in
-        // THREE.Curve, getLength() depends on getPoint() but in THREE.CurvePath
-        // getPoint() depends on getLength */
         getLength(): any;
         updateArcLengths(): void;
         getCurveLengths(): any;
@@ -1822,7 +1746,6 @@ declare namespace THREE {
     class Shape extends Path {
         holes: any;
         constructor(points?: Vector2[]);
-        /** Convenience method to return ExtrudeGeometry */
         extrude(options?: ExtrudeGeometryOptions): ExtrudeGeometry;
         makeGeometry(options?: ShapeGeometryOptions): ShapeGeometry;
         getPointsHoles(divisions: any): any[];
@@ -1896,7 +1819,6 @@ declare namespace THREE {
         v2: Vector2;
         constructor(v1: Vector2, v2: Vector2);
         getPoint(t: number): Vector2;
-        /** Line curve is linear, so we can overwrite default getPointAt */
         getPointAt(u: number): Vector2;
         getTangent(t: number): Vector2;
     }
@@ -2071,22 +1993,13 @@ declare namespace THREE {
 }
 declare namespace THREE {
     interface ShapeGeometryOptions {
-        /**number of points on the curves. NOT USED AT THE MOMENT.*/
         curveSegments?: number;
-        /** material index for front and back faces*/
         material?: number;
-        /**object that provides UV generator functions*/
         UVGenerator?: any;
     }
     class ShapeGeometry extends Geometry {
         constructor(ashapes: Shape | Shape[], options?: ShapeGeometryOptions);
-        /**
-         * Add an array of shapes to THREE.ShapeGeometry.
-         */
         addShapeList(shapes: Shape[], options?: ShapeGeometryOptions): this;
-        /**
-         * Adds a shape to THREE.ShapeGeometry, based on THREE.ExtrudeGeometry.
-         */
         addShape(shape: any, options?: ShapeGeometryOptions): void;
     }
 }
@@ -2267,9 +2180,6 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    /**
-     *  FaceNormalsHelper only supports THREE.Geometry
-     */
     class FaceNormalsHelper extends LineSegments {
         object: Object3D;
         size: number;
@@ -2776,13 +2686,7 @@ declare namespace THREE {
         lights: boolean;
         blending: number;
         side: number;
-        /**
-        * THREE.FlatShading, THREE.SmoothShading
-        */
         shading: number;
-        /**
-        * THREE.NoColors, THREE.VertexColors, THREE.FaceColors
-        */
         vertexColors: number;
         opacity: number;
         transparent: boolean;
@@ -3484,6 +3388,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class Sprite extends Object3D {
+        z: number;
         constructor(material: any);
         private static raycast_matrixPosition;
         raycast(raycaster: Raycaster, intersects: IntersectResult[]): void;
@@ -3515,9 +3420,6 @@ declare namespace THREE {
         generateMipmaps: boolean;
         premultiplyAlpha: boolean;
         flipY: boolean;
-        /**
-        * 1, 2, 4, 8
-        */
         unpackAlignment: number;
         encoding: number;
         version: number;
@@ -3821,7 +3723,6 @@ declare namespace THREE {
     };
 }
 declare namespace THREE {
-    /** Map three.js constants to WebGL constants */
     function paramThreeToGL(renderer: WebGLRenderer, p: number): any;
 }
 declare namespace THREE {
@@ -3843,7 +3744,7 @@ declare namespace THREE {
         memory: InfoMemory;
         programs: any;
     }
-    interface TmpLights {
+    interface LightArrayCache {
         hash: string;
         ambient: number[];
         directional: number[];
@@ -3908,8 +3809,8 @@ declare namespace THREE {
         transparentObjects: any;
         transparentObjectsLastIndex: number;
         morphInfluences: Float32Array;
-        sprites: any;
-        lensFlares: any;
+        sprites: Sprite[];
+        lensFlares: LensFlare[];
         _currentRenderTarget: WebGLRenderTarget;
         _currentProgram: number;
         _currentFramebuffer: any;
@@ -4016,7 +3917,7 @@ declare namespace THREE {
         private markUniformsLightsNeedsUpdate(uniforms, value);
         private setupShadows(lights);
         private setupLights(lights, camera);
-        setFaceCulling(cullFace: any, frontFaceDirection: any): void;
+        setFaceCulling(cullFace: number, frontFaceDirection?: number): void;
         allocTextureUnit(): number;
         private static warned;
         setTexture2D(texture: Texture, slot: number): void;
@@ -4060,9 +3961,6 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class WebGLRenderTargetCube extends WebGLRenderTarget {
-        /**
-        * PX 0, NX 1, PY 2, NY 3, PZ 4, NZ 5
-        */
         activeCubeFace: number;
         activeMipMapLevel: number;
         constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
@@ -4070,14 +3968,42 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class LensFlarePlugin {
-        render: (scene, camera, viewport) => any;
-        constructor(renderer: any, flares: any);
+        renderer: WebGLRenderer;
+        private flares;
+        private vertexBuffer;
+        private elementBuffer;
+        private shader;
+        private program;
+        private attributes;
+        private uniforms;
+        private tempTexture;
+        private occlusionTexture;
+        constructor(renderer: WebGLRenderer);
+        private init();
+        private createProgram(shader);
+        render(scene: Scene, camera: Camera, viewport: Vector4): void;
     }
 }
 declare namespace THREE {
     class SpritePlugin {
-        render: (Scene, camera) => any;
-        constructor(renderer: WebGLRenderer, sprites: any);
+        renderer: WebGLRenderer;
+        private sprites;
+        private gl;
+        private state;
+        private vertexBuffer;
+        private elementBuffer;
+        private program;
+        private attributes;
+        private uniforms;
+        private texture;
+        private spritePosition;
+        private spriteRotation;
+        private spriteScale;
+        constructor(renderer: WebGLRenderer);
+        private init();
+        private createProgram();
+        private painterSortStable(a, b);
+        render(scene: Scene, camera: Camera): void;
     }
 }
 declare namespace THREE {
@@ -4309,7 +4235,7 @@ declare namespace THREE {
         constructor(renderer: WebGLRenderer, capabilities: WebGLCapabilities);
         private allocateBones(object);
         private getTextureEncodingFromMap(map, gammaOverrideLinear);
-        getParameters(material: IMaterial, lights: TmpLights, fog: any, nClipPlanes: any, object: any): WebGLProgramParameters;
+        getParameters(material: IMaterial, lights: LightArrayCache, fog: any, nClipPlanes: any, object: any): WebGLProgramParameters;
         getProgramCode(material: any, parameters: any): string;
         acquireProgram(material: any, parameters: WebGLProgramParameters, code: string): WebGLProgram;
         releaseProgram(program: any): void;
@@ -4363,7 +4289,7 @@ declare namespace THREE {
         type: number;
         renderReverseSided: boolean;
         renderSingleSided: boolean;
-        constructor(_renderer: WebGLRenderer, _lights: TmpLights, _objects: any);
+        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects);
         private getDepthMaterial(object, material, isPointLight, lightPositionWorld);
         private projectObject(object, camera, shadowCamera);
         render(scene: any, camera: any): void;
