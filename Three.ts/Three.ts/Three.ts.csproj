@@ -253,6 +253,7 @@
     <TypeScriptCompile Include="textures\DepthTexture.ts" />
     <TypeScriptCompile Include="textures\Texture.ts" />
     <TypeScriptCompile Include="textures\VideoTexture.ts" />
+    <TypeScriptCompile Include="Three.Legacy.ts" />
     <TypeScriptCompile Include="Three.ts" />
   </ItemGroup>
   <ItemGroup>
