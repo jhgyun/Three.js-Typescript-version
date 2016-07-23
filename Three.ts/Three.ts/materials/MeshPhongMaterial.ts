@@ -106,8 +106,8 @@ namespace THREE
          
 
         copy(source: MeshPhongMaterial)
-        { 
-            super.copy.call( source);
+        {
+            super.copy(source);  
 
             this.color.copy(source.color);
             this.specular.copy(source.specular);

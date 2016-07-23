@@ -27,7 +27,7 @@ namespace THREE
         private static raycast_ray: Ray;
         private static raycast_sphere: Sphere;
 
-        raycast(raycaster, intersects)
+        public raycast(raycaster, intersects)
         { 
             var inverseMatrix = Line.raycast_inverseMatrix;
             var ray = Line.raycast_ray;
@@ -53,9 +53,7 @@ namespace THREE
             sphere.applyMatrix4(matrixWorld);
 
             if (raycaster.ray.intersectsSphere(sphere) === false) return;
-
-            //
-
+            
             inverseMatrix.getInverse(matrixWorld);
             ray.copy(raycaster.ray).applyMatrix4(inverseMatrix);
 
@@ -135,13 +133,9 @@ namespace THREE
                             face: null,
                             faceIndex: null,
                             object: this
-
                         });
-
                     }
-
                 }
-
             }
             else if (geometry instanceof Geometry)
             { 
@@ -170,14 +164,11 @@ namespace THREE
                         face: null,
                         faceIndex: null,
                         object: this
-
                     });
-
                 }
-
             }
         }
-        clone()
+        public clone()
         {
             return new (this.constructor as any)(this.geometry, this.material).copy(this);
         }

@@ -22,7 +22,7 @@ namespace THREE
             }
         };
 
-        copy(source: LensFlare)
+        public copy(source: LensFlare)
         {
             super.copy(source);
             this.positionScreen.copy(source.positionScreen);
@@ -34,7 +34,7 @@ namespace THREE
             }
             return this;
         }
-        add(texture?, size?: number, distance?: number, blending?: number, color?: Color, opacity?: number)
+        public add(texture?, size?: number, distance?: number, blending?: number, color?: Color, opacity?: number)
         { 
             if (size === undefined) size = - 1;
             if (distance === undefined) distance = 0;
@@ -58,13 +58,11 @@ namespace THREE
 
             return this;
         }
-
         /*
          * Update lens flares update positions on all flares based on the screen position
          * Set myLensFlare.customUpdateCallback to alter the flares in your project specific way.
-         */
-
-        updateLensFlares()
+         */ 
+        public updateLensFlares()
         {
             var f, fl = this.lensFlares.length;
             var flare;

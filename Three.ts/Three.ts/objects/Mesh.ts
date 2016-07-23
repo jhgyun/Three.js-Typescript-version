@@ -44,7 +44,6 @@ namespace THREE
         {
             this.drawMode = value;
         }
-
         copy(source: Mesh)
         {
             super.copy(source);
@@ -54,7 +53,6 @@ namespace THREE
             return this;
 
         }
-
         updateMorphTargets()
         {
             var geometry = this.geometry as any;
@@ -72,7 +70,6 @@ namespace THREE
                 }
             }
         }
-
         getMorphTargetIndexByName(name)
         {
             if (this.morphTargetDictionary[name] !== undefined)
@@ -214,7 +211,7 @@ namespace THREE
 
         }
 
-        raycast(raycaster: Raycaster, intersects: IntersectResult[])
+        public raycast(raycaster: Raycaster, intersects: IntersectResult[])
         {
             var sphere = Mesh.raycast_sphere;
             var inverseMatrix = Mesh.raycast_inverseMatrix;
@@ -384,7 +381,7 @@ namespace THREE
             } 
         }
 
-        clone(): this
+        public clone(): this
         {
             return new (this.constructor as any)(this.geometry, this.material).copy(this);
         }
