@@ -1,9 +1,9 @@
 # Three.js-Typescript-version
 Typescript version of Three.js 
 
-The aim of this project is to convert original three.js to typescript code.
+The aim of this project is to convert original three.js to typescript style.
 
-original source https://github.com/mrdoob/three.js
+Original source https://github.com/mrdoob/three.js
 
 #### Used Tools ####
 Visualstudio 2015
@@ -11,11 +11,12 @@ Typescript 1.8
 
 
 #### generated file ####
-three.js
+three.js   
+You can test with original examples.
 
 ```html
 ...
-var THREE;
+var THREE; 
 (function (THREE) {
     THREE.REVISION = '78';
     THREE.MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
