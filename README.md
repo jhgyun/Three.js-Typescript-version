@@ -32,5 +32,23 @@ var THREE;
     THREE.FrontSide = 0;
     THREE.BackSide = 1;
     THREE.DoubleSide = 2;
-    ...
+...
+var THREE;
+(function (THREE) {
+    var Matrix3 = (function () {
+        function Matrix3() {
+            this.elements = new Float32Array([
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1
+            ]);
+        }
+        Matrix3.prototype.set = function (n11, n12, n13, n21, n22, n23, n31, n32, n33) {
+            var te = this.elements;
+            te[0] = n11;
+            te[1] = n21;
+            te[2] = n31;
+            te[3] = n12;
+            te[4] = n22;
+...
 ```
