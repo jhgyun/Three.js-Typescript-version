@@ -12,7 +12,7 @@ Typescript 1.8
 
 #### generated file ####
 three.js   
-You can test with original examples.
+You can test it with original examples.
 
 ```html
 ...
