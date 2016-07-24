@@ -16,6 +16,7 @@ namespace THREE
         private _projScreenMatrix: Matrix4;
         private _lightShadows: Light[];
         private _shadowMapSize: Vector2;
+        private _maxShadowMapSize: Vector2;
         private _lookTarget: Vector3;
         private _lightPositionWorld: Vector3;
         private _renderList: any[];
@@ -39,7 +40,7 @@ namespace THREE
         public renderReverseSided: boolean;
         public renderSingleSided: boolean;
 
-        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects)
+        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects, capabilities: WebGLCapabilities)
         {
             this._renderer = _renderer;
             this._objects = _objects;
@@ -51,6 +52,7 @@ namespace THREE
 
             this._lightShadows = _lights.shadows; 
             this._shadowMapSize = new Vector2();
+            this._maxShadowMapSize = new THREE.Vector2(capabilities.maxTextureSize, capabilities.maxTextureSize),
 
             this._lookTarget = new Vector3();
             this._lightPositionWorld = new Vector3();
@@ -151,8 +153,19 @@ namespace THREE
 
             if (!customMaterial)
             { 
-                var useMorphing = geometry.morphTargets !== undefined &&
-                    geometry.morphTargets.length > 0 && material.morphTargets;
+                var useMorphing = false;
+
+                if (material.morphTargets)
+                { 
+                    if (geometry instanceof THREE.BufferGeometry)
+                    { 
+                        useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0;
+
+                    } else if (geometry instanceof THREE.Geometry)
+                    { 
+                        useMorphing = geometry.morphTargets && geometry.morphTargets.length > 0;
+                    } 
+                }
 
                 var useSkinning = object instanceof SkinnedMesh && material.skinning;
 
@@ -298,6 +311,7 @@ namespace THREE
 
                 var shadowCamera = shadow.camera;
                 _shadowMapSize.copy(shadow.mapSize);
+                _shadowMapSize.min(this._maxShadowMapSize);
 
                 if (light instanceof PointLight)
                 {

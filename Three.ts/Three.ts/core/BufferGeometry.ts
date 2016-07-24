@@ -221,102 +221,107 @@ namespace THREE
                 }
             }
             return this;
-        }
-        updateFromObject(object)
-        {
+        } 
+        updateFromObject(object: Object3D)
+        { 
             var geometry = object.geometry;
-            if (object instanceof Mesh)
-            {
-                var direct = geometry.__directGeometry;
-                if (direct === undefined)
-                {
-                    return this.fromGeometry(geometry);
+
+            if (object instanceof THREE.Mesh)
+            { 
+                var direct = geometry.__directGeometry; 
+                if (direct === undefined || geometry.elementsNeedUpdate === true)
+                { 
+                    return this.fromGeometry(geometry); 
                 }
 
-                direct.verticesNeedUpdate = geometry.verticesNeedUpdate;
-                direct.normalsNeedUpdate = geometry.normalsNeedUpdate;
-                direct.colorsNeedUpdate = geometry.colorsNeedUpdate;
-                direct.uvsNeedUpdate = geometry.uvsNeedUpdate;
-                direct.groupsNeedUpdate = geometry.groupsNeedUpdate;
+                direct.verticesNeedUpdate = geometry.verticesNeedUpdate || geometry.elementsNeedUpdate;
+                direct.normalsNeedUpdate = geometry.normalsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.colorsNeedUpdate = geometry.colorsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.uvsNeedUpdate = geometry.uvsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.groupsNeedUpdate = geometry.groupsNeedUpdate || geometry.elementsNeedUpdate;
 
+                geometry.elementsNeedUpdate = false;
                 geometry.verticesNeedUpdate = false;
                 geometry.normalsNeedUpdate = false;
                 geometry.colorsNeedUpdate = false;
                 geometry.uvsNeedUpdate = false;
-                geometry.groupsNeedUpdate = false;
-
-                geometry = direct;
-
+                geometry.groupsNeedUpdate = false; 
+                geometry = direct; 
             }
 
+            var attribute;
+
             if (geometry.verticesNeedUpdate === true)
-            {
-                var attribute = this.attributes.position;
+            { 
+                attribute = this.attributes.position; 
                 if (attribute !== undefined)
-                {
+                { 
                     attribute.copyVector3sArray(geometry.vertices);
-                    attribute.needsUpdate = true;
+                    attribute.needsUpdate = true; 
                 }
-                geometry.verticesNeedUpdate = false;
+
+                geometry.verticesNeedUpdate = false; 
             }
 
             if (geometry.normalsNeedUpdate === true)
-            {
-                var attribute = this.attributes.normal;
+            { 
+                attribute = this.attributes.normal;
+
                 if (attribute !== undefined)
-                {
+                { 
                     attribute.copyVector3sArray(geometry.normals);
-                    attribute.needsUpdate = true;
+                    attribute.needsUpdate = true; 
                 }
-                geometry.normalsNeedUpdate = false;
+
+                geometry.normalsNeedUpdate = false; 
             }
 
             if (geometry.colorsNeedUpdate === true)
-            {
-                var attribute = this.attributes.color;
+            { 
+                attribute = this.attributes.color; 
                 if (attribute !== undefined)
-                {
+                { 
                     attribute.copyColorsArray(geometry.colors);
-                    attribute.needsUpdate = true;
+                    attribute.needsUpdate = true; 
                 }
 
-                geometry.colorsNeedUpdate = false;
+                geometry.colorsNeedUpdate = false; 
             }
 
             if (geometry.uvsNeedUpdate)
-            {
-                var attribute = this.attributes.uv;
+            { 
+                attribute = this.attributes.uv;
+
                 if (attribute !== undefined)
-                {
+                { 
                     attribute.copyVector2sArray(geometry.uvs);
-                    attribute.needsUpdate = true;
+                    attribute.needsUpdate = true; 
                 }
-                geometry.uvsNeedUpdate = false;
+
+                geometry.uvsNeedUpdate = false; 
             }
 
             if (geometry.lineDistancesNeedUpdate)
-            {
-                var attribute = this.attributes.lineDistance;
-
+            { 
+                attribute = this.attributes.lineDistance; 
                 if (attribute !== undefined)
-                {
+                { 
                     attribute.copyArray(geometry.lineDistances);
-                    attribute.needsUpdate = true;
+                    attribute.needsUpdate = true; 
                 }
+
                 geometry.lineDistancesNeedUpdate = false;
+
             }
 
             if (geometry.groupsNeedUpdate)
-            {
+            { 
                 geometry.computeGroups(object.geometry);
-                this.groups = geometry.groups;
-                geometry.groupsNeedUpdate = false;
-            }
-
-            return this;
-
-        }
-
+                this.groups = geometry.groups; 
+                geometry.groupsNeedUpdate = false; 
+            } 
+            return this; 
+        } 
         fromGeometry(geometry)
         {
             geometry.__directGeometry = new DirectGeometry().fromGeometry(geometry);

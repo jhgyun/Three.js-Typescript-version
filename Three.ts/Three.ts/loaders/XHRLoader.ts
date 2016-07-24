@@ -30,14 +30,14 @@ namespace THREE
 
             if (cached !== undefined)
             {
-                if (onLoad)
-                {
-                    setTimeout(function ()
-                    {
-                        onLoad(cached);
+                scope.manager.itemStart(url);
 
-                    }, 0);
-                }
+                setTimeout(function ()
+                { 
+                    if (onLoad) onLoad(cached); 
+                    scope.manager.itemEnd(url); 
+                }, 0);
+
                 return cached;
             }
 

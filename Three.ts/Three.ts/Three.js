@@ -268,9 +268,9 @@ var THREE;
                         }
                     }
                     if (time >= duration || time < 0) {
-                        var loopDelta = Math.floor(time / duration);
+                        var loopDelta = THREE.Math.floor(time / duration);
                         time -= duration * loopDelta;
-                        loopCount += Math.abs(loopDelta);
+                        loopCount += THREE.Math.abs(loopDelta);
                         var pending = this.repetitions - loopCount;
                         if (pending < 0) {
                             if (this.clampWhenFinished)
@@ -353,7 +353,7 @@ var THREE;
             this.name = name;
             this.tracks = tracks;
             this.duration = (duration !== undefined) ? duration : -1;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             if (this.duration < 0) {
                 this.resetDuration();
             }
@@ -365,7 +365,7 @@ var THREE;
             var tracks = this.tracks, duration = 0;
             for (var i = 0, n = tracks.length; i !== n; ++i) {
                 var track = this.tracks[i];
-                duration = Math.max(duration, track.times[track.times.length - 1]);
+                duration = THREE.Math.max(duration, track.times[track.times.length - 1]);
             }
             this.duration = duration;
         };
@@ -663,7 +663,7 @@ var THREE;
         };
         AnimationMixer.prototype.update = function (deltaTime) {
             deltaTime *= this.timeScale;
-            var actions = this._actions, nActions = this._nActiveActions, time = this.time += deltaTime, timeDirection = Math.sign(deltaTime), accuIndex = this._accuIndex ^= 1;
+            var actions = this._actions, nActions = this._nActiveActions, time = this.time += deltaTime, timeDirection = THREE.Math.sign(deltaTime), accuIndex = this._accuIndex ^= 1;
             for (var i = 0; i !== nActions; ++i) {
                 var action = actions[i];
                 if (action.enabled) {
@@ -933,7 +933,7 @@ var THREE;
 (function (THREE) {
     var AnimationObjectGroup = (function () {
         function AnimationObjectGroup(var_args) {
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this._objects = Array.prototype.slice.call(arguments);
             this.nCachedObjects_ = 0;
             var indices = {};
@@ -1265,7 +1265,7 @@ var THREE;
             ++to;
             if (from !== 0 || to !== nKeys) {
                 if (from >= to)
-                    to = Math.max(to, 1), from = to - 1;
+                    to = THREE.Math.max(to, 1), from = to - 1;
                 var stride = this.getValueSize();
                 this.times = THREE.AnimationUtils.arraySlice(times, from, to);
                 this.values = THREE.AnimationUtils.
@@ -1276,7 +1276,7 @@ var THREE;
         KeyframeTrack.prototype.validate = function () {
             var valid = true;
             var valueSize = this.getValueSize();
-            if (valueSize - Math.floor(valueSize) !== 0) {
+            if (valueSize - THREE.Math.floor(valueSize) !== 0) {
                 console.error("invalid value size in track", this);
                 valid = false;
             }
@@ -2010,7 +2010,7 @@ if (Object.assign === undefined) {
 }
 var THREE;
 (function (THREE) {
-    THREE.REVISION = '78';
+    THREE.REVISION = '79';
     THREE.MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
     THREE.CullFaceNone = 0;
     THREE.CullFaceBack = 1;
@@ -2398,9 +2398,9 @@ var THREE;
             }
             var te = this.elements;
             var x = euler.x, y = euler.y, z = euler.z;
-            var a = Math.cos(x), b = Math.sin(x);
-            var c = Math.cos(y), d = Math.sin(y);
-            var e = Math.cos(z), f = Math.sin(z);
+            var a = THREE.Math.cos(x), b = THREE.Math.sin(x);
+            var c = THREE.Math.cos(y), d = THREE.Math.sin(y);
+            var e = THREE.Math.cos(z), f = THREE.Math.sin(z);
             if (euler.order === 'XYZ') {
                 var ae = a * e, af = a * f, be = b * e, bf = b * f;
                 te[0] = c * e;
@@ -2758,30 +2758,30 @@ var THREE;
             var scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
             var scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
             var scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
-            return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
+            return THREE.Math.sqrt(THREE.Math.max(scaleXSq, scaleYSq, scaleZSq));
         };
         Matrix4.prototype.makeTranslation = function (x, y, z) {
             this.set(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
             return this;
         };
         Matrix4.prototype.makeRotationX = function (theta) {
-            var c = Math.cos(theta), s = Math.sin(theta);
+            var c = THREE.Math.cos(theta), s = THREE.Math.sin(theta);
             this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
             return this;
         };
         Matrix4.prototype.makeRotationY = function (theta) {
-            var c = Math.cos(theta), s = Math.sin(theta);
+            var c = THREE.Math.cos(theta), s = THREE.Math.sin(theta);
             this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
             return this;
         };
         Matrix4.prototype.makeRotationZ = function (theta) {
-            var c = Math.cos(theta), s = Math.sin(theta);
+            var c = THREE.Math.cos(theta), s = THREE.Math.sin(theta);
             this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
             return this;
         };
         Matrix4.prototype.makeRotationAxis = function (axis, angle) {
-            var c = Math.cos(angle);
-            var s = Math.sin(angle);
+            var c = THREE.Math.cos(angle);
+            var s = THREE.Math.sin(angle);
             var t = 1 - c;
             var x = axis.x, y = axis.y, z = axis.z;
             var tx = t * x, ty = t * y;
@@ -2862,7 +2862,7 @@ var THREE;
             return this;
         };
         Matrix4.prototype.makePerspective = function (fov, aspect, near, far) {
-            var ymax = near * Math.tan(Math.DEG2RAD * fov * 0.5);
+            var ymax = near * THREE.Math.tan(THREE.Math.DEG2RAD * fov * 0.5);
             var ymin = -ymax;
             var xmin = ymin * aspect;
             var xmax = ymax * aspect;
@@ -3067,42 +3067,42 @@ var THREE;
             return this.multiplyScalar(1 / scalar);
         };
         Vector2.prototype.min = function (v) {
-            this.x = Math.min(this.x, v.x);
-            this.y = Math.min(this.y, v.y);
+            this.x = THREE.Math.min(this.x, v.x);
+            this.y = THREE.Math.min(this.y, v.y);
             return this;
         };
         Vector2.prototype.max = function (v) {
-            this.x = Math.max(this.x, v.x);
-            this.y = Math.max(this.y, v.y);
+            this.x = THREE.Math.max(this.x, v.x);
+            this.y = THREE.Math.max(this.y, v.y);
             return this;
         };
         Vector2.prototype.clamp = function (min, max) {
-            this.x = Math.max(min.x, Math.min(max.x, this.x));
-            this.y = Math.max(min.y, Math.min(max.y, this.y));
+            this.x = THREE.Math.max(min.x, THREE.Math.min(max.x, this.x));
+            this.y = THREE.Math.max(min.y, THREE.Math.min(max.y, this.y));
             return this;
         };
         Vector2.prototype.clampLength = function (min, max) {
             var length = this.length();
-            return this.multiplyScalar(Math.max(min, Math.min(max, length)) / length);
+            return this.multiplyScalar(THREE.Math.max(min, THREE.Math.min(max, length)) / length);
         };
         Vector2.prototype.floor = function () {
-            this.x = Math.floor(this.x);
-            this.y = Math.floor(this.y);
+            this.x = THREE.Math.floor(this.x);
+            this.y = THREE.Math.floor(this.y);
             return this;
         };
         Vector2.prototype.ceil = function () {
-            this.x = Math.ceil(this.x);
-            this.y = Math.ceil(this.y);
+            this.x = THREE.Math.ceil(this.x);
+            this.y = THREE.Math.ceil(this.y);
             return this;
         };
         Vector2.prototype.round = function () {
-            this.x = Math.round(this.x);
-            this.y = Math.round(this.y);
+            this.x = THREE.Math.round(this.x);
+            this.y = THREE.Math.round(this.y);
             return this;
         };
         Vector2.prototype.roundToZero = function () {
-            this.x = (this.x < 0) ? Math.ceil(this.x) : Math.floor(this.x);
-            this.y = (this.y < 0) ? Math.ceil(this.y) : Math.floor(this.y);
+            this.x = (this.x < 0) ? THREE.Math.ceil(this.x) : THREE.Math.floor(this.x);
+            this.y = (this.y < 0) ? THREE.Math.ceil(this.y) : THREE.Math.floor(this.y);
             return this;
         };
         Vector2.prototype.negate = function () {
@@ -3117,26 +3117,29 @@ var THREE;
             return this.x * this.x + this.y * this.y;
         };
         Vector2.prototype.length = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y);
+            return THREE.Math.sqrt(this.x * this.x + this.y * this.y);
         };
         Vector2.prototype.lengthManhattan = function () {
-            return Math.abs(this.x) + Math.abs(this.y);
+            return THREE.Math.abs(this.x) + THREE.Math.abs(this.y);
         };
         Vector2.prototype.normalize = function () {
             return this.divideScalar(this.length());
         };
         Vector2.prototype.angle = function () {
-            var angle = Math.atan2(this.y, this.x);
+            var angle = THREE.Math.atan2(this.y, this.x);
             if (angle < 0)
-                angle += 2 * Math.PI;
+                angle += 2 * THREE.Math.PI;
             return angle;
         };
         Vector2.prototype.distanceTo = function (v) {
-            return Math.sqrt(this.distanceToSquared(v));
+            return THREE.Math.sqrt(this.distanceToSquared(v));
         };
         Vector2.prototype.distanceToSquared = function (v) {
             var dx = this.x - v.x, dy = this.y - v.y;
             return dx * dx + dy * dy;
+        };
+        Vector2.prototype.distanceToManhattan = function (v) {
+            return THREE.Math.abs(this.x - v.x) + THREE.Math.abs(this.y - v.y);
         };
         Vector2.prototype.setLength = function (length) {
             return this.multiplyScalar(length / this.length());
@@ -3173,7 +3176,7 @@ var THREE;
             return this;
         };
         Vector2.prototype.rotateAround = function (center, angle) {
-            var c = Math.cos(angle), s = Math.sin(angle);
+            var c = THREE.Math.cos(angle), s = THREE.Math.sin(angle);
             var x = this.x - center.x;
             var y = this.y - center.y;
             this.x = x * c - y * s + center.x;
@@ -3181,8 +3184,8 @@ var THREE;
             return this;
         };
         Vector2.prototype.clampScalar = function (minVal, maxVal) {
-            this.x = Math.max(minVal, Math.min(maxVal, this.x));
-            this.y = Math.max(minVal, Math.min(maxVal, this.y));
+            this.x = THREE.Math.max(minVal, THREE.Math.min(maxVal, this.x));
+            this.y = THREE.Math.max(minVal, THREE.Math.min(maxVal, this.y));
             return this;
         };
         return Vector2;
@@ -3413,21 +3416,21 @@ var THREE;
             return this.multiplyScalar(1 / scalar);
         };
         Vector3.prototype.min = function (v) {
-            this.x = Math.min(this.x, v.x);
-            this.y = Math.min(this.y, v.y);
-            this.z = Math.min(this.z, v.z);
+            this.x = THREE.Math.min(this.x, v.x);
+            this.y = THREE.Math.min(this.y, v.y);
+            this.z = THREE.Math.min(this.z, v.z);
             return this;
         };
         Vector3.prototype.max = function (v) {
-            this.x = Math.max(this.x, v.x);
-            this.y = Math.max(this.y, v.y);
-            this.z = Math.max(this.z, v.z);
+            this.x = THREE.Math.max(this.x, v.x);
+            this.y = THREE.Math.max(this.y, v.y);
+            this.z = THREE.Math.max(this.z, v.z);
             return this;
         };
         Vector3.prototype.clamp = function (min, max) {
-            this.x = Math.max(min.x, Math.min(max.x, this.x));
-            this.y = Math.max(min.y, Math.min(max.y, this.y));
-            this.z = Math.max(min.z, Math.min(max.z, this.z));
+            this.x = THREE.Math.max(min.x, THREE.Math.min(max.x, this.x));
+            this.y = THREE.Math.max(min.y, THREE.Math.min(max.y, this.y));
+            this.z = THREE.Math.max(min.z, THREE.Math.min(max.z, this.z));
             return this;
         };
         Vector3.prototype.clampScalar = function (minVal, maxVal) {
@@ -3444,30 +3447,30 @@ var THREE;
         };
         Vector3.prototype.clampLength = function (min, max) {
             var length = this.length();
-            return this.multiplyScalar(Math.max(min, Math.min(max, length)) / length);
+            return this.multiplyScalar(THREE.Math.max(min, THREE.Math.min(max, length)) / length);
         };
         Vector3.prototype.floor = function () {
-            this.x = Math.floor(this.x);
-            this.y = Math.floor(this.y);
-            this.z = Math.floor(this.z);
+            this.x = THREE.Math.floor(this.x);
+            this.y = THREE.Math.floor(this.y);
+            this.z = THREE.Math.floor(this.z);
             return this;
         };
         Vector3.prototype.ceil = function () {
-            this.x = Math.ceil(this.x);
-            this.y = Math.ceil(this.y);
-            this.z = Math.ceil(this.z);
+            this.x = THREE.Math.ceil(this.x);
+            this.y = THREE.Math.ceil(this.y);
+            this.z = THREE.Math.ceil(this.z);
             return this;
         };
         Vector3.prototype.round = function () {
-            this.x = Math.round(this.x);
-            this.y = Math.round(this.y);
-            this.z = Math.round(this.z);
+            this.x = THREE.Math.round(this.x);
+            this.y = THREE.Math.round(this.y);
+            this.z = THREE.Math.round(this.z);
             return this;
         };
         Vector3.prototype.roundToZero = function () {
-            this.x = (this.x < 0) ? Math.ceil(this.x) : Math.floor(this.x);
-            this.y = (this.y < 0) ? Math.ceil(this.y) : Math.floor(this.y);
-            this.z = (this.z < 0) ? Math.ceil(this.z) : Math.floor(this.z);
+            this.x = (this.x < 0) ? THREE.Math.ceil(this.x) : THREE.Math.floor(this.x);
+            this.y = (this.y < 0) ? THREE.Math.ceil(this.y) : THREE.Math.floor(this.y);
+            this.z = (this.z < 0) ? THREE.Math.ceil(this.z) : THREE.Math.floor(this.z);
             return this;
         };
         Vector3.prototype.negate = function () {
@@ -3483,10 +3486,10 @@ var THREE;
             return this.x * this.x + this.y * this.y + this.z * this.z;
         };
         Vector3.prototype.length = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+            return THREE.Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         };
         Vector3.prototype.lengthManhattan = function () {
-            return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z);
+            return THREE.Math.abs(this.x) + THREE.Math.abs(this.y) + THREE.Math.abs(this.z);
         };
         Vector3.prototype.normalize = function () {
             return this.divideScalar(this.length());
@@ -3541,21 +3544,24 @@ var THREE;
             return func.apply(this, arguments);
         };
         Vector3.prototype.angleTo = function (v) {
-            var theta = this.dot(v) / (Math.sqrt(this.lengthSq() * v.lengthSq()));
-            return Math.acos(Math.clamp(theta, -1, 1));
+            var theta = this.dot(v) / (THREE.Math.sqrt(this.lengthSq() * v.lengthSq()));
+            return THREE.Math.acos(THREE.Math.clamp(theta, -1, 1));
         };
         Vector3.prototype.distanceTo = function (v) {
-            return Math.sqrt(this.distanceToSquared(v));
+            return THREE.Math.sqrt(this.distanceToSquared(v));
         };
         Vector3.prototype.distanceToSquared = function (v) {
             var dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z;
             return dx * dx + dy * dy + dz * dz;
         };
+        Vector3.prototype.distanceToManhattan = function (v) {
+            return THREE.Math.abs(this.x - v.x) + THREE.Math.abs(this.y - v.y) + THREE.Math.abs(this.z - v.z);
+        };
         Vector3.prototype.setFromSpherical = function (s) {
-            var sinPhiRadius = Math.sin(s.phi) * s.radius;
-            this.x = sinPhiRadius * Math.sin(s.theta);
-            this.y = Math.cos(s.phi) * s.radius;
-            this.z = sinPhiRadius * Math.cos(s.theta);
+            var sinPhiRadius = THREE.Math.sin(s.phi) * s.radius;
+            this.x = sinPhiRadius * THREE.Math.sin(s.theta);
+            this.y = THREE.Math.cos(s.phi) * s.radius;
+            this.z = sinPhiRadius * THREE.Math.cos(s.theta);
             return this;
         };
         Vector3.prototype.setFromMatrixPosition = function (m) {
@@ -3760,8 +3766,8 @@ var THREE;
             return this.multiplyScalar(1 / scalar);
         };
         Vector4.prototype.setAxisAngleFromQuaternion = function (q) {
-            this.w = 2 * Math.acos(q.w);
-            var s = Math.sqrt(1 - q.w * q.w);
+            this.w = 2 * THREE.Math.acos(q.w);
+            var s = THREE.Math.sqrt(1 - q.w * q.w);
             if (s < 0.0001) {
                 this.x = 1;
                 this.y = 0;
@@ -3776,17 +3782,17 @@ var THREE;
         };
         Vector4.prototype.setAxisAngleFromRotationMatrix = function (m) {
             var angle, x, y, z, epsilon = 0.01, epsilon2 = 0.1, te = m.elements, m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10];
-            if ((Math.abs(m12 - m21) < epsilon) &&
-                (Math.abs(m13 - m31) < epsilon) &&
-                (Math.abs(m23 - m32) < epsilon)) {
-                if ((Math.abs(m12 + m21) < epsilon2) &&
-                    (Math.abs(m13 + m31) < epsilon2) &&
-                    (Math.abs(m23 + m32) < epsilon2) &&
-                    (Math.abs(m11 + m22 + m33 - 3) < epsilon2)) {
+            if ((THREE.Math.abs(m12 - m21) < epsilon) &&
+                (THREE.Math.abs(m13 - m31) < epsilon) &&
+                (THREE.Math.abs(m23 - m32) < epsilon)) {
+                if ((THREE.Math.abs(m12 + m21) < epsilon2) &&
+                    (THREE.Math.abs(m13 + m31) < epsilon2) &&
+                    (THREE.Math.abs(m23 + m32) < epsilon2) &&
+                    (THREE.Math.abs(m11 + m22 + m33 - 3) < epsilon2)) {
                     this.set(1, 0, 0, 0);
                     return this;
                 }
-                angle = Math.PI;
+                angle = THREE.Math.PI;
                 var xx = (m11 + 1) / 2;
                 var yy = (m22 + 1) / 2;
                 var zz = (m33 + 1) / 2;
@@ -3800,7 +3806,7 @@ var THREE;
                         z = 0.707106781;
                     }
                     else {
-                        x = Math.sqrt(xx);
+                        x = THREE.Math.sqrt(xx);
                         y = xy / x;
                         z = xz / x;
                     }
@@ -3812,7 +3818,7 @@ var THREE;
                         z = 0.707106781;
                     }
                     else {
-                        y = Math.sqrt(yy);
+                        y = THREE.Math.sqrt(yy);
                         x = xy / y;
                         z = yz / y;
                     }
@@ -3824,7 +3830,7 @@ var THREE;
                         z = 0;
                     }
                     else {
-                        z = Math.sqrt(zz);
+                        z = THREE.Math.sqrt(zz);
                         x = xz / z;
                         y = yz / z;
                     }
@@ -3832,36 +3838,36 @@ var THREE;
                 this.set(x, y, z, angle);
                 return this;
             }
-            var s = Math.sqrt((m32 - m23) * (m32 - m23) +
+            var s = THREE.Math.sqrt((m32 - m23) * (m32 - m23) +
                 (m13 - m31) * (m13 - m31) +
                 (m21 - m12) * (m21 - m12));
-            if (Math.abs(s) < 0.001)
+            if (THREE.Math.abs(s) < 0.001)
                 s = 1;
             this.x = (m32 - m23) / s;
             this.y = (m13 - m31) / s;
             this.z = (m21 - m12) / s;
-            this.w = Math.acos((m11 + m22 + m33 - 1) / 2);
+            this.w = THREE.Math.acos((m11 + m22 + m33 - 1) / 2);
             return this;
         };
         Vector4.prototype.min = function (v) {
-            this.x = Math.min(this.x, v.x);
-            this.y = Math.min(this.y, v.y);
-            this.z = Math.min(this.z, v.z);
-            this.w = Math.min(this.w, v.w);
+            this.x = THREE.Math.min(this.x, v.x);
+            this.y = THREE.Math.min(this.y, v.y);
+            this.z = THREE.Math.min(this.z, v.z);
+            this.w = THREE.Math.min(this.w, v.w);
             return this;
         };
         Vector4.prototype.max = function (v) {
-            this.x = Math.max(this.x, v.x);
-            this.y = Math.max(this.y, v.y);
-            this.z = Math.max(this.z, v.z);
-            this.w = Math.max(this.w, v.w);
+            this.x = THREE.Math.max(this.x, v.x);
+            this.y = THREE.Math.max(this.y, v.y);
+            this.z = THREE.Math.max(this.z, v.z);
+            this.w = THREE.Math.max(this.w, v.w);
             return this;
         };
         Vector4.prototype.clamp = function (min, max) {
-            this.x = Math.max(min.x, Math.min(max.x, this.x));
-            this.y = Math.max(min.y, Math.min(max.y, this.y));
-            this.z = Math.max(min.z, Math.min(max.z, this.z));
-            this.w = Math.max(min.w, Math.min(max.w, this.w));
+            this.x = THREE.Math.max(min.x, THREE.Math.min(max.x, this.x));
+            this.y = THREE.Math.max(min.y, THREE.Math.min(max.y, this.y));
+            this.z = THREE.Math.max(min.z, THREE.Math.min(max.z, this.z));
+            this.w = THREE.Math.max(min.w, THREE.Math.min(max.w, this.w));
             return this;
         };
         Vector4.prototype.clampScalar = function (minVal, maxVal) {
@@ -3875,31 +3881,31 @@ var THREE;
             return func.apply(this, arguments);
         };
         Vector4.prototype.floor = function () {
-            this.x = Math.floor(this.x);
-            this.y = Math.floor(this.y);
-            this.z = Math.floor(this.z);
-            this.w = Math.floor(this.w);
+            this.x = THREE.Math.floor(this.x);
+            this.y = THREE.Math.floor(this.y);
+            this.z = THREE.Math.floor(this.z);
+            this.w = THREE.Math.floor(this.w);
             return this;
         };
         Vector4.prototype.ceil = function () {
-            this.x = Math.ceil(this.x);
-            this.y = Math.ceil(this.y);
-            this.z = Math.ceil(this.z);
-            this.w = Math.ceil(this.w);
+            this.x = THREE.Math.ceil(this.x);
+            this.y = THREE.Math.ceil(this.y);
+            this.z = THREE.Math.ceil(this.z);
+            this.w = THREE.Math.ceil(this.w);
             return this;
         };
         Vector4.prototype.round = function () {
-            this.x = Math.round(this.x);
-            this.y = Math.round(this.y);
-            this.z = Math.round(this.z);
-            this.w = Math.round(this.w);
+            this.x = THREE.Math.round(this.x);
+            this.y = THREE.Math.round(this.y);
+            this.z = THREE.Math.round(this.z);
+            this.w = THREE.Math.round(this.w);
             return this;
         };
         Vector4.prototype.roundToZero = function () {
-            this.x = (this.x < 0) ? Math.ceil(this.x) : Math.floor(this.x);
-            this.y = (this.y < 0) ? Math.ceil(this.y) : Math.floor(this.y);
-            this.z = (this.z < 0) ? Math.ceil(this.z) : Math.floor(this.z);
-            this.w = (this.w < 0) ? Math.ceil(this.w) : Math.floor(this.w);
+            this.x = (this.x < 0) ? THREE.Math.ceil(this.x) : THREE.Math.floor(this.x);
+            this.y = (this.y < 0) ? THREE.Math.ceil(this.y) : THREE.Math.floor(this.y);
+            this.z = (this.z < 0) ? THREE.Math.ceil(this.z) : THREE.Math.floor(this.z);
+            this.w = (this.w < 0) ? THREE.Math.ceil(this.w) : THREE.Math.floor(this.w);
             return this;
         };
         Vector4.prototype.negate = function () {
@@ -3916,10 +3922,10 @@ var THREE;
             return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
         };
         Vector4.prototype.length = function () {
-            return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+            return THREE.Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
         };
         Vector4.prototype.lengthManhattan = function () {
-            return Math.abs(this.x) + Math.abs(this.y) + Math.abs(this.z) + Math.abs(this.w);
+            return THREE.Math.abs(this.x) + THREE.Math.abs(this.y) + THREE.Math.abs(this.z) + THREE.Math.abs(this.w);
         };
         Vector4.prototype.normalize = function () {
             return this.divideScalar(this.length());
@@ -4003,7 +4009,7 @@ var THREE;
             this.b = scalar;
         };
         Color.prototype.setHex = function (hex) {
-            hex = Math.floor(hex);
+            hex = THREE.Math.floor(hex);
             this.r = (hex >> 16 & 255) / 255;
             this.g = (hex >> 8 & 255) / 255;
             this.b = (hex & 255) / 255;
@@ -4029,9 +4035,9 @@ var THREE;
             return p;
         };
         Color.prototype.setHSL = function (h, s, l) {
-            h = Math.euclideanModulo(h, 1);
-            s = Math.clamp(s, 0, 1);
-            l = Math.clamp(l, 0, 1);
+            h = THREE.Math.euclideanModulo(h, 1);
+            s = THREE.Math.clamp(s, 0, 1);
+            l = THREE.Math.clamp(l, 0, 1);
             if (s === 0) {
                 this.r = this.g = this.b = l;
             }
@@ -4061,16 +4067,16 @@ var THREE;
                     case 'rgb':
                     case 'rgba':
                         if (color = /^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(components)) {
-                            this.r = Math.min(255, parseInt(color[1], 10)) / 255;
-                            this.g = Math.min(255, parseInt(color[2], 10)) / 255;
-                            this.b = Math.min(255, parseInt(color[3], 10)) / 255;
+                            this.r = THREE.Math.min(255, parseInt(color[1], 10)) / 255;
+                            this.g = THREE.Math.min(255, parseInt(color[2], 10)) / 255;
+                            this.b = THREE.Math.min(255, parseInt(color[3], 10)) / 255;
                             handleAlpha(color[5]);
                             return this;
                         }
                         if (color = /^(\d+)\%\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(components)) {
-                            this.r = Math.min(100, parseInt(color[1], 10)) / 100;
-                            this.g = Math.min(100, parseInt(color[2], 10)) / 100;
-                            this.b = Math.min(100, parseInt(color[3], 10)) / 100;
+                            this.r = THREE.Math.min(100, parseInt(color[1], 10)) / 100;
+                            this.g = THREE.Math.min(100, parseInt(color[2], 10)) / 100;
+                            this.b = THREE.Math.min(100, parseInt(color[3], 10)) / 100;
                             handleAlpha(color[5]);
                             return this;
                         }
@@ -4126,18 +4132,18 @@ var THREE;
         Color.prototype.copyGammaToLinear = function (color, gammaFactor) {
             if (gammaFactor === undefined)
                 gammaFactor = 2.0;
-            this.r = Math.pow(color.r, gammaFactor);
-            this.g = Math.pow(color.g, gammaFactor);
-            this.b = Math.pow(color.b, gammaFactor);
+            this.r = THREE.Math.pow(color.r, gammaFactor);
+            this.g = THREE.Math.pow(color.g, gammaFactor);
+            this.b = THREE.Math.pow(color.b, gammaFactor);
             return this;
         };
         Color.prototype.copyLinearToGamma = function (color, gammaFactor) {
             if (gammaFactor === undefined)
                 gammaFactor = 2.0;
             var safeInverse = (gammaFactor > 0) ? (1.0 / gammaFactor) : 1.0;
-            this.r = Math.pow(color.r, safeInverse);
-            this.g = Math.pow(color.g, safeInverse);
-            this.b = Math.pow(color.b, safeInverse);
+            this.r = THREE.Math.pow(color.r, safeInverse);
+            this.g = THREE.Math.pow(color.g, safeInverse);
+            this.b = THREE.Math.pow(color.b, safeInverse);
             return this;
         };
         Color.prototype.convertGammaToLinear = function () {
@@ -4148,9 +4154,9 @@ var THREE;
             return this;
         };
         Color.prototype.convertLinearToGamma = function () {
-            this.r = Math.sqrt(this.r);
-            this.g = Math.sqrt(this.g);
-            this.b = Math.sqrt(this.b);
+            this.r = THREE.Math.sqrt(this.r);
+            this.g = THREE.Math.sqrt(this.g);
+            this.b = THREE.Math.sqrt(this.b);
             return this;
         };
         Color.prototype.getHex = function () {
@@ -4162,8 +4168,8 @@ var THREE;
         Color.prototype.getHSL = function (optionalTarget) {
             var hsl = optionalTarget || { h: 0, s: 0, l: 0 };
             var r = this.r, g = this.g, b = this.b;
-            var max = Math.max(r, g, b);
-            var min = Math.min(r, g, b);
+            var max = THREE.Math.max(r, g, b);
+            var min = THREE.Math.min(r, g, b);
             var hue, saturation;
             var lightness = (min + max) / 2.0;
             if (min === max) {
@@ -4218,6 +4224,12 @@ var THREE;
             this.r += s;
             this.g += s;
             this.b += s;
+            return this;
+        };
+        Color.prototype.sub = function (color) {
+            this.r = THREE.Math.max(0, this.r - color.r);
+            this.g = THREE.Math.max(0, this.g - color.g);
+            this.b = THREE.Math.max(0, this.b - color.b);
             return this;
         };
         Color.prototype.multiply = function (color) {
@@ -4498,12 +4510,25 @@ var THREE;
                                 scope.expandByPoint(v1);
                             }
                         }
-                        else if (geometry instanceof THREE.BufferGeometry && geometry.attributes['position'] !== undefined) {
-                            var positions = geometry.attributes['position'].array;
-                            for (var i = 0, il = positions.length; i < il; i += 3) {
-                                v1.fromArray(positions, i);
-                                v1.applyMatrix4(node.matrixWorld);
-                                scope.expandByPoint(v1);
+                        else if (geometry instanceof THREE.BufferGeometry) {
+                            var attribute = geometry.attributes.position;
+                            if (attribute !== undefined) {
+                                var array, offset, stride;
+                                if (attribute instanceof THREE.InterleavedBufferAttribute) {
+                                    array = attribute.data.array;
+                                    offset = attribute.offset;
+                                    stride = attribute.data.stride;
+                                }
+                                else {
+                                    array = attribute.array;
+                                    offset = 0;
+                                    stride = 3;
+                                }
+                                for (var i_1 = offset, il_1 = array.length; i_1 < il_1; i_1 += stride) {
+                                    v1.fromArray(array, i_1);
+                                    v1.applyMatrix4(node.matrixWorld);
+                                    scope.expandByPoint(v1);
+                                }
                             }
                         }
                     }
@@ -4712,9 +4737,9 @@ var THREE;
                 }
                 var maxRadiusSq = 0;
                 for (var i = 0, il = points.length; i < il; i++) {
-                    maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(points[i]));
+                    maxRadiusSq = THREE.Math.max(maxRadiusSq, center.distanceToSquared(points[i]));
                 }
-                this.radius = Math.sqrt(maxRadiusSq);
+                this.radius = THREE.Math.sqrt(maxRadiusSq);
                 return this;
             };
             return func.apply(this, arguments);
@@ -4744,7 +4769,7 @@ var THREE;
             return box.intersectsSphere(this);
         };
         Sphere.prototype.intersectsPlane = function (plane) {
-            return Math.abs(this.center.dot(plane.normal) - plane.constant) <= this.radius;
+            return THREE.Math.abs(this.center.dot(plane.normal) - plane.constant) <= this.radius;
         };
         Sphere.prototype.clampPoint = function (point, optionalTarget) {
             var deltaLengthSq = this.center.distanceToSquared(point);
@@ -4807,7 +4832,7 @@ var THREE;
         };
         Spherical.prototype.makeSafe = function () {
             var EPS = 0.000001;
-            this.phi = Math.max(EPS, Math.min(Math.PI - EPS, this.phi));
+            this.phi = THREE.Math.max(EPS, THREE.Math.min(THREE.Math.PI - EPS, this.phi));
             return this;
         };
         Spherical.prototype.setFromVector3 = function (vec3) {
@@ -4817,8 +4842,8 @@ var THREE;
                 this.phi = 0;
             }
             else {
-                this.theta = Math.atan2(vec3.x, vec3.z);
-                this.phi = Math.acos(Math.clamp(vec3.y / this.radius, -1, 1));
+                this.theta = THREE.Math.atan2(vec3.x, vec3.z);
+                this.phi = THREE.Math.acos(THREE.Math.clamp(vec3.y / this.radius, -1, 1));
             }
             return this;
         };
@@ -4847,7 +4872,7 @@ var THREE;
                 result.cross(v0);
                 var resultLengthSq = result.lengthSq();
                 if (resultLengthSq > 0) {
-                    return result.multiplyScalar(1 / Math.sqrt(resultLengthSq));
+                    return result.multiplyScalar(1 / THREE.Math.sqrt(resultLengthSq));
                 }
                 return result.set(0, 0, 0);
             };
@@ -4981,7 +5006,7 @@ var THREE;
         function Object3D() {
             _super.call(this);
             this._id = THREE.Object3DIdCount++;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.name = '';
             this.type = 'Object3D';
             this.parent = null;
@@ -5961,21 +5986,21 @@ var THREE;
         };
         PerspectiveCamera.prototype.setFocalLength = function (focalLength) {
             var vExtentSlope = 0.5 * this.getFilmHeight() / focalLength;
-            this.fov = Math.RAD2DEG * 2 * Math.atan(vExtentSlope);
+            this.fov = THREE.Math.RAD2DEG * 2 * THREE.Math.atan(vExtentSlope);
             this.updateProjectionMatrix();
         };
         PerspectiveCamera.prototype.getFocalLength = function () {
-            var vExtentSlope = Math.tan(Math.DEG2RAD * 0.5 * this.fov);
+            var vExtentSlope = THREE.Math.tan(THREE.Math.DEG2RAD * 0.5 * this.fov);
             return 0.5 * this.getFilmHeight() / vExtentSlope;
         };
         PerspectiveCamera.prototype.getEffectiveFOV = function () {
-            return Math.RAD2DEG * 2 * Math.atan(Math.tan(Math.DEG2RAD * 0.5 * this.fov) / this.zoom);
+            return THREE.Math.RAD2DEG * 2 * THREE.Math.atan(THREE.Math.tan(THREE.Math.DEG2RAD * 0.5 * this.fov) / this.zoom);
         };
         PerspectiveCamera.prototype.getFilmWidth = function () {
-            return this.filmGauge * Math.min(this.aspect, 1);
+            return this.filmGauge * THREE.Math.min(this.aspect, 1);
         };
         PerspectiveCamera.prototype.getFilmHeight = function () {
-            return this.filmGauge / Math.max(this.aspect, 1);
+            return this.filmGauge / THREE.Math.max(this.aspect, 1);
         };
         PerspectiveCamera.prototype.setViewOffset = function (fullWidth, fullHeight, x, y, width, height) {
             this.aspect = fullWidth / fullHeight;
@@ -5994,7 +6019,7 @@ var THREE;
             this.updateProjectionMatrix();
         };
         PerspectiveCamera.prototype.updateProjectionMatrix = function () {
-            var near = this.near, top = near * Math.tan(Math.DEG2RAD * 0.5 * this.fov) / this.zoom, height = 2 * top, width = this.aspect * height, left = -0.5 * width, view = this.view;
+            var near = this.near, top = near * THREE.Math.tan(THREE.Math.DEG2RAD * 0.5 * this.fov) / this.zoom, height = 2 * top, width = this.aspect * height, left = -0.5 * width, view = this.view;
             if (view !== null) {
                 var fullWidth = view.fullWidth, fullHeight = view.fullHeight;
                 left += view.offsetX * width / fullWidth;
@@ -6057,7 +6082,7 @@ var THREE;
                 var projectionMatrix = camera.projectionMatrix.clone();
                 var eyeSep = 0.064 / 2;
                 var eyeSepOnProjection = eyeSep * near / focus;
-                var ymax = near * Math.tan(Math.DEG2RAD * fov * 0.5);
+                var ymax = near * THREE.Math.tan(THREE.Math.DEG2RAD * fov * 0.5);
                 var xmin, xmax;
                 eyeLeft.elements[12] = -eyeSep;
                 eyeRight.elements[12] = eyeSep;
@@ -6095,7 +6120,7 @@ var THREE;
             this.dynamic = false;
             this.updateRange = { offset: 0, count: -1 };
             this.version = 0;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.array = array;
             this.itemSize = itemSize;
             this.dynamic = false;
@@ -6344,7 +6369,7 @@ var THREE;
         function Geometry() {
             _super.apply(this, arguments);
             this._id = THREE.GeometryIdCount++;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.name = '';
             this.type = 'Geometry';
             this.vertices = [];
@@ -6358,8 +6383,8 @@ var THREE;
             this.lineDistances = [];
             this.boundingBox = null;
             this.boundingSphere = null;
-            this.verticesNeedUpdate = false;
             this.elementsNeedUpdate = false;
+            this.verticesNeedUpdate = false;
             this.uvsNeedUpdate = false;
             this.normalsNeedUpdate = false;
             this.colorsNeedUpdate = false;
@@ -6723,12 +6748,12 @@ var THREE;
             var unique = [], changes = [];
             var v, key;
             var precisionPoints = 4;
-            var precision = Math.pow(10, precisionPoints);
+            var precision = THREE.Math.pow(10, precisionPoints);
             var i, il, face;
             var indices, j, jl;
             for (i = 0, il = this.vertices.length; i < il; i++) {
                 v = this.vertices[i];
-                key = Math.round(v.x * precision) + '_' + Math.round(v.y * precision) + '_' + Math.round(v.z * precision);
+                key = THREE.Math.round(v.x * precision) + '_' + THREE.Math.round(v.y * precision) + '_' + THREE.Math.round(v.z * precision);
                 if (verticesMap[key] === undefined) {
                     verticesMap[key] = i;
                     unique.push(this.vertices[i]);
@@ -7095,14 +7120,15 @@ var THREE;
             var geometry = object.geometry;
             if (object instanceof THREE.Mesh) {
                 var direct = geometry.__directGeometry;
-                if (direct === undefined) {
+                if (direct === undefined || geometry.elementsNeedUpdate === true) {
                     return this.fromGeometry(geometry);
                 }
-                direct.verticesNeedUpdate = geometry.verticesNeedUpdate;
-                direct.normalsNeedUpdate = geometry.normalsNeedUpdate;
-                direct.colorsNeedUpdate = geometry.colorsNeedUpdate;
-                direct.uvsNeedUpdate = geometry.uvsNeedUpdate;
-                direct.groupsNeedUpdate = geometry.groupsNeedUpdate;
+                direct.verticesNeedUpdate = geometry.verticesNeedUpdate || geometry.elementsNeedUpdate;
+                direct.normalsNeedUpdate = geometry.normalsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.colorsNeedUpdate = geometry.colorsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.uvsNeedUpdate = geometry.uvsNeedUpdate || geometry.elementsNeedUpdate;
+                direct.groupsNeedUpdate = geometry.groupsNeedUpdate || geometry.elementsNeedUpdate;
+                geometry.elementsNeedUpdate = false;
                 geometry.verticesNeedUpdate = false;
                 geometry.normalsNeedUpdate = false;
                 geometry.colorsNeedUpdate = false;
@@ -7110,8 +7136,9 @@ var THREE;
                 geometry.groupsNeedUpdate = false;
                 geometry = direct;
             }
+            var attribute;
             if (geometry.verticesNeedUpdate === true) {
-                var attribute = this.attributes.position;
+                attribute = this.attributes.position;
                 if (attribute !== undefined) {
                     attribute.copyVector3sArray(geometry.vertices);
                     attribute.needsUpdate = true;
@@ -7119,7 +7146,7 @@ var THREE;
                 geometry.verticesNeedUpdate = false;
             }
             if (geometry.normalsNeedUpdate === true) {
-                var attribute = this.attributes.normal;
+                attribute = this.attributes.normal;
                 if (attribute !== undefined) {
                     attribute.copyVector3sArray(geometry.normals);
                     attribute.needsUpdate = true;
@@ -7127,7 +7154,7 @@ var THREE;
                 geometry.normalsNeedUpdate = false;
             }
             if (geometry.colorsNeedUpdate === true) {
-                var attribute = this.attributes.color;
+                attribute = this.attributes.color;
                 if (attribute !== undefined) {
                     attribute.copyColorsArray(geometry.colors);
                     attribute.needsUpdate = true;
@@ -7135,7 +7162,7 @@ var THREE;
                 geometry.colorsNeedUpdate = false;
             }
             if (geometry.uvsNeedUpdate) {
-                var attribute = this.attributes.uv;
+                attribute = this.attributes.uv;
                 if (attribute !== undefined) {
                     attribute.copyVector2sArray(geometry.uvs);
                     attribute.needsUpdate = true;
@@ -7143,7 +7170,7 @@ var THREE;
                 geometry.uvsNeedUpdate = false;
             }
             if (geometry.lineDistancesNeedUpdate) {
-                var attribute = this.attributes.lineDistance;
+                attribute = this.attributes.lineDistance;
                 if (attribute !== undefined) {
                     attribute.copyArray(geometry.lineDistances);
                     attribute.needsUpdate = true;
@@ -7245,9 +7272,9 @@ var THREE;
                     var maxRadiusSq = 0;
                     for (var i = 0, il = array.length; i < il; i += 3) {
                         vector.fromArray(array, i);
-                        maxRadiusSq = Math.max(maxRadiusSq, center.distanceToSquared(vector));
+                        maxRadiusSq = THREE.Math.max(maxRadiusSq, center.distanceToSquared(vector));
                     }
-                    this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+                    this.boundingSphere.radius = THREE.Math.sqrt(maxRadiusSq);
                     if (isNaN(this.boundingSphere.radius)) {
                         console.error('THREE.BufferGeometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.', this);
                     }
@@ -7352,7 +7379,7 @@ var THREE;
                 x = normals[i];
                 y = normals[i + 1];
                 z = normals[i + 2];
-                n = 1.0 / Math.sqrt(x * x + y * y + z * z);
+                n = 1.0 / THREE.Math.sqrt(x * x + y * y + z * z);
                 normals[i] *= n;
                 normals[i + 1] *= n;
                 normals[i + 2] *= n;
@@ -7513,7 +7540,7 @@ var THREE;
         function DirectGeometry() {
             _super.call(this);
             this._id = THREE.GeometryIdCount++;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.name = '';
             this.type = 'DirectGeometry';
             this.indices = [];
@@ -7779,7 +7806,7 @@ var THREE;
         function InterleavedBuffer(array, stride) {
             this.array = array;
             this.stride = stride;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.dynamic = false;
             this.updateRange = { offset: 0, count: -1 };
             this.version = 0;
@@ -7862,14 +7889,22 @@ var THREE;
 (function (THREE) {
     var InterleavedBufferAttribute = (function (_super) {
         __extends(InterleavedBufferAttribute, _super);
-        function InterleavedBufferAttribute(interleavedBuffer, itemSize, offset) {
+        function InterleavedBufferAttribute(interleavedBuffer, itemSize, offset, normalized) {
             _super.call(this, null, itemSize);
             this.data = interleavedBuffer;
             this.offset = offset;
+            this.normalized = normalized === true;
         }
         Object.defineProperty(InterleavedBufferAttribute.prototype, "count", {
             get: function () {
                 return this.data.count;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(InterleavedBufferAttribute.prototype, "array", {
+            get: function () {
+                return this.data.array;
             },
             enumerable: true,
             configurable: true
@@ -8055,20 +8090,20 @@ var THREE;
         Curve.prototype.getPoints = function (divisions) {
             if (!divisions)
                 divisions = 5;
-            var d, pts = [];
-            for (d = 0; d <= divisions; d++) {
-                pts.push(this.getPoint(d / divisions));
+            var points = [];
+            for (var d = 0; d <= divisions; d++) {
+                points.push(this.getPoint(d / divisions));
             }
-            return pts;
+            return points;
         };
         Curve.prototype.getSpacedPoints = function (divisions) {
             if (!divisions)
                 divisions = 5;
-            var d, pts = [];
-            for (d = 0; d <= divisions; d++) {
-                pts.push(this.getPointAt(d / divisions));
+            var points = [];
+            for (var d = 0; d <= divisions; d++) {
+                points.push(this.getPointAt(d / divisions));
             }
-            return pts;
+            return points;
         };
         Curve.prototype.getLength = function () {
             var lengths = this.getLengths();
@@ -8112,7 +8147,7 @@ var THREE;
             }
             var low = 0, high = il - 1, comparison;
             while (low <= high) {
-                i = Math.floor(low + (high - low) / 2);
+                i = THREE.Math.floor(low + (high - low) / 2);
                 comparison = arcLengths[i] - targetArcLength;
                 if (comparison < 0) {
                     low = i + 1;
@@ -8192,7 +8227,8 @@ var THREE;
                 if (curveLengths[i] >= d) {
                     var diff = curveLengths[i] - d;
                     var curve = this.curves[i];
-                    var u = 1 - diff / curve.getLength();
+                    var segmentLength = curve.getLength();
+                    var u = segmentLength === 0 ? 0 : 1 - diff / segmentLength;
                     return curve.getPointAt(u);
                 }
                 i++;
@@ -8219,6 +8255,41 @@ var THREE;
             }
             this.cacheLengths = lengths;
             return lengths;
+        };
+        CurvePath.prototype.getSpacedPoints = function (divisions) {
+            if (!divisions)
+                divisions = 40;
+            var points = [];
+            for (var i = 0; i <= divisions; i++) {
+                points.push(this.getPoint(i / divisions));
+            }
+            if (this.autoClose) {
+                points.push(points[0]);
+            }
+            return points;
+        };
+        CurvePath.prototype.getPoints = function (divisions) {
+            divisions = divisions || 12;
+            var points = [], last;
+            for (var i = 0, curves = this.curves; i < curves.length; i++) {
+                var curve = curves[i];
+                var resolution = curve instanceof THREE.EllipseCurve ? divisions * 2
+                    : curve instanceof THREE.LineCurve ? 1
+                        : curve instanceof THREE.SplineCurve ? divisions * curve.points.length
+                            : divisions;
+                var pts = curve.getPoints(resolution);
+                for (var j = 0; j < pts.length; j++) {
+                    var point = pts[j];
+                    if (last && last.equals(point))
+                        continue;
+                    points.push(point);
+                    last = point;
+                }
+            }
+            if (this.autoClose && points.length > 1 && !points[points.length - 1].equals(points[0])) {
+                points.push(points[0]);
+            }
+            return points;
         };
         CurvePath.prototype.createPointsGeometry = function (divisions) {
             var pts = this.getPoints(divisions);
@@ -8264,7 +8335,7 @@ var THREE;
                 var glyph = data.glyphs[c] || data.glyphs['?'];
                 if (!glyph)
                     return;
-                var path = new THREE.Path();
+                var path = new THREE.ShapePath();
                 var pts = [], b2 = THREE.ShapeUtils.b2, b3 = THREE.ShapeUtils.b3;
                 var x, y, cpx, cpy, cpx0, cpy0, cpx1, cpy1, cpx2, cpy2, laste;
                 if (glyph.o) {
@@ -8345,7 +8416,7 @@ var THREE;
         __extends(Path, _super);
         function Path(points) {
             _super.call(this);
-            this.actions = [];
+            this.currentPoint = new THREE.Vector2();
             if (points) {
                 this.fromPoints(points);
             }
@@ -8358,241 +8429,85 @@ var THREE;
             }
         };
         Path.prototype.moveTo = function (x, y) {
-            this.actions.push({ action: 'moveTo', args: [x, y] });
+            this.currentPoint.set(x, y);
         };
         Path.prototype.lineTo = function (x, y) {
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
-            var curve = new THREE.LineCurve(new THREE.Vector2(x0, y0), new THREE.Vector2(x, y));
+            var curve = new THREE.LineCurve(this.currentPoint.clone(), new THREE.Vector2(x, y));
             this.curves.push(curve);
-            this.actions.push({ action: 'lineTo', args: [x, y] });
+            this.currentPoint.set(x, y);
         };
         Path.prototype.quadraticCurveTo = function (aCPx, aCPy, aX, aY) {
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
-            var curve = new THREE.QuadraticBezierCurve(new THREE.Vector2(x0, y0), new THREE.Vector2(aCPx, aCPy), new THREE.Vector2(aX, aY));
+            var curve = new THREE.QuadraticBezierCurve(this.currentPoint.clone(), new THREE.Vector2(aCPx, aCPy), new THREE.Vector2(aX, aY));
             this.curves.push(curve);
-            this.actions.push({ action: 'quadraticCurveTo', args: [aCPx, aCPy, aX, aY] });
+            this.currentPoint.set(aX, aY);
         };
         Path.prototype.bezierCurveTo = function (aCP1x, aCP1y, aCP2x, aCP2y, aX, aY) {
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
-            var curve = new THREE.CubicBezierCurve(new THREE.Vector2(x0, y0), new THREE.Vector2(aCP1x, aCP1y), new THREE.Vector2(aCP2x, aCP2y), new THREE.Vector2(aX, aY));
+            var curve = new THREE.CubicBezierCurve(this.currentPoint.clone(), new THREE.Vector2(aCP1x, aCP1y), new THREE.Vector2(aCP2x, aCP2y), new THREE.Vector2(aX, aY));
             this.curves.push(curve);
-            this.actions.push({ action: 'bezierCurveTo', args: [aCP1x, aCP1y, aCP2x, aCP2y, aX, aY] });
+            this.currentPoint.set(aX, aY);
         };
         Path.prototype.splineThru = function (pts) {
-            var args = Array.prototype.slice.call(arguments);
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
-            var npts = [new THREE.Vector2(x0, y0)];
-            Array.prototype.push.apply(npts, pts);
+            var npts = [this.currentPoint.clone()].concat(pts);
             var curve = new THREE.SplineCurve(npts);
             this.curves.push(curve);
-            var lastPoint = pts[pts.length - 1];
-            args.push(lastPoint.x);
-            args.push(lastPoint.y);
-            this.actions.push({ action: 'splineThru', args: args });
+            this.currentPoint.copy(pts[pts.length - 1]);
         };
         Path.prototype.arc = function (aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise) {
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
+            var x0 = this.currentPoint.x;
+            var y0 = this.currentPoint.y;
             this.absarc(aX + x0, aY + y0, aRadius, aStartAngle, aEndAngle, aClockwise);
         };
         Path.prototype.absarc = function (aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise) {
             this.absellipse(aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise);
         };
         Path.prototype.ellipse = function (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation) {
-            var lastargs = this.actions[this.actions.length - 1].args;
-            var x0 = lastargs[lastargs.length - 2];
-            var y0 = lastargs[lastargs.length - 1];
+            var x0 = this.currentPoint.x;
+            var y0 = this.currentPoint.y;
             this.absellipse(aX + x0, aY + y0, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
         };
         Path.prototype.absellipse = function (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation) {
-            var args = [
-                aX, aY,
-                xRadius, yRadius,
-                aStartAngle, aEndAngle,
-                aClockwise,
-                aRotation || 0
-            ];
             var curve = new THREE.EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
+            if (this.curves.length > 0) {
+                var firstPoint = curve.getPoint(0);
+                if (!firstPoint.equals(this.currentPoint)) {
+                    this.lineTo(firstPoint.x, firstPoint.y);
+                }
+            }
             this.curves.push(curve);
             var lastPoint = curve.getPoint(1);
-            args.push(lastPoint.x);
-            args.push(lastPoint.y);
-            this.actions.push({ action: 'ellipse', args: args });
+            this.currentPoint.copy(lastPoint);
         };
-        Path.prototype.getSpacedPoints = function (divisions) {
-            if (!divisions)
-                divisions = 40;
-            var points = [];
-            for (var i = 0; i < divisions; i++) {
-                points.push(this.getPoint(i / divisions));
-            }
-            if (this.autoClose) {
-                points.push(points[0]);
-            }
-            return points;
+        return Path;
+    }(THREE.CurvePath));
+    THREE.Path = Path;
+    var ShapePath = (function () {
+        function ShapePath() {
+            this.subPaths = [];
+            this.currentPath = null;
+        }
+        ShapePath.prototype.moveTo = function (x, y) {
+            this.currentPath = new THREE.Path();
+            this.subPaths.push(this.currentPath);
+            this.currentPath.moveTo(x, y);
         };
-        Path.prototype.getPoints = function (divisions) {
-            divisions = divisions || 12;
-            var b2 = THREE.ShapeUtils.b2;
-            var b3 = THREE.ShapeUtils.b3;
-            var points = [];
-            var cpx, cpy, cpx2, cpy2, cpx1, cpy1, cpx0, cpy0, laste, tx, ty;
-            for (var i = 0, l = this.actions.length; i < l; i++) {
-                var item = this.actions[i];
-                var action = item.action;
-                var args = item.args;
-                switch (action) {
-                    case 'moveTo':
-                        points.push(new THREE.Vector2(args[0], args[1]));
-                        break;
-                    case 'lineTo':
-                        points.push(new THREE.Vector2(args[0], args[1]));
-                        break;
-                    case 'quadraticCurveTo':
-                        cpx = args[2];
-                        cpy = args[3];
-                        cpx1 = args[0];
-                        cpy1 = args[1];
-                        if (points.length > 0) {
-                            laste = points[points.length - 1];
-                            cpx0 = laste.x;
-                            cpy0 = laste.y;
-                        }
-                        else {
-                            laste = this.actions[i - 1].args;
-                            cpx0 = laste[laste.length - 2];
-                            cpy0 = laste[laste.length - 1];
-                        }
-                        for (var j = 1; j <= divisions; j++) {
-                            var t = j / divisions;
-                            tx = b2(t, cpx0, cpx1, cpx);
-                            ty = b2(t, cpy0, cpy1, cpy);
-                            points.push(new THREE.Vector2(tx, ty));
-                        }
-                        break;
-                    case 'bezierCurveTo':
-                        cpx = args[4];
-                        cpy = args[5];
-                        cpx1 = args[0];
-                        cpy1 = args[1];
-                        cpx2 = args[2];
-                        cpy2 = args[3];
-                        if (points.length > 0) {
-                            laste = points[points.length - 1];
-                            cpx0 = laste.x;
-                            cpy0 = laste.y;
-                        }
-                        else {
-                            laste = this.actions[i - 1].args;
-                            cpx0 = laste[laste.length - 2];
-                            cpy0 = laste[laste.length - 1];
-                        }
-                        for (var j = 1; j <= divisions; j++) {
-                            var t = j / divisions;
-                            tx = b3(t, cpx0, cpx1, cpx2, cpx);
-                            ty = b3(t, cpy0, cpy1, cpy2, cpy);
-                            points.push(new THREE.Vector2(tx, ty));
-                        }
-                        break;
-                    case 'splineThru':
-                        laste = this.actions[i - 1].args;
-                        var last = new THREE.Vector2(laste[laste.length - 2], laste[laste.length - 1]);
-                        var spts = [last];
-                        var n = divisions * args[0].length;
-                        spts = spts.concat(args[0]);
-                        var spline = new THREE.SplineCurve(spts);
-                        for (var j = 1; j <= n; j++) {
-                            points.push(spline.getPointAt(j / n));
-                        }
-                        break;
-                    case 'arc':
-                        var aX = args[0], aY = args[1], aRadius = args[2], aStartAngle = args[3], aEndAngle = args[4], aClockwise = !!args[5];
-                        var deltaAngle = aEndAngle - aStartAngle;
-                        var angle;
-                        var tdivisions = divisions * 2;
-                        for (var j = 1; j <= tdivisions; j++) {
-                            var t = j / tdivisions;
-                            if (!aClockwise) {
-                                t = 1 - t;
-                            }
-                            angle = aStartAngle + t * deltaAngle;
-                            tx = aX + aRadius * Math.cos(angle);
-                            ty = aY + aRadius * Math.sin(angle);
-                            points.push(new THREE.Vector2(tx, ty));
-                        }
-                        break;
-                    case 'ellipse':
-                        var aX = args[0], aY = args[1], xRadius = args[2], yRadius = args[3], aStartAngle = args[4], aEndAngle = args[5], aClockwise = !!args[6], aRotation = args[7];
-                        var deltaAngle = aEndAngle - aStartAngle;
-                        var angle;
-                        var tdivisions = divisions * 2;
-                        var cos, sin;
-                        if (aRotation !== 0) {
-                            cos = Math.cos(aRotation);
-                            sin = Math.sin(aRotation);
-                        }
-                        for (var j = 1; j <= tdivisions; j++) {
-                            var t = j / tdivisions;
-                            if (!aClockwise) {
-                                t = 1 - t;
-                            }
-                            angle = aStartAngle + t * deltaAngle;
-                            tx = aX + xRadius * Math.cos(angle);
-                            ty = aY + yRadius * Math.sin(angle);
-                            if (aRotation !== 0) {
-                                var x = tx, y = ty;
-                                tx = (x - aX) * cos - (y - aY) * sin + aX;
-                                ty = (x - aX) * sin + (y - aY) * cos + aY;
-                            }
-                            points.push(new THREE.Vector2(tx, ty));
-                        }
-                        break;
-                }
-            }
-            var lastPoint = points[points.length - 1];
-            if (Math.abs(lastPoint.x - points[0].x) < Number.EPSILON &&
-                Math.abs(lastPoint.y - points[0].y) < Number.EPSILON)
-                points.splice(points.length - 1, 1);
-            if (this.autoClose) {
-                points.push(points[0]);
-            }
-            return points;
+        ShapePath.prototype.lineTo = function (x, y) {
+            this.currentPath.lineTo(x, y);
         };
-        Path.prototype.toShapes = function (isCCW, noHoles) {
-            function extractSubpaths(inActions) {
-                var subPaths = [], lastPath = new Path();
-                for (var i = 0, l = inActions.length; i < l; i++) {
-                    var item = inActions[i];
-                    var args = item.args;
-                    var action = item.action;
-                    if (action === 'moveTo') {
-                        if (lastPath.actions.length !== 0) {
-                            subPaths.push(lastPath);
-                            lastPath = new Path();
-                        }
-                    }
-                    lastPath[action].apply(lastPath, args);
-                }
-                if (lastPath.actions.length !== 0) {
-                    subPaths.push(lastPath);
-                }
-                return subPaths;
-            }
+        ShapePath.prototype.quadraticCurveTo = function (aCPx, aCPy, aX, aY) {
+            this.currentPath.quadraticCurveTo(aCPx, aCPy, aX, aY);
+        };
+        ShapePath.prototype.bezierCurveTo = function (aCP1x, aCP1y, aCP2x, aCP2y, aX, aY) {
+            this.currentPath.bezierCurveTo(aCP1x, aCP1y, aCP2x, aCP2y, aX, aY);
+        };
+        ShapePath.prototype.splineThru = function (pts) {
+            this.currentPath.splineThru(pts);
+        };
+        ShapePath.prototype.toShapes = function (isCCW, noHoles) {
             function toShapesNoHoles(inSubpaths) {
                 var shapes = [];
                 for (var i = 0, l = inSubpaths.length; i < l; i++) {
                     var tmpPath = inSubpaths[i];
                     var tmpShape = new THREE.Shape();
-                    tmpShape.actions = tmpPath.actions;
                     tmpShape.curves = tmpPath.curves;
                     shapes.push(tmpShape);
                 }
@@ -8606,7 +8521,7 @@ var THREE;
                     var edgeHighPt = inPolygon[q];
                     var edgeDx = edgeHighPt.x - edgeLowPt.x;
                     var edgeDy = edgeHighPt.y - edgeLowPt.y;
-                    if (Math.abs(edgeDy) > Number.EPSILON) {
+                    if (THREE.Math.abs(edgeDy) > Number.EPSILON) {
                         if (edgeDy < 0) {
                             edgeLowPt = inPolygon[q];
                             edgeDx = -edgeDx;
@@ -8639,7 +8554,7 @@ var THREE;
                 return inside;
             }
             var isClockWise = THREE.ShapeUtils.isClockWise;
-            var subPaths = extractSubpaths(this.actions);
+            var subPaths = this.subPaths;
             if (subPaths.length === 0)
                 return [];
             if (noHoles === true)
@@ -8648,7 +8563,6 @@ var THREE;
             if (subPaths.length === 1) {
                 tmpPath = subPaths[0];
                 tmpShape = new THREE.Shape();
-                tmpShape.actions = tmpPath.actions;
                 tmpShape.curves = tmpPath.curves;
                 shapes.push(tmpShape);
                 return shapes;
@@ -8671,7 +8585,6 @@ var THREE;
                     if ((!holesFirst) && (newShapes[mainIdx]))
                         mainIdx++;
                     newShapes[mainIdx] = { s: new THREE.Shape(), p: tmpPoints };
-                    newShapes[mainIdx].s.actions = tmpPath.actions;
                     newShapes[mainIdx].s.curves = tmpPath.curves;
                     if (holesFirst)
                         mainIdx++;
@@ -8728,9 +8641,9 @@ var THREE;
             }
             return shapes;
         };
-        return Path;
-    }(THREE.CurvePath));
-    THREE.Path = Path;
+        return ShapePath;
+    }());
+    THREE.ShapePath = ShapePath;
 })(THREE || (THREE = {}));
 var THREE;
 (function (THREE) {
@@ -8786,21 +8699,21 @@ var THREE;
         EllipseCurve.prototype.getPoint = function (t) {
             var deltaAngle = this.aEndAngle - this.aStartAngle;
             if (deltaAngle < 0)
-                deltaAngle += Math.PI * 2;
-            if (deltaAngle > Math.PI * 2)
-                deltaAngle -= Math.PI * 2;
+                deltaAngle += THREE.Math.PI * 2;
+            if (deltaAngle > THREE.Math.PI * 2)
+                deltaAngle -= THREE.Math.PI * 2;
             var angle;
             if (this.aClockwise === true) {
-                angle = this.aEndAngle + (1 - t) * (Math.PI * 2 - deltaAngle);
+                angle = this.aEndAngle + (1 - t) * (THREE.Math.PI * 2 - deltaAngle);
             }
             else {
                 angle = this.aStartAngle + t * deltaAngle;
             }
-            var x = this.aX + this.xRadius * Math.cos(angle);
-            var y = this.aY + this.yRadius * Math.sin(angle);
+            var x = this.aX + this.xRadius * THREE.Math.cos(angle);
+            var y = this.aY + this.yRadius * THREE.Math.sin(angle);
             if (this.aRotation !== 0) {
-                var cos = Math.cos(this.aRotation);
-                var sin = Math.sin(this.aRotation);
+                var cos = THREE.Math.cos(this.aRotation);
+                var sin = THREE.Math.sin(this.aRotation);
                 var tx = x, ty = y;
                 x = (tx - this.aX) * cos - (ty - this.aY) * sin + this.aX;
                 y = (tx - this.aX) * sin + (ty - this.aY) * cos + this.aY;
@@ -8878,10 +8791,10 @@ var THREE;
             if (l < 2)
                 console.log('duh, you need at least 2 points');
             point = (l - (this.closed ? 0 : 1)) * t;
-            intPoint = Math.floor(point);
+            intPoint = THREE.Math.floor(point);
             weight = point - intPoint;
             if (this.closed) {
-                intPoint += intPoint > 0 ? 0 : (Math.floor(Math.abs(intPoint) / points.length) + 1) * points.length;
+                intPoint += intPoint > 0 ? 0 : (THREE.Math.floor(THREE.Math.abs(intPoint) / points.length) + 1) * points.length;
             }
             else if (weight === 0 && intPoint === l - 1) {
                 intPoint = l - 2;
@@ -8906,9 +8819,9 @@ var THREE;
             }
             if (this.type === undefined || this.type === 'centripetal' || this.type === 'chordal') {
                 var pow = this.type === 'chordal' ? 0.5 : 0.25;
-                var dt0 = Math.pow(p0.distanceToSquared(p1), pow);
-                var dt1 = Math.pow(p1.distanceToSquared(p2), pow);
-                var dt2 = Math.pow(p2.distanceToSquared(p3), pow);
+                var dt0 = THREE.Math.pow(p0.distanceToSquared(p1), pow);
+                var dt1 = THREE.Math.pow(p1.distanceToSquared(p2), pow);
+                var dt2 = THREE.Math.pow(p2.distanceToSquared(p3), pow);
                 if (dt1 < 1e-4)
                     dt1 = 1.0;
                 if (dt0 < 1e-4)
@@ -9081,7 +8994,7 @@ var THREE;
         SplineCurve.prototype.getPoint = function (t) {
             var points = this.points;
             var point = (points.length - 1) * t;
-            var intPoint = Math.floor(point);
+            var intPoint = THREE.Math.floor(point);
             var weight = point - intPoint;
             var point0 = points[intPoint === 0 ? intPoint : intPoint - 1];
             var point1 = points[intPoint];
@@ -9139,9 +9052,9 @@ var THREE;
                 depthSegments: depthSegments
             };
             var scope = this;
-            widthSegments = Math.floor(widthSegments) || 1;
-            heightSegments = Math.floor(heightSegments) || 1;
-            depthSegments = Math.floor(depthSegments) || 1;
+            widthSegments = THREE.Math.floor(widthSegments) || 1;
+            heightSegments = THREE.Math.floor(heightSegments) || 1;
+            depthSegments = THREE.Math.floor(depthSegments) || 1;
             var vertexCount = BoxBufferGeometry.calculateVertexCount(widthSegments, heightSegments, depthSegments);
             var indexCount = BoxBufferGeometry.calculateIndexCount(widthSegments, heightSegments, depthSegments);
             var indices = new (indexCount > 65535 ? Uint32Array : Uint16Array)(indexCount);
@@ -9275,9 +9188,9 @@ var THREE;
                 thetaLength: thetaLength
             };
             radius = radius || 50;
-            segments = segments !== undefined ? Math.max(3, segments) : 8;
+            segments = segments !== undefined ? THREE.Math.max(3, segments) : 8;
             thetaStart = thetaStart !== undefined ? thetaStart : 0;
-            thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
+            thetaLength = thetaLength !== undefined ? thetaLength : THREE.Math.PI * 2;
             var vertices = segments + 2;
             var positions = new Float32Array(vertices * 3);
             var normals = new Float32Array(vertices * 3);
@@ -9287,8 +9200,8 @@ var THREE;
             uvs[1] = 0.5;
             for (var s = 0, i = 3, ii = 2; s <= segments; s++, i += 3, ii += 2) {
                 var segment = thetaStart + s / segments * thetaLength;
-                positions[i] = radius * Math.cos(segment);
-                positions[i + 1] = radius * Math.sin(segment);
+                positions[i] = radius * THREE.Math.cos(segment);
+                positions[i + 1] = radius * THREE.Math.sin(segment);
                 normals[i + 2] = 1;
                 uvs[ii] = (positions[i] / radius + 1) / 2;
                 uvs[ii + 1] = (positions[i + 1] / radius + 1) / 2;
@@ -9349,11 +9262,11 @@ var THREE;
             radiusTop = radiusTop !== undefined ? radiusTop : 20;
             radiusBottom = radiusBottom !== undefined ? radiusBottom : 20;
             height = height !== undefined ? height : 100;
-            radialSegments = Math.floor(radialSegments) || 8;
-            heightSegments = Math.floor(heightSegments) || 1;
+            radialSegments = THREE.Math.floor(radialSegments) || 8;
+            heightSegments = THREE.Math.floor(heightSegments) || 1;
             openEnded = openEnded !== undefined ? openEnded : false;
             thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
-            thetaLength = thetaLength !== undefined ? thetaLength : 2.0 * Math.PI;
+            thetaLength = thetaLength !== undefined ? thetaLength : 2.0 * THREE.Math.PI;
             var nbCap = 0;
             if (openEnded === false) {
                 if (radiusTop > 0)
@@ -9406,16 +9319,16 @@ var THREE;
                     var radius = v * (radiusBottom - radiusTop) + radiusTop;
                     for (x = 0; x <= radialSegments; x++) {
                         var u = x / radialSegments;
-                        vertex.x = radius * Math.sin(u * thetaLength + thetaStart);
+                        vertex.x = radius * THREE.Math.sin(u * thetaLength + thetaStart);
                         vertex.y = -v * height + halfHeight;
-                        vertex.z = radius * Math.cos(u * thetaLength + thetaStart);
+                        vertex.z = radius * THREE.Math.cos(u * thetaLength + thetaStart);
                         vertices.setXYZ(index, vertex.x, vertex.y, vertex.z);
                         normal.copy(vertex);
                         if ((radiusTop === 0 && y === 0) || (radiusBottom === 0 && y === heightSegments)) {
-                            normal.x = Math.sin(u * thetaLength + thetaStart);
-                            normal.z = Math.cos(u * thetaLength + thetaStart);
+                            normal.x = THREE.Math.sin(u * thetaLength + thetaStart);
+                            normal.z = THREE.Math.cos(u * thetaLength + thetaStart);
                         }
-                        normal.setY(Math.sqrt(normal.x * normal.x + normal.z * normal.z) * tanTheta).normalize();
+                        normal.setY(THREE.Math.sqrt(normal.x * normal.x + normal.z * normal.z) * tanTheta).normalize();
                         normals.setXYZ(index, normal.x, normal.y, normal.z);
                         uvs.setXY(index, u, 1 - v);
                         indexRow.push(index);
@@ -9467,8 +9380,8 @@ var THREE;
                 for (x = 0; x <= radialSegments; x++) {
                     var u = x / radialSegments;
                     var theta = u * thetaLength + thetaStart;
-                    var cosTheta = Math.cos(theta);
-                    var sinTheta = Math.sin(theta);
+                    var cosTheta = THREE.Math.cos(theta);
+                    var sinTheta = THREE.Math.sin(theta);
                     vertex.x = radius * sinTheta;
                     vertex.y = halfHeight * sign;
                     vertex.z = radius * cosTheta;
@@ -9613,8 +9526,8 @@ var THREE;
                 var x0 = uvs[0].x;
                 var x1 = uvs[1].x;
                 var x2 = uvs[2].x;
-                var max = Math.max(x0, x1, x2);
-                var min = Math.min(x0, x1, x2);
+                var max = THREE.Math.max(x0, x1, x2);
+                var min = THREE.Math.min(x0, x1, x2);
                 if (max > 0.9 && min < 0.1) {
                     if (x0 < 0.2)
                         uvs[0].x += 1;
@@ -9633,8 +9546,8 @@ var THREE;
             function prepare(vector) {
                 var vertex = vector.normalize().clone();
                 vertex.index = that.vertices.push(vertex) - 1;
-                var u = azimuth(vector) / 2 / Math.PI + 0.5;
-                var v = inclination(vector) / Math.PI + 0.5;
+                var u = azimuth(vector) / 2 / THREE.Math.PI + 0.5;
+                var v = inclination(vector) / THREE.Math.PI + 0.5;
                 vertex.uv = new THREE.Vector2(u, 1 - v);
                 return vertex;
             }
@@ -9650,7 +9563,7 @@ var THREE;
                 ]);
             }
             function subdivide(face, detail) {
-                var cols = Math.pow(2, detail);
+                var cols = THREE.Math.pow(2, detail);
                 var a = prepare(that.vertices[face.a]);
                 var b = prepare(that.vertices[face.b]);
                 var c = prepare(that.vertices[face.c]);
@@ -9671,7 +9584,7 @@ var THREE;
                 }
                 for (var i = 0; i < cols; i++) {
                     for (var j = 0; j < 2 * (cols - i) - 1; j++) {
-                        var k = Math.floor(j / 2);
+                        var k = THREE.Math.floor(j / 2);
                         if (j % 2 === 0) {
                             make(v[i][k + 1], v[i + 1][k], v[i][k]);
                         }
@@ -9682,16 +9595,16 @@ var THREE;
                 }
             }
             function azimuth(vector) {
-                return Math.atan2(vector.z, -vector.x);
+                return THREE.Math.atan2(vector.z, -vector.x);
             }
             function inclination(vector) {
-                return Math.atan2(-vector.y, Math.sqrt((vector.x * vector.x) + (vector.z * vector.z)));
+                return THREE.Math.atan2(-vector.y, THREE.Math.sqrt((vector.x * vector.x) + (vector.z * vector.z)));
             }
             function correctUV(uv, vector, azimuth) {
                 if ((azimuth < 0) && (uv.x === 1))
                     uv = new THREE.Vector2(uv.x - 1, uv.y);
                 if ((vector.x === 0) && (vector.z === 0))
-                    uv = new THREE.Vector2(azimuth / 2 / Math.PI + 0.5, uv.y);
+                    uv = new THREE.Vector2(azimuth / 2 / THREE.Math.PI + 0.5, uv.y);
                 return uv.clone();
             }
         }
@@ -9705,7 +9618,7 @@ var THREE;
     var DodecahedronGeometry = (function (_super) {
         __extends(DodecahedronGeometry, _super);
         function DodecahedronGeometry(radius, detail) {
-            var t = (1 + Math.sqrt(5)) / 2;
+            var t = (1 + THREE.Math.sqrt(5)) / 2;
             var r = 1 / t;
             var vertices = [
                 -1, -1, -1, -1, -1, 1,
@@ -9752,7 +9665,7 @@ var THREE;
         function EdgesGeometry(geometry, thresholdAngle) {
             _super.call(this);
             thresholdAngle = (thresholdAngle !== undefined) ? thresholdAngle : 1;
-            var thresholdDot = Math.cos(Math.DEG2RAD * thresholdAngle);
+            var thresholdDot = THREE.Math.cos(THREE.Math.DEG2RAD * thresholdAngle);
             var edge = [0, 0], hash = {};
             function sortFunction(a, b) {
                 return a - b;
@@ -9892,9 +9805,9 @@ var THREE;
                 var v_next_x = inNext.x - inPt.x, v_next_y = inNext.y - inPt.y;
                 var v_prev_lensq = (v_prev_x * v_prev_x + v_prev_y * v_prev_y);
                 var collinear0 = (v_prev_x * v_next_y - v_prev_y * v_next_x);
-                if (Math.abs(collinear0) > Number.EPSILON) {
-                    var v_prev_len = Math.sqrt(v_prev_lensq);
-                    var v_next_len = Math.sqrt(v_next_x * v_next_x + v_next_y * v_next_y);
+                if (THREE.Math.abs(collinear0) > Number.EPSILON) {
+                    var v_prev_len = THREE.Math.sqrt(v_prev_lensq);
+                    var v_next_len = THREE.Math.sqrt(v_next_x * v_next_x + v_next_y * v_next_y);
                     var ptPrevShift_x = (inPrev.x - v_prev_y / v_prev_len);
                     var ptPrevShift_y = (inPrev.y + v_prev_x / v_prev_len);
                     var ptNextShift_x = (inNext.x - v_next_y / v_next_len);
@@ -9909,7 +9822,7 @@ var THREE;
                         return new THREE.Vector2(v_trans_x, v_trans_y);
                     }
                     else {
-                        shrink_by = Math.sqrt(v_trans_lensq / 2);
+                        shrink_by = THREE.Math.sqrt(v_trans_lensq / 2);
                     }
                 }
                 else {
@@ -9926,7 +9839,7 @@ var THREE;
                             }
                         }
                         else {
-                            if (Math.sign(v_prev_y) === Math.sign(v_next_y)) {
+                            if (THREE.Math.sign(v_prev_y) === THREE.Math.sign(v_next_y)) {
                                 direction_eq = true;
                             }
                         }
@@ -9934,12 +9847,12 @@ var THREE;
                     if (direction_eq) {
                         v_trans_x = -v_prev_y;
                         v_trans_y = v_prev_x;
-                        shrink_by = Math.sqrt(v_prev_lensq);
+                        shrink_by = THREE.Math.sqrt(v_prev_lensq);
                     }
                     else {
                         v_trans_x = v_prev_x;
                         v_trans_y = v_prev_y;
-                        shrink_by = Math.sqrt(v_prev_lensq / 2);
+                        shrink_by = THREE.Math.sqrt(v_prev_lensq / 2);
                     }
                 }
                 return new THREE.Vector2(v_trans_x / shrink_by, v_trans_y / shrink_by);
@@ -9969,7 +9882,7 @@ var THREE;
             for (b = 0; b < bevelSegments; b++) {
                 t = b / bevelSegments;
                 z = bevelThickness * (1 - t);
-                bs = bevelSize * (Math.sin(t * Math.PI / 2));
+                bs = bevelSize * (THREE.Math.sin(t * THREE.Math.PI / 2));
                 for (i = 0, il = contour.length; i < il; i++) {
                     vert = scalePt2(contour[i], contourMovements[i], bs);
                     v(vert.x, vert.y, -z);
@@ -10014,7 +9927,7 @@ var THREE;
             for (b = bevelSegments - 1; b >= 0; b--) {
                 t = b / bevelSegments;
                 z = bevelThickness * (1 - t);
-                bs = bevelSize * Math.sin(t * Math.PI / 2);
+                bs = bevelSize * THREE.Math.sin(t * THREE.Math.PI / 2);
                 for (i = 0, il = contour.length; i < il; i++) {
                     vert = scalePt2(contour[i], contourMovements[i], bs);
                     v(vert.x, vert.y, amount + z);
@@ -10130,7 +10043,7 @@ var THREE;
                 var b = vertices[indexB];
                 var c = vertices[indexC];
                 var d = vertices[indexD];
-                if (Math.abs(a.y - b.y) < 0.01) {
+                if (THREE.Math.abs(a.y - b.y) < 0.01) {
                     return [
                         new THREE.Vector2(a.x, 1 - a.z),
                         new THREE.Vector2(b.x, 1 - b.z),
@@ -10157,7 +10070,7 @@ var THREE;
     var IcosahedronGeometry = (function (_super) {
         __extends(IcosahedronGeometry, _super);
         function IcosahedronGeometry(radius, detail) {
-            var t = (1 + Math.sqrt(5)) / 2;
+            var t = (1 + THREE.Math.sqrt(5)) / 2;
             var vertices = [
                 -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t, 0,
                 0, -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t,
@@ -10194,10 +10107,10 @@ var THREE;
                 phiStart: phiStart,
                 phiLength: phiLength
             };
-            segments = Math.floor(segments) || 12;
+            segments = THREE.Math.floor(segments) || 12;
             phiStart = phiStart || 0;
-            phiLength = phiLength || Math.PI * 2;
-            phiLength = Math.clamp(phiLength, 0, Math.PI * 2);
+            phiLength = phiLength || THREE.Math.PI * 2;
+            phiLength = THREE.Math.clamp(phiLength, 0, THREE.Math.PI * 2);
             var vertexCount = (segments + 1) * points.length;
             var indexCount = segments * points.length * 2 * 3;
             var indices = new THREE.BufferAttribute(new (indexCount > 65535 ? Uint32Array : Uint16Array)(indexCount), 1);
@@ -10211,8 +10124,8 @@ var THREE;
             var i, j;
             for (i = 0; i <= segments; i++) {
                 var phi = phiStart + i * inverseSegments * phiLength;
-                var sin = Math.sin(phi);
-                var cos = Math.cos(phi);
+                var sin = THREE.Math.sin(phi);
+                var cos = THREE.Math.cos(phi);
                 for (j = 0; j <= (points.length - 1); j++) {
                     vertex.x = points[j].x * sin;
                     vertex.y = points[j].y;
@@ -10249,7 +10162,7 @@ var THREE;
             this.addAttribute('position', vertices);
             this.addAttribute('uv', uvs);
             this.computeVertexNormals();
-            if (phiLength === Math.PI * 2) {
+            if (phiLength === THREE.Math.PI * 2) {
                 var normals = this.attributes.normal.array;
                 var n1 = new THREE.Vector3();
                 var n2 = new THREE.Vector3();
@@ -10384,8 +10297,8 @@ var THREE;
             };
             var width_half = width / 2;
             var height_half = height / 2;
-            var gridX = Math.floor(widthSegments) || 1;
-            var gridY = Math.floor(heightSegments) || 1;
+            var gridX = THREE.Math.floor(widthSegments) || 1;
+            var gridY = THREE.Math.floor(heightSegments) || 1;
             var gridX1 = gridX + 1;
             var gridY1 = gridY + 1;
             var segment_width = width / gridX;
@@ -10473,9 +10386,9 @@ var THREE;
             innerRadius = innerRadius || 20;
             outerRadius = outerRadius || 50;
             thetaStart = thetaStart !== undefined ? thetaStart : 0;
-            thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
-            thetaSegments = thetaSegments !== undefined ? Math.max(3, thetaSegments) : 8;
-            phiSegments = phiSegments !== undefined ? Math.max(1, phiSegments) : 1;
+            thetaLength = thetaLength !== undefined ? thetaLength : THREE.Math.PI * 2;
+            thetaSegments = thetaSegments !== undefined ? THREE.Math.max(3, thetaSegments) : 8;
+            phiSegments = phiSegments !== undefined ? THREE.Math.max(1, phiSegments) : 1;
             var vertexCount = (thetaSegments + 1) * (phiSegments + 1);
             var indexCount = thetaSegments * phiSegments * 2 * 3;
             var indices = new THREE.BufferAttribute(new (indexCount > 65535 ? Uint32Array : Uint16Array)(indexCount), 1);
@@ -10491,8 +10404,8 @@ var THREE;
             for (j = 0; j <= phiSegments; j++) {
                 for (i = 0; i <= thetaSegments; i++) {
                     segment = thetaStart + i / thetaSegments * thetaLength;
-                    vertex.x = radius * Math.cos(segment);
-                    vertex.y = radius * Math.sin(segment);
+                    vertex.x = radius * THREE.Math.cos(segment);
+                    vertex.y = radius * THREE.Math.sin(segment);
                     vertices.setXYZ(index, vertex.x, vertex.y, vertex.z);
                     normals.setXYZ(index, 0, 0, 1);
                     uv.x = (vertex.x / outerRadius + 1) / 2;
@@ -10641,12 +10554,12 @@ var THREE;
                 thetaLength: thetaLength
             };
             radius = radius || 50;
-            widthSegments = Math.max(3, Math.floor(widthSegments) || 8);
-            heightSegments = Math.max(2, Math.floor(heightSegments) || 6);
+            widthSegments = THREE.Math.max(3, THREE.Math.floor(widthSegments) || 8);
+            heightSegments = THREE.Math.max(2, THREE.Math.floor(heightSegments) || 6);
             phiStart = phiStart !== undefined ? phiStart : 0;
-            phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
+            phiLength = phiLength !== undefined ? phiLength : THREE.Math.PI * 2;
             thetaStart = thetaStart !== undefined ? thetaStart : 0;
-            thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+            thetaLength = thetaLength !== undefined ? thetaLength : THREE.Math.PI;
             var thetaEnd = thetaStart + thetaLength;
             var vertexCount = ((widthSegments + 1) * (heightSegments + 1));
             var positions = new THREE.BufferAttribute(new Float32Array(vertexCount * 3), 3);
@@ -10658,9 +10571,9 @@ var THREE;
                 var v = y / heightSegments;
                 for (var x = 0; x <= widthSegments; x++) {
                     var u = x / widthSegments;
-                    var px = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
-                    var py = radius * Math.cos(thetaStart + v * thetaLength);
-                    var pz = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
+                    var px = -radius * THREE.Math.cos(phiStart + u * phiLength) * THREE.Math.sin(thetaStart + v * thetaLength);
+                    var py = radius * THREE.Math.cos(thetaStart + v * thetaLength);
+                    var pz = radius * THREE.Math.sin(phiStart + u * phiLength) * THREE.Math.sin(thetaStart + v * thetaLength);
                     normal.set(px, py, pz).normalize();
                     positions.setXYZ(index, px, py, pz);
                     normals.setXYZ(index, normal.x, normal.y, normal.z);
@@ -10679,7 +10592,7 @@ var THREE;
                     var v4 = vertices[y + 1][x + 1];
                     if (y !== 0 || thetaStart > 0)
                         indices.push(v1, v2, v4);
-                    if (y !== heightSegments - 1 || thetaEnd < Math.PI)
+                    if (y !== heightSegments - 1 || thetaEnd < THREE.Math.PI)
                         indices.push(v2, v3, v4);
                 }
             }
@@ -10783,9 +10696,9 @@ var THREE;
             };
             radius = radius || 100;
             tube = tube || 40;
-            radialSegments = Math.floor(radialSegments) || 8;
-            tubularSegments = Math.floor(tubularSegments) || 6;
-            arc = arc || Math.PI * 2;
+            radialSegments = THREE.Math.floor(radialSegments) || 8;
+            tubularSegments = THREE.Math.floor(tubularSegments) || 6;
+            arc = arc || THREE.Math.PI * 2;
             var vertexCount = ((radialSegments + 1) * (tubularSegments + 1));
             var indexCount = radialSegments * tubularSegments * 2 * 3;
             var indices = new (indexCount > 65535 ? Uint32Array : Uint16Array)(indexCount);
@@ -10802,15 +10715,15 @@ var THREE;
             for (j = 0; j <= radialSegments; j++) {
                 for (i = 0; i <= tubularSegments; i++) {
                     var u = i / tubularSegments * arc;
-                    var v = j / radialSegments * Math.PI * 2;
-                    vertex.x = (radius + tube * Math.cos(v)) * Math.cos(u);
-                    vertex.y = (radius + tube * Math.cos(v)) * Math.sin(u);
-                    vertex.z = tube * Math.sin(v);
+                    var v = j / radialSegments * THREE.Math.PI * 2;
+                    vertex.x = (radius + tube * THREE.Math.cos(v)) * THREE.Math.cos(u);
+                    vertex.y = (radius + tube * THREE.Math.cos(v)) * THREE.Math.sin(u);
+                    vertex.z = tube * THREE.Math.sin(v);
                     vertices[vertexBufferOffset] = vertex.x;
                     vertices[vertexBufferOffset + 1] = vertex.y;
                     vertices[vertexBufferOffset + 2] = vertex.z;
-                    center.x = radius * Math.cos(u);
-                    center.y = radius * Math.sin(u);
+                    center.x = radius * THREE.Math.cos(u);
+                    center.y = radius * THREE.Math.sin(u);
                     normal.subVectors(vertex, center).normalize();
                     normals[vertexBufferOffset] = normal.x;
                     normals[vertexBufferOffset + 1] = normal.y;
@@ -10884,8 +10797,8 @@ var THREE;
             };
             radius = radius || 100;
             tube = tube || 40;
-            tubularSegments = Math.floor(tubularSegments) || 64;
-            radialSegments = Math.floor(radialSegments) || 8;
+            tubularSegments = THREE.Math.floor(tubularSegments) || 64;
+            radialSegments = THREE.Math.floor(radialSegments) || 8;
             p = p || 2;
             q = q || 3;
             var vertexCount = ((radialSegments + 1) * (tubularSegments + 1));
@@ -10904,7 +10817,7 @@ var THREE;
             var T = new THREE.Vector3();
             var N = new THREE.Vector3();
             for (i = 0; i <= tubularSegments; ++i) {
-                var u = i / tubularSegments * p * Math.PI * 2;
+                var u = i / tubularSegments * p * THREE.Math.PI * 2;
                 calculatePositionOnCurve(u, p, q, radius, P1);
                 calculatePositionOnCurve(u + 0.01, p, q, radius, P2);
                 T.subVectors(P2, P1);
@@ -10914,9 +10827,9 @@ var THREE;
                 B.normalize();
                 N.normalize();
                 for (j = 0; j <= radialSegments; ++j) {
-                    var v = j / radialSegments * Math.PI * 2;
-                    var cx = -tube * Math.cos(v);
-                    var cy = tube * Math.sin(v);
+                    var v = j / radialSegments * THREE.Math.PI * 2;
+                    var cx = -tube * THREE.Math.cos(v);
+                    var cy = tube * THREE.Math.sin(v);
                     vertex.x = P1.x + (cx * N.x + cy * B.x);
                     vertex.y = P1.y + (cx * N.y + cy * B.y);
                     vertex.z = P1.z + (cx * N.z + cy * B.z);
@@ -10954,13 +10867,13 @@ var THREE;
             this.addAttribute('normal', normals);
             this.addAttribute('uv', uvs);
             function calculatePositionOnCurve(u, p, q, radius, position) {
-                var cu = Math.cos(u);
-                var su = Math.sin(u);
+                var cu = THREE.Math.cos(u);
+                var su = THREE.Math.sin(u);
                 var quOverP = q / p * u;
-                var cs = Math.cos(quOverP);
+                var cs = THREE.Math.cos(quOverP);
                 position.x = radius * (2 + cs) * 0.5 * cu;
                 position.y = radius * (2 + cs) * su * 0.5;
-                position.z = radius * Math.sin(quOverP) * 0.5;
+                position.z = radius * THREE.Math.sin(quOverP) * 0.5;
             }
         }
         ;
@@ -11031,9 +10944,9 @@ var THREE;
                 binormal = binormals[i];
                 r = radius * taper(u);
                 for (j = 0; j < radialSegments; j++) {
-                    v = j / radialSegments * 2 * Math.PI;
-                    cx = -r * Math.cos(v);
-                    cy = r * Math.sin(v);
+                    v = j / radialSegments * 2 * THREE.Math.PI;
+                    cx = -r * THREE.Math.cos(v);
+                    cy = r * THREE.Math.sin(v);
                     pos2.copy(pos);
                     pos2.x += cx * normal.x + cy * binormal.x;
                     pos2.y += cx * normal.y + cy * binormal.y;
@@ -11067,7 +10980,7 @@ var THREE;
             return 1;
         };
         TubeGeometry.SinusoidalTaper = function (u) {
-            return Math.sin(Math.PI * u);
+            return THREE.Math.sin(THREE.Math.PI * u);
         };
         TubeGeometry.FrenetFrames = function (path, segments, closed) {
             var normal = new THREE.Vector3(), tangents = [], normals = [], binormals = [], vec = new THREE.Vector3(), mat = new THREE.Matrix4(), numpoints = segments + 1, theta, smallest, tx, ty, tz, i, u;
@@ -11084,9 +10997,9 @@ var THREE;
                 normals[0] = new THREE.Vector3();
                 binormals[0] = new THREE.Vector3();
                 smallest = Number.MAX_VALUE;
-                tx = Math.abs(tangents[0].x);
-                ty = Math.abs(tangents[0].y);
-                tz = Math.abs(tangents[0].z);
+                tx = THREE.Math.abs(tangents[0].x);
+                ty = THREE.Math.abs(tangents[0].y);
+                tz = THREE.Math.abs(tangents[0].z);
                 if (tx <= smallest) {
                     smallest = tx;
                     normal.set(1, 0, 0);
@@ -11108,13 +11021,13 @@ var THREE;
                 vec.crossVectors(tangents[i - 1], tangents[i]);
                 if (vec.length() > Number.EPSILON) {
                     vec.normalize();
-                    theta = Math.acos(Math.clamp(tangents[i - 1].dot(tangents[i]), -1, 1));
+                    theta = THREE.Math.acos(THREE.Math.clamp(tangents[i - 1].dot(tangents[i]), -1, 1));
                     normals[i].applyMatrix4(mat.makeRotationAxis(vec, theta));
                 }
                 binormals[i].crossVectors(tangents[i], normals[i]);
             }
             if (closed) {
-                theta = Math.acos(Math.clamp(normals[0].dot(normals[numpoints - 1]), -1, 1));
+                theta = THREE.Math.acos(THREE.Math.clamp(normals[0].dot(normals[numpoints - 1]), -1, 1));
                 theta /= (numpoints - 1);
                 if (tangents[0].dot(vec.crossVectors(normals[0], normals[numpoints - 1])) > 0) {
                     theta = -theta;
@@ -11286,7 +11199,7 @@ var THREE;
             }
             else {
                 axis.set(dir.z, 0, -dir.x).normalize();
-                radians = Math.acos(dir.y);
+                radians = THREE.Math.acos(dir.y);
                 this.quaternion.setFromAxisAngle(axis, radians);
             }
         };
@@ -11295,7 +11208,7 @@ var THREE;
                 headLength = 0.2 * length;
             if (headWidth === undefined)
                 headWidth = 0.2 * headLength;
-            this.line.scale.set(1, Math.max(0, length - headLength), 1);
+            this.line.scale.set(1, THREE.Math.max(0, length - headLength), 1);
             this.line.updateMatrix();
             this.cone.scale.set(headWidth, headLength, headWidth);
             this.cone.position.y = length;
@@ -11321,7 +11234,7 @@ var THREE;
             }
             this.type = 'Line';
             this.geometry = geometry !== undefined ? geometry : new THREE.BufferGeometry();
-            this.material = material !== undefined ? material : new THREE.LineBasicMaterial({ color: Math.random() * 0xffffff });
+            this.material = material !== undefined ? material : new THREE.LineBasicMaterial({ color: THREE.Math.random() * 0xffffff });
         }
         ;
         Line.prototype.raycast = function (raycaster, intersects) {
@@ -11478,7 +11391,7 @@ var THREE;
             Mesh.initStatic();
             this.type = 'Mesh';
             this.geometry = geometry !== undefined ? geometry : new THREE.BufferGeometry();
-            this.material = material !== undefined ? material : new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+            this.material = material !== undefined ? material : new THREE.MeshBasicMaterial({ color: THREE.Math.random() * 0xffffff });
             this.drawMode = THREE.TrianglesDrawMode;
             this.updateMorphTargets();
         }
@@ -11634,7 +11547,7 @@ var THREE;
                         c = indices[i + 2];
                         intersection = Mesh.checkBufferGeometryIntersection(this, raycaster, ray, positions, uvs, a, b, c);
                         if (intersection) {
-                            intersection.faceIndex = Math.floor(i / 3);
+                            intersection.faceIndex = THREE.Math.floor(i / 3);
                             intersects.push(intersection);
                         }
                     }
@@ -12056,16 +11969,18 @@ var THREE;
 (function (THREE) {
     var GridHelper = (function (_super) {
         __extends(GridHelper, _super);
-        function GridHelper(size, step, acolor1, acolor2) {
+        function GridHelper(size, divisions, acolor1, acolor2) {
             _super.call(this);
+            divisions = divisions || 1;
             var color1 = new THREE.Color(acolor1 !== undefined ? acolor1 : 0x444444);
             var color2 = new THREE.Color(acolor2 !== undefined ? acolor2 : 0x888888);
-            var vertices = [];
-            var colors = [];
-            for (var i = -size, j = 0; i <= size; i += step) {
-                vertices.push(-size, 0, i, size, 0, i);
-                vertices.push(i, 0, -size, i, 0, size);
-                var color = i === 0 ? color1 : color2;
+            var center = divisions / 2;
+            var step = (size * 2) / divisions;
+            var vertices = [], colors = [];
+            for (var i = 0, j = 0, k = -size; i <= divisions; i++, k += step) {
+                vertices.push(-size, 0, k, size, 0, k);
+                vertices.push(k, 0, -size, k, 0, size);
+                var color = i === center ? color1 : color2;
                 color.toArray(colors, j);
                 j += 3;
                 color.toArray(colors, j);
@@ -12099,7 +12014,7 @@ var THREE;
             this.matrixAutoUpdate = false;
             this.colors = [new THREE.Color(), new THREE.Color()];
             var geometry = new THREE.SphereGeometry(sphereSize, 4, 2);
-            geometry.rotateX(-Math.PI / 2);
+            geometry.rotateX(-THREE.Math.PI / 2);
             for (var i = 0, il = 8; i < il; i++) {
                 geometry.faces[i].color = this.colors[i < 4 ? 0 : 1];
             }
@@ -12232,9 +12147,9 @@ var THREE;
                 0, 0, 0, 0, -1, 1
             ];
             for (var i = 0, j = 1, l = 32; i < l; i++, j++) {
-                var p1 = (i / l) * Math.PI * 2;
-                var p2 = (j / l) * Math.PI * 2;
-                positions.push(Math.cos(p1), Math.sin(p1), 1, Math.cos(p2), Math.sin(p2), 1);
+                var p1 = (i / l) * THREE.Math.PI * 2;
+                var p2 = (j / l) * THREE.Math.PI * 2;
+                positions.push(THREE.Math.cos(p1), THREE.Math.sin(p1), 1, THREE.Math.cos(p2), THREE.Math.sin(p2), 1);
             }
             geometry.addAttribute('position', new THREE.Float32Attribute(positions, 3));
             var material = new THREE.LineBasicMaterial({ fog: false });
@@ -12250,7 +12165,7 @@ var THREE;
             var vector = SpotLightHelper["update_vector"] || (SpotLightHelper["update_vector"] = new THREE.Vector3());
             var vector2 = SpotLightHelper["update_vector2"] || (SpotLightHelper["update_vector2"] = new THREE.Vector3());
             var coneLength = this.light.distance ? this.light.distance : 1000;
-            var coneWidth = coneLength * Math.tan(this.light.angle);
+            var coneWidth = coneLength * THREE.Math.tan(this.light.angle);
             this.cone.scale.set(coneWidth, coneWidth, coneLength);
             vector.setFromMatrixPosition(this.light.matrixWorld);
             vector2.setFromMatrixPosition(this.light.target.matrixWorld);
@@ -12532,7 +12447,7 @@ var THREE;
                     if (animation.time < 0)
                         animation.time += animation.duration;
                 }
-                var keyframe = animation.start + Math.clamp(Math.floor(animation.time / frameTime), 0, animation.length - 1);
+                var keyframe = animation.start + THREE.Math.clamp(THREE.Math.floor(animation.time / frameTime), 0, animation.length - 1);
                 var weight = animation.weight;
                 if (keyframe !== animation.currentFrame) {
                     this.morphTargetInfluences[animation.lastFrame] = 0;
@@ -12690,6 +12605,14 @@ var THREE;
             };
         })(),
         triangulateShape: function (contour, holes) {
+            function removeDupEndPts(points) {
+                var l = points.length;
+                if (l > 2 && points[l - 1].equals(points[0])) {
+                    points.pop();
+                }
+            }
+            removeDupEndPts(contour);
+            holes.forEach(removeDupEndPts);
             function point_in_segment_2D_colin(inSegPt1, inSegPt2, inOtherPt) {
                 if (inSegPt1.x !== inSegPt2.x) {
                     if (inSegPt1.x < inSegPt2.x) {
@@ -12715,7 +12638,7 @@ var THREE;
                 var seg1seg2dy = inSeg1Pt1.y - inSeg2Pt1.y;
                 var limit = seg1dy * seg2dx - seg1dx * seg2dy;
                 var perpSeg1 = seg1dy * seg1seg2dx - seg1dx * seg1seg2dy;
-                if (Math.abs(limit) > Number.EPSILON) {
+                if (THREE.Math.abs(limit) > Number.EPSILON) {
                     var perpSeg2;
                     if (limit > 0) {
                         if ((perpSeg1 < 0) || (perpSeg1 > limit))
@@ -12861,7 +12784,7 @@ var THREE;
                 var otherPtX = inOtherPt.x - inVertex.x, otherPtY = inOtherPt.y - inVertex.y;
                 var from2toAngle = legFromPtX * legToPtY - legFromPtY * legToPtX;
                 var from2otherAngle = legFromPtX * otherPtY - legFromPtY * otherPtX;
-                if (Math.abs(from2toAngle) > Number.EPSILON) {
+                if (THREE.Math.abs(from2toAngle) > Number.EPSILON) {
                     var other2toAngle = otherPtX * legToPtY - otherPtY * legToPtX;
                     if (from2toAngle > 0) {
                         return ((from2otherAngle >= 0) && (other2toAngle >= 0));
@@ -12985,7 +12908,7 @@ var THREE;
             for (i = 0, il = allpoints.length; i < il; i++) {
                 key = allpoints[i].x + ":" + allpoints[i].y;
                 if (allPointsMap[key] !== undefined) {
-                    console.warn("THREE.Shape: Duplicate point", key);
+                    console.warn("THREE.Shape: Duplicate point", key, i);
                 }
                 allPointsMap[key] = i;
             }
@@ -13102,7 +13025,7 @@ var THREE;
         function DirectionalLight(color, intensity) {
             _super.call(this, color, intensity);
             this.type = 'DirectionalLight';
-            this.position.set(0, 1, 0);
+            this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
             this.target = new THREE.Object3D();
             this.shadow = new THREE.DirectionalLightShadow(this);
@@ -13162,7 +13085,7 @@ var THREE;
             _super.call(this, skyColor, intensity);
             this.type = 'HemisphereLight';
             this.castShadow = undefined;
-            this.position.set(0, 1, 0);
+            this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
             this.groundColor = new THREE.Color(groundColor);
         }
@@ -13190,13 +13113,13 @@ var THREE;
         ;
         Object.defineProperty(PointLight.prototype, "power", {
             get: function () {
-                return this.intensity * 4 * Math.PI;
+                return this.intensity * 4 * THREE.Math.PI;
             },
             enumerable: true,
             configurable: true
         });
         PointLight.prototype.set = function (power) {
-            this.intensity = power / (4 * Math.PI);
+            this.intensity = power / (4 * THREE.Math.PI);
         };
         PointLight.prototype.copy = function (source) {
             _super.prototype.copy.call(this, source);
@@ -13216,11 +13139,11 @@ var THREE;
         function SpotLight(color, intensity, distance, angle, penumbra, decay) {
             _super.call(this, color, intensity);
             this.type = 'SpotLight';
-            this.position.set(0, 1, 0);
+            this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
             this.target = new THREE.Object3D();
             this.distance = (distance !== undefined) ? distance : 0;
-            this.angle = (angle !== undefined) ? angle : Math.PI / 3;
+            this.angle = (angle !== undefined) ? angle : THREE.Math.PI / 3;
             this.penumbra = (penumbra !== undefined) ? penumbra : 0;
             this.decay = (decay !== undefined) ? decay : 1;
             this.shadow = new THREE.SpotLightShadow();
@@ -13228,10 +13151,10 @@ var THREE;
         ;
         Object.defineProperty(SpotLight.prototype, "power", {
             get: function () {
-                return this.intensity * Math.PI;
+                return this.intensity * THREE.Math.PI;
             },
             set: function (power) {
-                this.intensity = power / Math.PI;
+                this.intensity = power / THREE.Math.PI;
             },
             enumerable: true,
             configurable: true
@@ -13258,7 +13181,7 @@ var THREE;
             _super.call(this, new THREE.PerspectiveCamera(50, 1, 0.5, 500));
         }
         SpotLightShadow.prototype.update = function (light) {
-            var fov = Math.RAD2DEG * 2 * light.angle;
+            var fov = THREE.Math.RAD2DEG * 2 * light.angle;
             var aspect = this.mapSize.width / this.mapSize.height;
             var far = light.distance || 500;
             var camera = this.camera;
@@ -13616,23 +13539,26 @@ var THREE;
         }
         ;
         ImageLoader.prototype.load = function (url, onLoad, onProgress, onError) {
+            var scope = this;
             var image = document.createElementNS('http://www.w3.org/1999/xhtml', 'img');
             image.onload = function () {
                 URL.revokeObjectURL(image.src);
                 if (onLoad)
                     onLoad(image);
+                scope.manager.itemEnd(url);
             };
             if (url.indexOf('data:') === 0) {
                 image.src = url;
             }
             else {
-                var loader = new THREE.XHRLoader(this.manager);
+                var loader = new THREE.XHRLoader();
                 loader.setPath(this.path);
                 loader.setResponseType('blob');
                 loader.load(url, function (blob) {
                     image.src = URL.createObjectURL(blob);
                 }, onProgress, onError);
             }
+            scope.manager.itemStart(url);
             return image;
         };
         ImageLoader.prototype.setCrossOrigin = function (value) {
@@ -13892,8 +13818,8 @@ var THREE;
                     console.warn('THREE.JSONLoader: "morphColors" no longer supported. Using them as face colors.');
                     var faces = geometry.faces;
                     var morphColors = json.morphColors[0].colors;
-                    for (var i_1 = 0, l_1 = faces.length; i_1 < l_1; i_1++) {
-                        faces[i_1].color.fromArray(morphColors, i_1 * 3);
+                    for (var i_2 = 0, l_1 = faces.length; i_2 < l_1; i_2++) {
+                        faces[i_2].color.fromArray(morphColors, i_2 * 3);
                     }
                 }
             }
@@ -14007,12 +13933,12 @@ var THREE;
                 if (anisotropy !== undefined) {
                     texture.anisotropy = anisotropy;
                 }
-                var uuid = Math.generateUUID();
+                var uuid = THREE.Math.generateUUID();
                 textures[uuid] = texture;
                 return uuid;
             }
             var json = {
-                uuid: Math.generateUUID(),
+                uuid: THREE.Math.generateUUID(),
                 type: 'MeshLambertMaterial'
             };
             for (var name in m) {
@@ -14564,19 +14490,21 @@ var THREE;
                     if (data.mapping !== undefined)
                         texture.mapping = parseConstant(data.mapping);
                     if (data.offset !== undefined)
-                        texture.offset = new THREE.Vector2(data.offset[0], data.offset[1]);
+                        texture.offset.fromArray(data.offset);
                     if (data.repeat !== undefined)
-                        texture.repeat = new THREE.Vector2(data.repeat[0], data.repeat[1]);
+                        texture.repeat.fromArray(data.repeat);
+                    if (data.wrap !== undefined) {
+                        texture.wrapS = parseConstant(data.wrap[0]);
+                        texture.wrapT = parseConstant(data.wrap[1]);
+                    }
                     if (data.minFilter !== undefined)
                         texture.minFilter = parseConstant(data.minFilter);
                     if (data.magFilter !== undefined)
                         texture.magFilter = parseConstant(data.magFilter);
                     if (data.anisotropy !== undefined)
                         texture.anisotropy = data.anisotropy;
-                    if (Array.isArray(data.wrap)) {
-                        texture.wrapS = parseConstant(data.wrap[0]);
-                        texture.wrapT = parseConstant(data.wrap[1]);
-                    }
+                    if (data.flipY !== undefined)
+                        texture.flipY = data.flipY;
                     textures[data.uuid] = texture;
                 }
             }
@@ -14720,6 +14648,8 @@ var THREE;
             loader.setCrossOrigin(this.crossOrigin);
             loader.setPath(this.path);
             loader.load(url, function (image) {
+                var isJPEG = url.search(/\.(jpg|jpeg)$/) > 0 || url.search(/^data\:image\/jpeg/) === 0;
+                texture.format = isJPEG ? THREE.RGBFormat : THREE.RGBAFormat;
                 texture.image = image;
                 texture.needsUpdate = true;
                 if (onLoad !== undefined) {
@@ -14753,11 +14683,12 @@ var THREE;
             var scope = this;
             var cached = THREE.Cache.get(url);
             if (cached !== undefined) {
-                if (onLoad) {
-                    setTimeout(function () {
+                scope.manager.itemStart(url);
+                setTimeout(function () {
+                    if (onLoad)
                         onLoad(cached);
-                    }, 0);
-                }
+                    scope.manager.itemEnd(url);
+                }, 0);
                 return cached;
             }
             var request = new XMLHttpRequest();
@@ -14824,7 +14755,7 @@ var THREE;
         function Material() {
             _super.call(this);
             this._id = THREE.MaterialIdCount++;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.name = '';
             this.type = 'Material';
             this.fog = true;
@@ -15499,7 +15430,7 @@ var THREE;
 (function (THREE) {
     var MultiMaterial = (function () {
         function MultiMaterial(materials) {
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.type = 'MultiMaterial';
             this.visible = true;
             this.materials = materials instanceof Array ? materials : [];
@@ -15787,75 +15718,75 @@ var THREE;
             return this;
         };
         Euler.prototype.setFromRotationMatrix = function (m, order, update) {
-            var clamp = Math.clamp;
+            var clamp = THREE.Math.clamp;
             var te = m.elements;
             var m11 = te[0], m12 = te[4], m13 = te[8];
             var m21 = te[1], m22 = te[5], m23 = te[9];
             var m31 = te[2], m32 = te[6], m33 = te[10];
             order = order || this._order;
             if (order === 'XYZ') {
-                this._y = Math.asin(clamp(m13, -1, 1));
-                if (Math.abs(m13) < 0.99999) {
-                    this._x = Math.atan2(-m23, m33);
-                    this._z = Math.atan2(-m12, m11);
+                this._y = THREE.Math.asin(clamp(m13, -1, 1));
+                if (THREE.Math.abs(m13) < 0.99999) {
+                    this._x = THREE.Math.atan2(-m23, m33);
+                    this._z = THREE.Math.atan2(-m12, m11);
                 }
                 else {
-                    this._x = Math.atan2(m32, m22);
+                    this._x = THREE.Math.atan2(m32, m22);
                     this._z = 0;
                 }
             }
             else if (order === 'YXZ') {
-                this._x = Math.asin(-clamp(m23, -1, 1));
-                if (Math.abs(m23) < 0.99999) {
-                    this._y = Math.atan2(m13, m33);
-                    this._z = Math.atan2(m21, m22);
+                this._x = THREE.Math.asin(-clamp(m23, -1, 1));
+                if (THREE.Math.abs(m23) < 0.99999) {
+                    this._y = THREE.Math.atan2(m13, m33);
+                    this._z = THREE.Math.atan2(m21, m22);
                 }
                 else {
-                    this._y = Math.atan2(-m31, m11);
+                    this._y = THREE.Math.atan2(-m31, m11);
                     this._z = 0;
                 }
             }
             else if (order === 'ZXY') {
-                this._x = Math.asin(clamp(m32, -1, 1));
-                if (Math.abs(m32) < 0.99999) {
-                    this._y = Math.atan2(-m31, m33);
-                    this._z = Math.atan2(-m12, m22);
+                this._x = THREE.Math.asin(clamp(m32, -1, 1));
+                if (THREE.Math.abs(m32) < 0.99999) {
+                    this._y = THREE.Math.atan2(-m31, m33);
+                    this._z = THREE.Math.atan2(-m12, m22);
                 }
                 else {
                     this._y = 0;
-                    this._z = Math.atan2(m21, m11);
+                    this._z = THREE.Math.atan2(m21, m11);
                 }
             }
             else if (order === 'ZYX') {
-                this._y = Math.asin(-clamp(m31, -1, 1));
-                if (Math.abs(m31) < 0.99999) {
-                    this._x = Math.atan2(m32, m33);
-                    this._z = Math.atan2(m21, m11);
+                this._y = THREE.Math.asin(-clamp(m31, -1, 1));
+                if (THREE.Math.abs(m31) < 0.99999) {
+                    this._x = THREE.Math.atan2(m32, m33);
+                    this._z = THREE.Math.atan2(m21, m11);
                 }
                 else {
                     this._x = 0;
-                    this._z = Math.atan2(-m12, m22);
+                    this._z = THREE.Math.atan2(-m12, m22);
                 }
             }
             else if (order === 'YZX') {
-                this._z = Math.asin(clamp(m21, -1, 1));
-                if (Math.abs(m21) < 0.99999) {
-                    this._x = Math.atan2(-m23, m22);
-                    this._y = Math.atan2(-m31, m11);
+                this._z = THREE.Math.asin(clamp(m21, -1, 1));
+                if (THREE.Math.abs(m21) < 0.99999) {
+                    this._x = THREE.Math.atan2(-m23, m22);
+                    this._y = THREE.Math.atan2(-m31, m11);
                 }
                 else {
                     this._x = 0;
-                    this._y = Math.atan2(m13, m33);
+                    this._y = THREE.Math.atan2(m13, m33);
                 }
             }
             else if (order === 'XZY') {
-                this._z = Math.asin(-clamp(m12, -1, 1));
-                if (Math.abs(m12) < 0.99999) {
-                    this._x = Math.atan2(m32, m22);
-                    this._y = Math.atan2(m13, m11);
+                this._z = THREE.Math.asin(-clamp(m12, -1, 1));
+                if (THREE.Math.abs(m12) < 0.99999) {
+                    this._x = THREE.Math.atan2(m32, m22);
+                    this._y = THREE.Math.atan2(m13, m11);
                 }
                 else {
-                    this._x = Math.atan2(-m23, m33);
+                    this._x = THREE.Math.atan2(-m23, m33);
                     this._y = 0;
                 }
             }
@@ -16349,7 +16280,7 @@ var THREE;
                 var startEnd_startP = startEnd.dot(startP);
                 var t = startEnd_startP / startEnd2;
                 if (clampToLine) {
-                    t = Math.clamp(t, 0, 1);
+                    t = THREE.Math.clamp(t, 0, 1);
                 }
                 return t;
             };
@@ -16456,7 +16387,11 @@ if (Math.DEG2RAD === undefined) {
         return value;
     };
 }
-THREE["Math"] = Math;
+var _math = Math;
+var THREE;
+(function (THREE) {
+    THREE.Math = _math;
+})(THREE || (THREE = {}));
 var THREE;
 (function (THREE) {
     var Plane = (function () {
@@ -16661,12 +16596,12 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromEuler = function (euler, update) {
-            var c1 = Math.cos(euler._x / 2);
-            var c2 = Math.cos(euler._y / 2);
-            var c3 = Math.cos(euler._z / 2);
-            var s1 = Math.sin(euler._x / 2);
-            var s2 = Math.sin(euler._y / 2);
-            var s3 = Math.sin(euler._z / 2);
+            var c1 = THREE.Math.cos(euler._x / 2);
+            var c2 = THREE.Math.cos(euler._y / 2);
+            var c3 = THREE.Math.cos(euler._z / 2);
+            var s1 = THREE.Math.sin(euler._x / 2);
+            var s2 = THREE.Math.sin(euler._y / 2);
+            var s3 = THREE.Math.sin(euler._z / 2);
             var order = euler.order;
             if (order === 'XYZ') {
                 this._x = s1 * c2 * c3 + c1 * s2 * s3;
@@ -16709,39 +16644,39 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromAxisAngle = function (axis, angle) {
-            var halfAngle = angle / 2, s = Math.sin(halfAngle);
+            var halfAngle = angle / 2, s = THREE.Math.sin(halfAngle);
             this._x = axis.x * s;
             this._y = axis.y * s;
             this._z = axis.z * s;
-            this._w = Math.cos(halfAngle);
+            this._w = THREE.Math.cos(halfAngle);
             this.onChangeCallback();
             return this;
         };
         Quaternion.prototype.setFromRotationMatrix = function (m) {
             var te = m.elements, m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10], trace = m11 + m22 + m33, s;
             if (trace > 0) {
-                s = 0.5 / Math.sqrt(trace + 1.0);
+                s = 0.5 / THREE.Math.sqrt(trace + 1.0);
                 this._w = 0.25 / s;
                 this._x = (m32 - m23) * s;
                 this._y = (m13 - m31) * s;
                 this._z = (m21 - m12) * s;
             }
             else if (m11 > m22 && m11 > m33) {
-                s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
+                s = 2.0 * THREE.Math.sqrt(1.0 + m11 - m22 - m33);
                 this._w = (m32 - m23) / s;
                 this._x = 0.25 * s;
                 this._y = (m12 + m21) / s;
                 this._z = (m13 + m31) / s;
             }
             else if (m22 > m33) {
-                s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
+                s = 2.0 * THREE.Math.sqrt(1.0 + m22 - m11 - m33);
                 this._w = (m13 - m31) / s;
                 this._x = (m12 + m21) / s;
                 this._y = 0.25 * s;
                 this._z = (m23 + m32) / s;
             }
             else {
-                s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
+                s = 2.0 * THREE.Math.sqrt(1.0 + m33 - m11 - m22);
                 this._w = (m21 - m12) / s;
                 this._x = (m13 + m31) / s;
                 this._y = (m23 + m32) / s;
@@ -16759,7 +16694,7 @@ var THREE;
                 r = vFrom.dot(vTo) + 1;
                 if (r < EPS) {
                     r = 0;
-                    if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
+                    if (THREE.Math.abs(vFrom.x) > THREE.Math.abs(vFrom.z)) {
                         v1.set(-vFrom.y, vFrom.x, 0);
                     }
                     else {
@@ -16794,7 +16729,7 @@ var THREE;
             return this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w;
         };
         Quaternion.prototype.length = function () {
-            return Math.sqrt(this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w);
+            return THREE.Math.sqrt(this._x * this._x + this._y * this._y + this._z * this._z + this._w * this._w);
         };
         Quaternion.prototype.normalize = function () {
             var l = this.length();
@@ -16854,16 +16789,16 @@ var THREE;
                 this._z = z;
                 return this;
             }
-            var sinHalfTheta = Math.sqrt(1.0 - cosHalfTheta * cosHalfTheta);
-            if (Math.abs(sinHalfTheta) < 0.001) {
+            var sinHalfTheta = THREE.Math.sqrt(1.0 - cosHalfTheta * cosHalfTheta);
+            if (THREE.Math.abs(sinHalfTheta) < 0.001) {
                 this._w = 0.5 * (w + this._w);
                 this._x = 0.5 * (x + this._x);
                 this._y = 0.5 * (y + this._y);
                 this._z = 0.5 * (z + this._z);
                 return this;
             }
-            var halfTheta = Math.atan2(sinHalfTheta, cosHalfTheta);
-            var ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta, ratioB = Math.sin(t * halfTheta) / sinHalfTheta;
+            var halfTheta = THREE.Math.atan2(sinHalfTheta, cosHalfTheta);
+            var ratioA = THREE.Math.sin((1 - t) * halfTheta) / sinHalfTheta, ratioB = THREE.Math.sin(t * halfTheta) / sinHalfTheta;
             this._w = (w * ratioA + this._w * ratioB);
             this._x = (x * ratioA + this._x * ratioB);
             this._y = (y * ratioA + this._y * ratioB);
@@ -16913,9 +16848,9 @@ var THREE;
             if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
                 var s = 1 - t, cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1, dir = (cos >= 0 ? 1 : -1), sqrSin = 1 - cos * cos;
                 if (sqrSin > Number.EPSILON) {
-                    var sin = Math.sqrt(sqrSin), len = Math.atan2(sin, cos * dir);
-                    s = Math.sin(s * len) / sin;
-                    t = Math.sin(t * len) / sin;
+                    var sin = THREE.Math.sqrt(sqrSin), len = THREE.Math.atan2(sin, cos * dir);
+                    s = THREE.Math.sin(s * len) / sin;
+                    t = THREE.Math.sin(t * len) / sin;
                 }
                 var tDir = t * dir;
                 x0 = x0 * s + x1 * tDir;
@@ -16923,7 +16858,7 @@ var THREE;
                 z0 = z0 * s + z1 * tDir;
                 w0 = w0 * s + w1 * tDir;
                 if (s === 1 - t) {
-                    var f = 1 / Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
+                    var f = 1 / THREE.Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
                     x0 *= f;
                     y0 *= f;
                     z0 *= f;
@@ -16987,7 +16922,7 @@ var THREE;
             return result.copy(this.direction).multiplyScalar(directionDistance).add(this.origin);
         };
         Ray.prototype.distanceToPoint = function (point) {
-            return Math.sqrt(this.distanceSqToPoint(point));
+            return THREE.Math.sqrt(this.distanceSqToPoint(point));
         };
         Ray.prototype.distanceSqToPoint = function (point) {
             var v1 = Ray[".distanceSqToPoint.v1"] || (Ray[".distanceSqToPoint.v1"] = new THREE.Vector3());
@@ -17013,7 +16948,7 @@ var THREE;
             var b0 = diff.dot(this.direction);
             var b1 = -diff.dot(segDir);
             var c = diff.lengthSq();
-            var det = Math.abs(1 - a01 * a01);
+            var det = THREE.Math.abs(1 - a01 * a01);
             var s0, s1, sqrDist, extDet;
             if (det > 0) {
                 s0 = a01 * b1 - b0;
@@ -17029,37 +16964,37 @@ var THREE;
                         }
                         else {
                             s1 = segExtent;
-                            s0 = Math.max(0, -(a01 * s1 + b0));
+                            s0 = THREE.Math.max(0, -(a01 * s1 + b0));
                             sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                         }
                     }
                     else {
                         s1 = -segExtent;
-                        s0 = Math.max(0, -(a01 * s1 + b0));
+                        s0 = THREE.Math.max(0, -(a01 * s1 + b0));
                         sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                     }
                 }
                 else {
                     if (s1 <= -extDet) {
-                        s0 = Math.max(0, -(-a01 * segExtent + b0));
-                        s1 = (s0 > 0) ? -segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
+                        s0 = THREE.Math.max(0, -(-a01 * segExtent + b0));
+                        s1 = (s0 > 0) ? -segExtent : THREE.Math.min(THREE.Math.max(-segExtent, -b1), segExtent);
                         sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                     }
                     else if (s1 <= extDet) {
                         s0 = 0;
-                        s1 = Math.min(Math.max(-segExtent, -b1), segExtent);
+                        s1 = THREE.Math.min(THREE.Math.max(-segExtent, -b1), segExtent);
                         sqrDist = s1 * (s1 + 2 * b1) + c;
                     }
                     else {
-                        s0 = Math.max(0, -(a01 * segExtent + b0));
-                        s1 = (s0 > 0) ? segExtent : Math.min(Math.max(-segExtent, -b1), segExtent);
+                        s0 = THREE.Math.max(0, -(a01 * segExtent + b0));
+                        s1 = (s0 > 0) ? segExtent : THREE.Math.min(THREE.Math.max(-segExtent, -b1), segExtent);
                         sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
                     }
                 }
             }
             else {
                 s1 = (a01 > 0) ? -segExtent : segExtent;
-                s0 = Math.max(0, -(a01 * s1 + b0));
+                s0 = THREE.Math.max(0, -(a01 * s1 + b0));
                 sqrDist = -s0 * s0 + s1 * (s1 + 2 * b1) + c;
             }
             if (optionalPointOnRay) {
@@ -17078,7 +17013,7 @@ var THREE;
             var radius2 = sphere.radius * sphere.radius;
             if (d2 > radius2)
                 return null;
-            var thc = Math.sqrt(radius2 - d2);
+            var thc = THREE.Math.sqrt(radius2 - d2);
             var t0 = tca - thc;
             var t1 = tca + thc;
             if (t0 < 0 && t1 < 0)
@@ -17240,7 +17175,7 @@ var THREE;
         ;
         Spline.prototype.getPoint = function (k) {
             var point = (this.points.length - 1) * k;
-            var intPoint = Math.floor(point);
+            var intPoint = THREE.Math.floor(point);
             var weight = point - intPoint;
             var c = this.c;
             c[0] = intPoint === 0 ? intPoint : intPoint - 1;
@@ -17285,7 +17220,7 @@ var THREE;
                 totalLength += tmpVec.distanceTo(oldPosition);
                 oldPosition.copy(position);
                 point = (this.points.length - 1) * index;
-                intPoint = Math.floor(point);
+                intPoint = THREE.Math.floor(point);
                 if (intPoint !== oldIntPoint) {
                     chunkLengths[intPoint] = totalLength;
                     oldIntPoint = intPoint;
@@ -17367,7 +17302,7 @@ var THREE;
                 color = new THREE.Color(0xffffff);
             if (blending === undefined)
                 blending = THREE.NormalBlending;
-            distance = Math.min(distance, Math.max(0, distance));
+            distance = THREE.Math.min(distance, THREE.Math.max(0, distance));
             this.lensFlares.push({
                 texture: texture,
                 size: size,
@@ -17390,7 +17325,7 @@ var THREE;
                 flare = this.lensFlares[f];
                 flare.x = this.positionScreen.x + vecX * flare.distance;
                 flare.y = this.positionScreen.y + vecY * flare.distance;
-                flare.wantedRotation = flare.x * Math.PI * 0.25;
+                flare.wantedRotation = flare.x * THREE.Math.PI * 0.25;
                 flare.rotation += (flare.wantedRotation - flare.rotation) * 0.25;
             }
         };
@@ -17427,7 +17362,7 @@ var THREE;
         LOD.prototype.addLevel = function (object, distance) {
             if (distance === undefined)
                 distance = 0;
-            distance = Math.abs(distance);
+            distance = THREE.Math.abs(distance);
             var levels = this.levels;
             for (var l = 0; l < levels.length; l++) {
                 if (distance < levels[l].distance) {
@@ -17503,7 +17438,7 @@ var THREE;
             _super.call(this);
             this.type = 'Points';
             this.geometry = geometry !== undefined ? geometry : new THREE.BufferGeometry();
-            this.material = material !== undefined ? material : new THREE.PointsMaterial({ color: Math.random() * 0xffffff });
+            this.material = material !== undefined ? material : new THREE.PointsMaterial({ color: THREE.Math.random() * 0xffffff });
         }
         ;
         Points.prototype.raycast = function (raycaster, intersects) {
@@ -17535,7 +17470,7 @@ var THREE;
                         return;
                     intersects.push({
                         distance: distance,
-                        distanceToRay: Math.sqrt(rayPointDistanceSq),
+                        distanceToRay: THREE.Math.sqrt(rayPointDistanceSq),
                         point: intersectPoint.clone(),
                         index: index,
                         face: null,
@@ -17589,9 +17524,9 @@ var THREE;
             bones = bones || [];
             this.bones = bones.slice(0);
             if (this.useVertexTexture) {
-                var size = Math.sqrt(this.bones.length * 4);
-                size = Math.nextPowerOfTwo(Math.ceil(size));
-                size = Math.max(size, 4);
+                var size = THREE.Math.sqrt(this.bones.length * 4);
+                size = THREE.Math.nextPowerOfTwo(THREE.Math.ceil(size));
+                size = THREE.Math.max(size, 4);
                 this.boneTextureWidth = size;
                 this.boneTextureHeight = size;
                 this.boneMatrices = new Float32Array(this.boneTextureWidth * this.boneTextureHeight * 4);
@@ -17792,7 +17727,7 @@ var THREE;
                 return;
             }
             intersects.push({
-                distance: Math.sqrt(distanceSq),
+                distance: THREE.Math.sqrt(distanceSq),
                 point: this.position,
                 face: null,
                 object: this
@@ -17848,7 +17783,7 @@ var THREE;
     THREE.ShaderChunk['lights_phong_fragment'] = "BlinnPhongMaterial material;\nmaterial.diffuseColor = diffuseColor.rgb;\nmaterial.specularColor = specular;\nmaterial.specularShininess = shininess;\nmaterial.specularStrength = specularStrength;\n";
     THREE.ShaderChunk['lights_phong_pars_fragment'] = "varying vec3 vViewPosition;\n#ifndef FLAT_SHADED\n	varying vec3 vNormal;\n#endif\nstruct BlinnPhongMaterial {\n	vec3	diffuseColor;\n	vec3	specularColor;\n	float	specularShininess;\n	float	specularStrength;\n};\nvoid RE_Direct_BlinnPhong( const in IncidentLight directLight, const in GeometricContext geometry, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {\n	float dotNL = saturate( dot( geometry.normal, directLight.direction ) );\n	vec3 irradiance = dotNL * directLight.color;\n	#ifndef PHYSICALLY_CORRECT_LIGHTS\n		irradiance *= PI;\n	#endif\n	reflectedLight.directDiffuse += irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n	reflectedLight.directSpecular += irradiance * BRDF_Specular_BlinnPhong( directLight, geometry, material.specularColor, material.specularShininess ) * material.specularStrength;\n}\nvoid RE_IndirectDiffuse_BlinnPhong( const in vec3 irradiance, const in GeometricContext geometry, const in BlinnPhongMaterial material, inout ReflectedLight reflectedLight ) {\n	reflectedLight.indirectDiffuse += irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n}\n#define RE_Direct				RE_Direct_BlinnPhong\n#define RE_IndirectDiffuse		RE_IndirectDiffuse_BlinnPhong\n#define Material_LightProbeLOD( material )	(0)\n";
     THREE.ShaderChunk['lights_physical_fragment'] = "PhysicalMaterial material;\nmaterial.diffuseColor = diffuseColor.rgb * ( 1.0 - metalnessFactor );\nmaterial.specularRoughness = clamp( roughnessFactor, 0.04, 1.0 );\n#ifdef STANDARD\n	material.specularColor = mix( vec3( DEFAULT_SPECULAR_COEFFICIENT ), diffuseColor.rgb, metalnessFactor );\n#else\n	material.specularColor = mix( vec3( MAXIMUM_SPECULAR_COEFFICIENT * pow2( reflectivity ) ), diffuseColor.rgb, metalnessFactor );\n	material.clearCoat = saturate( clearCoat );	material.clearCoatRoughness = clamp( clearCoatRoughness, 0.04, 1.0 );\n#endif\n";
-    THREE.ShaderChunk['lights_physical_pars_fragment'] = "struct PhysicalMaterial {\n	vec3	diffuseColor;\n	float	specularRoughness;\n	vec3	specularColor;\n	#ifndef STANDARD\n		float clearCoat;\n		float clearCoatRoughness;\n	#endif\n};\n#define MAXIMUM_SPECULAR_COEFFICIENT 0.16\n#define DEFAULT_SPECULAR_COEFFICIENT 0.04\nvoid RE_Direct_Physical( const in IncidentLight directLight, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	float dotNL = saturate( dot( geometry.normal, directLight.direction ) );\n	vec3 irradiance = dotNL * directLight.color;\n	#ifndef PHYSICALLY_CORRECT_LIGHTS\n		irradiance *= PI;\n	#endif\n	reflectedLight.directSpecular += irradiance * BRDF_Specular_GGX( directLight, geometry, material.specularColor, material.specularRoughness );\n	reflectedLight.directDiffuse += irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n	#ifndef STANDARD\n		reflectedLight.directSpecular += irradiance * material.clearCoat * BRDF_Specular_GGX( directLight, geometry, vec3( DEFAULT_SPECULAR_COEFFICIENT ), material.clearCoatRoughness );\n	#endif\n}\nvoid RE_IndirectDiffuse_Physical( const in vec3 irradiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	reflectedLight.indirectDiffuse += irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n}\nvoid RE_IndirectSpecular_Physical( const in vec3 radiance, const in vec3 clearCoatRadiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	reflectedLight.indirectSpecular += radiance * BRDF_Specular_GGX_Environment( geometry, material.specularColor, material.specularRoughness );\n	#ifndef STANDARD\n		reflectedLight.indirectSpecular += clearCoatRadiance * material.clearCoat * BRDF_Specular_GGX_Environment( geometry, vec3( DEFAULT_SPECULAR_COEFFICIENT ), material.clearCoatRoughness );\n	#endif\n}\n#define RE_Direct				RE_Direct_Physical\n#define RE_IndirectDiffuse		RE_IndirectDiffuse_Physical\n#define RE_IndirectSpecular		RE_IndirectSpecular_Physical\n#define Material_BlinnShininessExponent( material )   GGXRoughnessToBlinnExponent( material.specularRoughness )\n#define Material_ClearCoat_BlinnShininessExponent( material )   GGXRoughnessToBlinnExponent( material.clearCoatRoughness )\nfloat computeSpecularOcclusion( const in float dotNV, const in float ambientOcclusion, const in float roughness ) {\n	return saturate( pow( dotNV + ambientOcclusion, exp2( - 16.0 * roughness - 1.0 ) ) - 1.0 + ambientOcclusion );\n}\n";
+    THREE.ShaderChunk['lights_physical_pars_fragment'] = "struct PhysicalMaterial {\n	vec3	diffuseColor;\n	float	specularRoughness;\n	vec3	specularColor;\n	#ifndef STANDARD\n		float clearCoat;\n		float clearCoatRoughness;\n	#endif\n};\n#define MAXIMUM_SPECULAR_COEFFICIENT 0.16\n#define DEFAULT_SPECULAR_COEFFICIENT 0.04\nfloat clearCoatDHRApprox( const in float roughness, const in float dotNL ) {\n	return DEFAULT_SPECULAR_COEFFICIENT + ( 1.0 - DEFAULT_SPECULAR_COEFFICIENT ) * ( pow( 1.0 - dotNL, 5.0 ) * pow( 1.0 - roughness, 2.0 ) );\n}\nvoid RE_Direct_Physical( const in IncidentLight directLight, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	float dotNL = saturate( dot( geometry.normal, directLight.direction ) );\n	vec3 irradiance = dotNL * directLight.color;\n	#ifndef PHYSICALLY_CORRECT_LIGHTS\n		irradiance *= PI;\n	#endif\n	#ifndef STANDARD\n		float clearCoatDHR = material.clearCoat * clearCoatDHRApprox( material.clearCoatRoughness, dotNL );\n	#else\n		float clearCoatDHR = 0.0;\n	#endif\n	reflectedLight.directSpecular += ( 1.0 - clearCoatDHR ) * irradiance * BRDF_Specular_GGX( directLight, geometry, material.specularColor, material.specularRoughness );\n	reflectedLight.directDiffuse += ( 1.0 - clearCoatDHR ) * irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n	#ifndef STANDARD\n		reflectedLight.directSpecular += irradiance * material.clearCoat * BRDF_Specular_GGX( directLight, geometry, vec3( DEFAULT_SPECULAR_COEFFICIENT ), material.clearCoatRoughness );\n	#endif\n}\nvoid RE_IndirectDiffuse_Physical( const in vec3 irradiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	reflectedLight.indirectDiffuse += irradiance * BRDF_Diffuse_Lambert( material.diffuseColor );\n}\nvoid RE_IndirectSpecular_Physical( const in vec3 radiance, const in vec3 clearCoatRadiance, const in GeometricContext geometry, const in PhysicalMaterial material, inout ReflectedLight reflectedLight ) {\n	#ifndef STANDARD\n		float dotNV = saturate( dot( geometry.normal, geometry.viewDir ) );\n		float dotNL = dotNV;\n		float clearCoatDHR = material.clearCoat * clearCoatDHRApprox( material.clearCoatRoughness, dotNL );\n	#else\n		float clearCoatDHR = 0.0;\n	#endif\n	reflectedLight.indirectSpecular += ( 1.0 - clearCoatDHR ) * radiance * BRDF_Specular_GGX_Environment( geometry, material.specularColor, material.specularRoughness );\n	#ifndef STANDARD\n		reflectedLight.indirectSpecular += clearCoatRadiance * material.clearCoat * BRDF_Specular_GGX_Environment( geometry, vec3( DEFAULT_SPECULAR_COEFFICIENT ), material.clearCoatRoughness );\n	#endif\n}\n#define RE_Direct				RE_Direct_Physical\n#define RE_IndirectDiffuse		RE_IndirectDiffuse_Physical\n#define RE_IndirectSpecular		RE_IndirectSpecular_Physical\n#define Material_BlinnShininessExponent( material )   GGXRoughnessToBlinnExponent( material.specularRoughness )\n#define Material_ClearCoat_BlinnShininessExponent( material )   GGXRoughnessToBlinnExponent( material.clearCoatRoughness )\nfloat computeSpecularOcclusion( const in float dotNV, const in float ambientOcclusion, const in float roughness ) {\n	return saturate( pow( dotNV + ambientOcclusion, exp2( - 16.0 * roughness - 1.0 ) ) - 1.0 + ambientOcclusion );\n}\n";
     THREE.ShaderChunk['lights_template'] = "\nGeometricContext geometry;\ngeometry.position = - vViewPosition;\ngeometry.normal = normal;\ngeometry.viewDir = normalize( vViewPosition );\nIncidentLight directLight;\n#if ( NUM_POINT_LIGHTS > 0 ) && defined( RE_Direct )\n	PointLight pointLight;\n	for ( int i = 0; i < NUM_POINT_LIGHTS; i ++ ) {\n		pointLight = pointLights[ i ];\n		getPointDirectLightIrradiance( pointLight, geometry, directLight );\n		#ifdef USE_SHADOWMAP\n		directLight.color *= all( bvec2( pointLight.shadow, directLight.visible ) ) ? getPointShadow( pointShadowMap[ i ], pointLight.shadowMapSize, pointLight.shadowBias, pointLight.shadowRadius, vPointShadowCoord[ i ] ) : 1.0;\n		#endif\n		RE_Direct( directLight, geometry, material, reflectedLight );\n	}\n#endif\n#if ( NUM_SPOT_LIGHTS > 0 ) && defined( RE_Direct )\n	SpotLight spotLight;\n	for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {\n		spotLight = spotLights[ i ];\n		getSpotDirectLightIrradiance( spotLight, geometry, directLight );\n		#ifdef USE_SHADOWMAP\n		directLight.color *= all( bvec2( spotLight.shadow, directLight.visible ) ) ? getShadow( spotShadowMap[ i ], spotLight.shadowMapSize, spotLight.shadowBias, spotLight.shadowRadius, vSpotShadowCoord[ i ] ) : 1.0;\n		#endif\n		RE_Direct( directLight, geometry, material, reflectedLight );\n	}\n#endif\n#if ( NUM_DIR_LIGHTS > 0 ) && defined( RE_Direct )\n	DirectionalLight directionalLight;\n	for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {\n		directionalLight = directionalLights[ i ];\n		getDirectionalDirectLightIrradiance( directionalLight, geometry, directLight );\n		#ifdef USE_SHADOWMAP\n		directLight.color *= all( bvec2( directionalLight.shadow, directLight.visible ) ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0;\n		#endif\n		RE_Direct( directLight, geometry, material, reflectedLight );\n	}\n#endif\n#if defined( RE_IndirectDiffuse )\n	vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );\n	#ifdef USE_LIGHTMAP\n		vec3 lightMapIrradiance = texture2D( lightMap, vUv2 ).xyz * lightMapIntensity;\n		#ifndef PHYSICALLY_CORRECT_LIGHTS\n			lightMapIrradiance *= PI;\n		#endif\n		irradiance += lightMapIrradiance;\n	#endif\n	#if ( NUM_HEMI_LIGHTS > 0 )\n		for ( int i = 0; i < NUM_HEMI_LIGHTS; i ++ ) {\n			irradiance += getHemisphereLightIrradiance( hemisphereLights[ i ], geometry );\n		}\n	#endif\n	#if defined( USE_ENVMAP ) && defined( PHYSICAL ) && defined( ENVMAP_TYPE_CUBE_UV )\n	 	irradiance += getLightProbeIndirectIrradiance( geometry, 8 );\n	#endif\n	RE_IndirectDiffuse( irradiance, geometry, material, reflectedLight );\n#endif\n#if defined( USE_ENVMAP ) && defined( RE_IndirectSpecular )\n	vec3 radiance = getLightProbeIndirectRadiance( geometry, Material_BlinnShininessExponent( material ), 8 );\n	#ifndef STANDARD\n		vec3 clearCoatRadiance = getLightProbeIndirectRadiance( geometry, Material_ClearCoat_BlinnShininessExponent( material ), 8 );\n	#else\n		vec3 clearCoatRadiance = vec3( 0.0 );\n	#endif\n		\n	RE_IndirectSpecular( radiance, clearCoatRadiance, geometry, material, reflectedLight );\n#endif\n";
     THREE.ShaderChunk['logdepthbuf_fragment'] = "#if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)\n	gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;\n#endif";
     THREE.ShaderChunk['logdepthbuf_pars_fragment'] = "#ifdef USE_LOGDEPTHBUF\n	uniform float logDepthBufFC;\n	#ifdef USE_LOGDEPTHBUF_EXT\n		varying float vFragDepth;\n	#endif\n#endif\n";
@@ -17898,7 +17833,7 @@ var THREE;
         function Texture(image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) {
             _super.call(this);
             this._id = THREE.TextureIdCount++;
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.name = '';
             this.sourceFile = '';
             this.mipmaps = [];
@@ -17996,12 +17931,13 @@ var THREE;
                 wrap: [this.wrapS, this.wrapT],
                 minFilter: this.minFilter,
                 magFilter: this.magFilter,
-                anisotropy: this.anisotropy
+                anisotropy: this.anisotropy,
+                flipY: this.flipY
             };
             if (this.image !== undefined) {
                 var image = this.image;
                 if (image.uuid === undefined) {
-                    image.uuid = Math.generateUUID();
+                    image.uuid = THREE.Math.generateUUID();
                 }
                 if (meta.images[image.uuid] === undefined) {
                     meta.images[image.uuid] = {
@@ -18025,17 +17961,17 @@ var THREE;
             if (uv.x < 0 || uv.x > 1) {
                 switch (this.wrapS) {
                     case THREE.RepeatWrapping:
-                        uv.x = uv.x - Math.floor(uv.x);
+                        uv.x = uv.x - THREE.Math.floor(uv.x);
                         break;
                     case THREE.ClampToEdgeWrapping:
                         uv.x = uv.x < 0 ? 0 : 1;
                         break;
                     case THREE.MirroredRepeatWrapping:
-                        if (Math.abs(Math.floor(uv.x) % 2) === 1) {
-                            uv.x = Math.ceil(uv.x) - uv.x;
+                        if (THREE.Math.abs(THREE.Math.floor(uv.x) % 2) === 1) {
+                            uv.x = THREE.Math.ceil(uv.x) - uv.x;
                         }
                         else {
-                            uv.x = uv.x - Math.floor(uv.x);
+                            uv.x = uv.x - THREE.Math.floor(uv.x);
                         }
                         break;
                 }
@@ -18043,17 +17979,17 @@ var THREE;
             if (uv.y < 0 || uv.y > 1) {
                 switch (this.wrapT) {
                     case THREE.RepeatWrapping:
-                        uv.y = uv.y - Math.floor(uv.y);
+                        uv.y = uv.y - THREE.Math.floor(uv.y);
                         break;
                     case THREE.ClampToEdgeWrapping:
                         uv.y = uv.y < 0 ? 0 : 1;
                         break;
                     case THREE.MirroredRepeatWrapping:
-                        if (Math.abs(Math.floor(uv.y) % 2) === 1) {
-                            uv.y = Math.ceil(uv.y) - uv.y;
+                        if (THREE.Math.abs(THREE.Math.floor(uv.y) % 2) === 1) {
+                            uv.y = THREE.Math.ceil(uv.y) - uv.y;
                         }
                         else {
-                            uv.y = uv.y - Math.floor(uv.y);
+                            uv.y = uv.y - THREE.Math.floor(uv.y);
                         }
                         break;
                 }
@@ -18222,14 +18158,14 @@ var THREE;
             "offsetRepeat": { value: new THREE.Vector4(0, 0, 1, 1) }
         }
     };
-    THREE.ShaderChunk['cube_frag'] = "uniform samplerCube tCube;\nuniform float tFlip;\nvarying vec3 vWorldPosition;\n#include <common>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n	#include <clipping_planes_fragment>\n	gl_FragColor = textureCube( tCube, vec3( tFlip * vWorldPosition.x, vWorldPosition.yz ) );\n	#include <logdepthbuf_fragment>\n}\n";
-    THREE.ShaderChunk['cube_vert'] = "varying vec3 vWorldPosition;\n#include <common>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\nvoid main() {\n	vWorldPosition = transformDirection( position, modelMatrix );\n	#include <begin_vertex>\n	#include <project_vertex>\n	#include <logdepthbuf_vertex>\n	#include <clipping_planes_vertex>\n}\n";
+    THREE.ShaderChunk['cube_frag'] = "uniform samplerCube tCube;\nuniform float tFlip;\nuniform float opacity;\nvarying vec3 vWorldPosition;\n#include <common>\nvoid main() {\n	gl_FragColor = textureCube( tCube, vec3( tFlip * vWorldPosition.x, vWorldPosition.yz ) );\n	gl_FragColor.a *= opacity;\n}\n";
+    THREE.ShaderChunk['cube_vert'] = "varying vec3 vWorldPosition;\n#include <common>\nvoid main() {\n	vWorldPosition = transformDirection( position, modelMatrix );\n	#include <begin_vertex>\n	#include <project_vertex>\n}\n";
     THREE.ShaderChunk['depth_frag'] = "#if DEPTH_PACKING == 3200\n	uniform float opacity;\n#endif\n#include <common>\n#include <packing>\n#include <uv_pars_fragment>\n#include <map_pars_fragment>\n#include <alphamap_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n	#include <clipping_planes_fragment>\n	vec4 diffuseColor = vec4( 1.0 );\n	#if DEPTH_PACKING == 3200\n		diffuseColor.a = opacity;\n	#endif\n	#include <map_fragment>\n	#include <alphamap_fragment>\n	#include <alphatest_fragment>\n	#include <logdepthbuf_fragment>\n	#if DEPTH_PACKING == 3200\n		gl_FragColor = vec4( vec3( gl_FragCoord.z ), opacity );\n	#elif DEPTH_PACKING == 3201\n		gl_FragColor = packDepthToRGBA( gl_FragCoord.z );\n	#endif\n}\n";
     THREE.ShaderChunk['depth_vert'] = "#include <common>\n#include <uv_pars_vertex>\n#include <displacementmap_pars_vertex>\n#include <morphtarget_pars_vertex>\n#include <skinning_pars_vertex>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\nvoid main() {\n	#include <uv_vertex>\n	#include <skinbase_vertex>\n	#include <begin_vertex>\n	#include <displacementmap_vertex>\n	#include <morphtarget_vertex>\n	#include <skinning_vertex>\n	#include <project_vertex>\n	#include <logdepthbuf_vertex>\n	#include <clipping_planes_vertex>\n}\n";
     THREE.ShaderChunk['distanceRGBA_frag'] = "uniform vec3 lightPos;\nvarying vec4 vWorldPosition;\n#include <common>\n#include <packing>\n#include <clipping_planes_pars_fragment>\nvoid main () {\n	#include <clipping_planes_fragment>\n	gl_FragColor = packDepthToRGBA( length( vWorldPosition.xyz - lightPos.xyz ) / 1000.0 );\n}\n";
     THREE.ShaderChunk['distanceRGBA_vert'] = "varying vec4 vWorldPosition;\n#include <common>\n#include <morphtarget_pars_vertex>\n#include <skinning_pars_vertex>\n#include <clipping_planes_pars_vertex>\nvoid main() {\n	#include <skinbase_vertex>\n	#include <begin_vertex>\n	#include <morphtarget_vertex>\n	#include <skinning_vertex>\n	#include <project_vertex>\n	#include <worldpos_vertex>\n	#include <clipping_planes_vertex>\n	vWorldPosition = worldPosition;\n}\n";
-    THREE.ShaderChunk['equirect_frag'] = "uniform sampler2D tEquirect;\nuniform float tFlip;\nvarying vec3 vWorldPosition;\n#include <common>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n	#include <clipping_planes_fragment>\n	vec3 direction = normalize( vWorldPosition );\n	vec2 sampleUV;\n	sampleUV.y = saturate( tFlip * direction.y * -0.5 + 0.5 );\n	sampleUV.x = atan( direction.z, direction.x ) * RECIPROCAL_PI2 + 0.5;\n	gl_FragColor = texture2D( tEquirect, sampleUV );\n	#include <logdepthbuf_fragment>\n}\n";
-    THREE.ShaderChunk['equirect_vert'] = "varying vec3 vWorldPosition;\n#include <common>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\nvoid main() {\n	vWorldPosition = transformDirection( position, modelMatrix );\n	#include <begin_vertex>\n	#include <project_vertex>\n	#include <logdepthbuf_vertex>\n	#include <clipping_planes_vertex>\n}\n";
+    THREE.ShaderChunk['equirect_frag'] = "uniform sampler2D tEquirect;\nuniform float tFlip;\nvarying vec3 vWorldPosition;\n#include <common>\nvoid main() {\n	vec3 direction = normalize( vWorldPosition );\n	vec2 sampleUV;\n	sampleUV.y = saturate( tFlip * direction.y * -0.5 + 0.5 );\n	sampleUV.x = atan( direction.z, direction.x ) * RECIPROCAL_PI2 + 0.5;\n	gl_FragColor = texture2D( tEquirect, sampleUV );\n}\n";
+    THREE.ShaderChunk['equirect_vert'] = "varying vec3 vWorldPosition;\n#include <common>\nvoid main() {\n	vWorldPosition = transformDirection( position, modelMatrix );\n	#include <begin_vertex>\n	#include <project_vertex>\n}\n";
     THREE.ShaderChunk['linedashed_frag'] = "uniform vec3 diffuse;\nuniform float opacity;\nuniform float dashSize;\nuniform float totalSize;\nvarying float vLineDistance;\n#include <common>\n#include <color_pars_fragment>\n#include <fog_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n	#include <clipping_planes_fragment>\n	if ( mod( vLineDistance, totalSize ) > dashSize ) {\n		discard;\n	}\n	vec3 outgoingLight = vec3( 0.0 );\n	vec4 diffuseColor = vec4( diffuse, opacity );\n	#include <logdepthbuf_fragment>\n	#include <color_fragment>\n	outgoingLight = diffuseColor.rgb;\n	gl_FragColor = vec4( outgoingLight, diffuseColor.a );\n	#include <premultiplied_alpha_fragment>\n	#include <tonemapping_fragment>\n	#include <encodings_fragment>\n	#include <fog_fragment>\n}\n";
     THREE.ShaderChunk['linedashed_vert'] = "uniform float scale;\nattribute float lineDistance;\nvarying float vLineDistance;\n#include <common>\n#include <color_pars_vertex>\n#include <logdepthbuf_pars_vertex>\n#include <clipping_planes_pars_vertex>\nvoid main() {\n	#include <color_vertex>\n	vLineDistance = scale * lineDistance;\n	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\n	gl_Position = projectionMatrix * mvPosition;\n	#include <logdepthbuf_vertex>\n	#include <clipping_planes_vertex>\n}\n";
     THREE.ShaderChunk['meshbasic_frag'] = "uniform vec3 diffuse;\nuniform float opacity;\n#ifndef FLAT_SHADED\n	varying vec3 vNormal;\n#endif\n#include <common>\n#include <color_pars_fragment>\n#include <uv_pars_fragment>\n#include <uv2_pars_fragment>\n#include <map_pars_fragment>\n#include <alphamap_pars_fragment>\n#include <aomap_pars_fragment>\n#include <envmap_pars_fragment>\n#include <fog_pars_fragment>\n#include <specularmap_pars_fragment>\n#include <logdepthbuf_pars_fragment>\n#include <clipping_planes_pars_fragment>\nvoid main() {\n	#include <clipping_planes_fragment>\n	vec4 diffuseColor = vec4( diffuse, opacity );\n	#include <logdepthbuf_fragment>\n	#include <map_fragment>\n	#include <color_fragment>\n	#include <alphamap_fragment>\n	#include <alphatest_fragment>\n	#include <specularmap_fragment>\n	ReflectedLight reflectedLight;\n	reflectedLight.directDiffuse = vec3( 0.0 );\n	reflectedLight.directSpecular = vec3( 0.0 );\n	reflectedLight.indirectDiffuse = diffuseColor.rgb;\n	reflectedLight.indirectSpecular = vec3( 0.0 );\n	#include <aomap_fragment>\n	vec3 outgoingLight = reflectedLight.indirectDiffuse;\n	#include <normal_flip>\n	#include <envmap_fragment>\n	gl_FragColor = vec4( outgoingLight, diffuseColor.a );\n	#include <premultiplied_alpha_fragment>\n	#include <tonemapping_fragment>\n	#include <encodings_fragment>\n	#include <fog_fragment>\n}\n";
@@ -18356,7 +18292,8 @@ var THREE;
         'cube': {
             uniforms: {
                 "tCube": { value: null },
-                "tFlip": { value: -1 }
+                "tFlip": { value: -1 },
+                "opacity": { value: 1.0 }
             },
             vertexShader: THREE.ShaderChunk['cube_vert'],
             fragmentShader: THREE.ShaderChunk['cube_frag']
@@ -18674,20 +18611,20 @@ var THREE;
             this.indexedBufferRenderer = new THREE.WebGLIndexedBufferRenderer(this.context, this.extensions, this._infoRender);
             this.backgroundCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
             this.backgroundCamera2 = new THREE.PerspectiveCamera();
-            this.backgroundPlaneMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial({ depthTest: false, depthWrite: false }));
+            this.backgroundPlaneMesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), new THREE.MeshBasicMaterial({ depthTest: false, depthWrite: false, fog: false }));
             this.backgroundBoxShader = THREE.ShaderLib['cube'];
             this.backgroundBoxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(5, 5, 5), new THREE.ShaderMaterial({
                 uniforms: this.backgroundBoxShader.uniforms,
                 vertexShader: this.backgroundBoxShader.vertexShader,
                 fragmentShader: this.backgroundBoxShader.fragmentShader,
+                side: THREE.BackSide,
                 depthTest: false,
-                depthWrite: false,
-                side: THREE.BackSide
+                depthWrite: false
             }));
             this.objects.update(this.backgroundPlaneMesh);
             this.objects.update(this.backgroundBoxMesh);
             this.setDefaultGLState();
-            this.shadowMap = new THREE.WebGLShadowMap(this, this._lights, this.objects);
+            this.shadowMap = new THREE.WebGLShadowMap(this, this._lights, this.objects, this.capabilities);
             this.spritePlugin = new THREE.SpritePlugin(this);
             this.lensFlarePlugin = new THREE.LensFlarePlugin(this);
             this.onContextLost_ = function (event) {
@@ -18976,9 +18913,9 @@ var THREE;
             var morphTargetInfluences = object.morphTargetInfluences;
             if (morphTargetInfluences !== undefined) {
                 var activeInfluences = [];
-                for (var i_2 = 0, l_2 = morphTargetInfluences.length; i_2 < l_2; i_2++) {
-                    var influence = morphTargetInfluences[i_2];
-                    activeInfluences.push([influence, i_2]);
+                for (var i_3 = 0, l_2 = morphTargetInfluences.length; i_3 < l_2; i_3++) {
+                    var influence = morphTargetInfluences[i_3];
+                    activeInfluences.push([influence, i_3]);
                 }
                 activeInfluences.sort(this.absNumericalSort);
                 if (activeInfluences.length > 8) {
@@ -19036,9 +18973,9 @@ var THREE;
             var rangeCount = geometry.drawRange.count;
             var groupStart = group !== null ? group.start : 0;
             var groupCount = group !== null ? group.count : Infinity;
-            var drawStart = Math.max(dataStart, rangeStart, groupStart);
-            var drawEnd = Math.min(dataStart + dataCount, rangeStart + rangeCount, groupStart + groupCount) - 1;
-            var drawCount = Math.max(0, drawEnd - drawStart + 1);
+            var drawStart = THREE.Math.max(dataStart, rangeStart, groupStart);
+            var drawEnd = THREE.Math.min(dataStart + dataCount, rangeStart + rangeCount, groupStart + groupCount) - 1;
+            var drawCount = THREE.Math.max(0, drawEnd - drawStart + 1);
             if (object instanceof THREE.Mesh) {
                 if (material.wireframe === true) {
                     this.state.setLineWidth(material.wireframeLinewidth * this.getTargetPixelRatio());
@@ -19188,11 +19125,14 @@ var THREE;
             state.disableUnusedAttributes();
         };
         WebGLRenderer.prototype.absNumericalSort = function (a, b) {
-            return Math.abs(b[0]) - Math.abs(a[0]);
+            return THREE.Math.abs(b[0]) - THREE.Math.abs(a[0]);
         };
         WebGLRenderer.prototype.painterSortStable = function (a, b) {
             if (a.object.renderOrder !== b.object.renderOrder) {
                 return a.object.renderOrder - b.object.renderOrder;
+            }
+            else if (a.material.program && b.material.program && a.material.program !== b.material.program) {
+                return a.material.program.id - b.material.program.id;
             }
             else if (a.material.id !== b.material.id) {
                 return a.material.id - b.material.id;
@@ -19276,10 +19216,12 @@ var THREE;
                 this.backgroundCamera2.matrixWorldInverse.getInverse(this.backgroundCamera2.matrixWorld);
                 this.backgroundBoxMesh.material.uniforms["tCube"].value = background;
                 this.backgroundBoxMesh.modelViewMatrix.multiplyMatrices(this.backgroundCamera2.matrixWorldInverse, this.backgroundBoxMesh.matrixWorld);
+                this.objects.update(this.backgroundBoxMesh);
                 this.renderBufferDirect(this.backgroundCamera2, null, this.backgroundBoxMesh.geometry, this.backgroundBoxMesh.material, this.backgroundBoxMesh, null);
             }
             else if (background instanceof THREE.Texture) {
                 this.backgroundPlaneMesh.material.map = background;
+                this.objects.update(this.backgroundPlaneMesh);
                 this.renderBufferDirect(this.backgroundCamera, null, this.backgroundPlaneMesh.geometry, this.backgroundPlaneMesh.material, this.backgroundPlaneMesh, null);
             }
             if (scene.overrideMaterial) {
@@ -19416,8 +19358,8 @@ var THREE;
                 }
             }
             var children = object.children;
-            for (var i_3 = 0, l_3 = children.length; i_3 < l_3; i_3++) {
-                this.projectObject(children[i_3], camera);
+            for (var i_4 = 0, l_3 = children.length; i_4 < l_3; i_4++) {
+                this.projectObject(children[i_4], camera);
             }
         };
         WebGLRenderer.prototype.renderObjects = function (renderList, camera, fog, overrideMaterial) {
@@ -19592,7 +19534,7 @@ var THREE;
             if (refreshProgram || camera !== this._currentCamera) {
                 p_uniforms.set(_gl, camera, 'projectionMatrix');
                 if (this.capabilities.logarithmicDepthBuffer) {
-                    p_uniforms.setValue(_gl, 'logDepthBufFC', 2.0 / (Math.log(camera.far + 1.0) / Math.LN2));
+                    p_uniforms.setValue(_gl, 'logDepthBufFC', 2.0 / (THREE.Math.log(camera.far + 1.0) / THREE.Math.LN2));
                 }
                 if (camera !== this._currentCamera) {
                     this._currentCamera = camera;
@@ -19788,7 +19730,7 @@ var THREE;
         };
         WebGLRenderer.prototype.refreshUniformsPhong = function (uniforms, material) {
             uniforms.specular.value = material.specular;
-            uniforms.shininess.value = Math.max(material.shininess, 1e-4);
+            uniforms.shininess.value = THREE.Math.max(material.shininess, 1e-4);
             if (material.lightMap) {
                 uniforms.lightMap.value = material.lightMap;
                 uniforms.lightMapIntensity.value = material.lightMapIntensity;
@@ -19910,8 +19852,8 @@ var THREE;
                     _vector3.setFromMatrixPosition(light.target.matrixWorld);
                     uniforms.direction.sub(_vector3);
                     uniforms.direction.transformDirection(viewMatrix);
-                    uniforms.coneCos = Math.cos(light.angle);
-                    uniforms.penumbraCos = Math.cos(light.angle * (1 - light.penumbra));
+                    uniforms.coneCos = THREE.Math.cos(light.angle);
+                    uniforms.penumbraCos = THREE.Math.cos(light.angle * (1 - light.penumbra));
                     uniforms.decay = (light.distance === 0) ? 0.0 : light.decay;
                     uniforms.shadow = light.castShadow;
                     if (light.castShadow) {
@@ -20068,7 +20010,7 @@ var THREE;
         __extends(WebGLRenderTarget, _super);
         function WebGLRenderTarget(width, height, options) {
             _super.call(this);
-            this.uuid = Math.generateUUID();
+            this.uuid = THREE.Math.generateUUID();
             this.width = width;
             this.height = height;
             this.scissor = new THREE.Vector4(0, 0, width, height);
@@ -20561,6 +20503,8 @@ var THREE;
             for (var i = 0, l = sprites.length; i < l; i++) {
                 var sprite = sprites[i];
                 var material = sprite.material;
+                if (material.visible === false)
+                    continue;
                 gl.uniform1f(uniforms.alphaTest, material.alphaTest);
                 gl.uniformMatrix4fv(uniforms.modelViewMatrix, false, sprite.modelViewMatrix.elements);
                 sprite.matrixWorld.decompose(spritePosition, spriteRotation, spriteScale);
@@ -21637,10 +21581,10 @@ var THREE;
             }
             else {
                 var nVertexUniforms = capabilities.maxVertexUniforms;
-                var nVertexMatrices = Math.floor((nVertexUniforms - 20) / 4);
+                var nVertexMatrices = THREE.Math.floor((nVertexUniforms - 20) / 4);
                 var maxBones = nVertexMatrices;
                 if (object !== undefined && object instanceof THREE.SkinnedMesh) {
-                    maxBones = Math.min(object.skeleton.bones.length, maxBones);
+                    maxBones = THREE.Math.min(object.skeleton.bones.length, maxBones);
                     if (maxBones < object.skeleton.bones.length) {
                         console.warn('WebGLRenderer: too many bones - ' + object.skeleton.bones.length + ', this GPU supports just ' + maxBones + ' (try OpenGL instead of ANGLE)');
                     }
@@ -21703,7 +21647,7 @@ var THREE;
                 alphaMap: !!material.alphaMap,
                 combine: material.combine,
                 vertexColors: material.vertexColors,
-                fog: fog,
+                fog: !!fog,
                 useFog: material.fog,
                 fogExp: fog instanceof THREE.FogExp2,
                 flatShading: material.shading === THREE.FlatShading,
@@ -21845,7 +21789,7 @@ var THREE;
 var THREE;
 (function (THREE) {
     var WebGLShadowMap = (function () {
-        function WebGLShadowMap(_renderer, _lights, _objects) {
+        function WebGLShadowMap(_renderer, _lights, _objects, capabilities) {
             this._renderer = _renderer;
             this._objects = _objects;
             this._lights = _lights;
@@ -21855,7 +21799,8 @@ var THREE;
             this._projScreenMatrix = new THREE.Matrix4();
             this._lightShadows = _lights.shadows;
             this._shadowMapSize = new THREE.Vector2();
-            this._lookTarget = new THREE.Vector3();
+            this._maxShadowMapSize = new THREE.Vector2(capabilities.maxTextureSize, capabilities.maxTextureSize),
+                this._lookTarget = new THREE.Vector3();
             this._lightPositionWorld = new THREE.Vector3();
             this._renderList = [];
             this._MorphingFlag = 1;
@@ -21926,8 +21871,15 @@ var THREE;
                 customMaterial = object.customDistanceMaterial;
             }
             if (!customMaterial) {
-                var useMorphing = geometry.morphTargets !== undefined &&
-                    geometry.morphTargets.length > 0 && material.morphTargets;
+                var useMorphing = false;
+                if (material.morphTargets) {
+                    if (geometry instanceof THREE.BufferGeometry) {
+                        useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0;
+                    }
+                    else if (geometry instanceof THREE.Geometry) {
+                        useMorphing = geometry.morphTargets && geometry.morphTargets.length > 0;
+                    }
+                }
                 var useSkinning = object instanceof THREE.SkinnedMesh && material.skinning;
                 var variantIndex = 0;
                 if (useMorphing)
@@ -22032,6 +21984,7 @@ var THREE;
                 }
                 var shadowCamera = shadow.camera;
                 _shadowMapSize.copy(shadow.mapSize);
+                _shadowMapSize.min(this._maxShadowMapSize);
                 if (light instanceof THREE.PointLight) {
                     faceCount = 6;
                     isPointLight = true;
@@ -22719,10 +22672,10 @@ var THREE;
         ;
         WebGLTextures.prototype.clampToMaxSize = function (image, maxSize) {
             if (image.width > maxSize || image.height > maxSize) {
-                var scale = maxSize / Math.max(image.width, image.height);
+                var scale = maxSize / THREE.Math.max(image.width, image.height);
                 var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-                canvas.width = Math.floor(image.width * scale);
-                canvas.height = Math.floor(image.height * scale);
+                canvas.width = THREE.Math.floor(image.width * scale);
+                canvas.height = THREE.Math.floor(image.height * scale);
                 var context = canvas.getContext('2d');
                 context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
                 console.warn('THREE.WebGLRenderer: image is too big (' + image.width + 'x' + image.height + '). Resized to ' + canvas.width + 'x' + canvas.height, image);
@@ -22731,13 +22684,13 @@ var THREE;
             return image;
         };
         WebGLTextures.prototype.isPowerOfTwo = function (image) {
-            return Math.isPowerOfTwo(image.width) && Math.isPowerOfTwo(image.height);
+            return THREE.Math.isPowerOfTwo(image.width) && THREE.Math.isPowerOfTwo(image.height);
         };
         WebGLTextures.prototype.makePowerOfTwo = function (image) {
             if (image instanceof HTMLImageElement || image instanceof HTMLCanvasElement) {
                 var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
-                canvas.width = Math.nearestPowerOfTwo(image.width);
-                canvas.height = Math.nearestPowerOfTwo(image.height);
+                canvas.width = THREE.Math.nearestPowerOfTwo(image.width);
+                canvas.height = THREE.Math.nearestPowerOfTwo(image.height);
                 var context = canvas.getContext('2d');
                 context.drawImage(image, 0, 0, canvas.width, canvas.height);
                 console.warn('THREE.WebGLRenderer: image is not power of two (' + image.width + 'x' + image.height + '). Resized to ' + canvas.width + 'x' + canvas.height, image);
@@ -22842,7 +22795,7 @@ var THREE;
                 if (texture.type === THREE.HalfFloatType && extensions.get('OES_texture_half_float_linear') === null)
                     return;
                 if (texture.anisotropy > 1 || properties.get(texture).__currentAnisotropy) {
-                    _gl.texParameterf(textureType, extension.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(texture.anisotropy, this.capabilities.getMaxAnisotropy()));
+                    _gl.texParameterf(textureType, extension.TEXTURE_MAX_ANISOTROPY_EXT, THREE.Math.min(texture.anisotropy, this.capabilities.getMaxAnisotropy()));
                     properties.get(texture).__currentAnisotropy = texture.anisotropy;
                 }
             }

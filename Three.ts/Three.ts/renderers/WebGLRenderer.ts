@@ -325,7 +325,7 @@ namespace THREE
             this.backgroundCamera2 = new PerspectiveCamera();
             this.backgroundPlaneMesh = new Mesh(
                 new PlaneBufferGeometry(2, 2),
-                new MeshBasicMaterial({ depthTest: false, depthWrite: false })
+                new MeshBasicMaterial({ depthTest: false, depthWrite: false, fog: false })
             );
 
             this.backgroundBoxShader = ShaderLib['cube'];
@@ -335,9 +335,9 @@ namespace THREE
                     uniforms: this.backgroundBoxShader.uniforms,
                     vertexShader: this.backgroundBoxShader.vertexShader,
                     fragmentShader: this.backgroundBoxShader.fragmentShader,
+                    side: THREE.BackSide,
                     depthTest: false,
-                    depthWrite: false,
-                    side: BackSide
+                    depthWrite: false  
                 })
             );
             this.objects.update(this.backgroundPlaneMesh);
@@ -347,7 +347,7 @@ namespace THREE
                  
 
             // shadow map 
-            this.shadowMap = new WebGLShadowMap(this, this._lights, this.objects);
+            this.shadowMap = new WebGLShadowMap(this, this._lights, this.objects, this.capabilities);
              
             // Plugins 
             this.spritePlugin = new SpritePlugin(this);
@@ -1060,6 +1060,10 @@ namespace THREE
             {
                 return a.object.renderOrder - b.object.renderOrder;
             }
+            else if (a.material.program && b.material.program && a.material.program !== b.material.program)
+            { 
+                return a.material.program.id - b.material.program.id; 
+            }
             else if (a.material.id !== b.material.id)
             {
                 return a.material.id - b.material.id;
@@ -1196,14 +1200,14 @@ namespace THREE
 
                 this.backgroundBoxMesh.material.uniforms["tCube"].value = background;
                 this.backgroundBoxMesh.modelViewMatrix.multiplyMatrices(this.backgroundCamera2.matrixWorldInverse, this.backgroundBoxMesh.matrixWorld);
-
+                this.objects.update(this.backgroundBoxMesh);
                 this.renderBufferDirect(this.backgroundCamera2, null, this.backgroundBoxMesh.geometry, this.backgroundBoxMesh.material, this.backgroundBoxMesh, null);
 
             }
             else if (background instanceof Texture)
             {
                 this.backgroundPlaneMesh.material.map = background;
-
+                this.objects.update(this.backgroundPlaneMesh);
                 this.renderBufferDirect(this.backgroundCamera, null, this.backgroundPlaneMesh.geometry, this.backgroundPlaneMesh.material, this.backgroundPlaneMesh, null);
             }
 

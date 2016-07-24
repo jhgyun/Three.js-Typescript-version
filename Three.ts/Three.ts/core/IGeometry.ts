@@ -50,5 +50,7 @@
 
         dispose?();
         computeBoundingSphere?();
+        __directGeometry?: DirectGeometry;
+        computeGroups?(geometry: IGeometry);
     }
 }

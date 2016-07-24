@@ -345,6 +345,14 @@ namespace THREE
             return this;
         }
 
+        sub(color: Color)
+        { 
+            this.r = Math.max(0, this.r - color.r);
+            this.g = Math.max(0, this.g - color.g);
+            this.b = Math.max(0, this.b - color.b); 
+            return this; 
+        } 
+
         multiply(color: Color)
         {
             this.r *= color.r;

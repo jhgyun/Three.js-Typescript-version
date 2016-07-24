@@ -452,6 +452,10 @@ namespace THREE
             var dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z; 
             return dx * dx + dy * dy + dz * dz; 
         }
+        distanceToManhattan(v: Vector3)
+        { 
+            return Math.abs(this.x - v.x) + Math.abs(this.y - v.y) + Math.abs(this.z - v.z); 
+        } 
         setFromSpherical(s: { phi: number, radius: number, theta: number })
         { 
             var sinPhiRadius = Math.sin(s.phi) * s.radius; 

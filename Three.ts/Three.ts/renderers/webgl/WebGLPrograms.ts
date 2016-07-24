@@ -151,7 +151,7 @@
 
                 vertexColors: material.vertexColors,
 
-                fog: fog,
+                fog: !!fog,
                 useFog: material.fog,
                 fogExp: fog instanceof FogExp2,
 

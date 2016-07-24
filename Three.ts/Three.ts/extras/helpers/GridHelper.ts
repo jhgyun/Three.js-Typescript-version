@@ -6,27 +6,33 @@ namespace THREE
 {
     export class GridHelper extends LineSegments
     {
-        constructor(size: number, step: number, acolor1?: number, acolor2?: number)
+        constructor(size: number, divisions: number, acolor1?: number, acolor2?: number)
         {
             super();
-            var color1 = new Color(acolor1 !== undefined ? acolor1 : 0x444444);
-            var color2 = new Color(acolor2 !== undefined ? acolor2 : 0x888888);
 
-            var vertices = [];
-            var colors = [];
+            divisions = divisions || 1;
+            var color1 = new THREE.Color(acolor1 !== undefined ? acolor1 : 0x444444);
+            var color2 = new THREE.Color(acolor2 !== undefined ? acolor2 : 0x888888);
 
-            for (var i = - size, j = 0; i <= size; i += step)
-            { 
-                vertices.push(- size, 0, i, size, 0, i);
-                vertices.push(i, 0, - size, i, 0, size);
+            var center = divisions / 2;
+            var step = (size * 2) / divisions;
+            var vertices = [], colors = [];
 
-                var color = i === 0 ? color1 : color2;
+            for (var i = 0, j = 0, k = - size; i <= divisions; i++ , k += step)
+            {
+
+                vertices.push(- size, 0, k, size, 0, k);
+                vertices.push(k, 0, - size, k, 0, size);
+
+                var color = i === center ? color1 : color2;
 
                 color.toArray(colors, j); j += 3;
                 color.toArray(colors, j); j += 3;
                 color.toArray(colors, j); j += 3;
-                color.toArray(colors, j); j += 3; 
+                color.toArray(colors, j); j += 3;
+
             }
+
 
             var geometry = new BufferGeometry();
             geometry.addAttribute('position', new Float32Attribute(vertices, 3));

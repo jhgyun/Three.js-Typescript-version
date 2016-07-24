@@ -18,12 +18,13 @@ namespace THREE
 
         load(url, onLoad?, onProgress?, onError?)
         {
-
+            var scope = this;
             var image = document.createElementNS('http://www.w3.org/1999/xhtml', 'img') as HTMLImageElement;
             image.onload = function ()
             {
                 URL.revokeObjectURL(image.src);
                 if (onLoad) onLoad(image);
+                scope.manager.itemEnd(url);
             };
 
             if (url.indexOf('data:') === 0)
@@ -32,7 +33,7 @@ namespace THREE
             }
             else
             {
-                var loader = new XHRLoader(this.manager);
+                var loader = new THREE.XHRLoader();
                 loader.setPath(this.path);
                 loader.setResponseType('blob');
                 loader.load(url, function (blob)
@@ -42,6 +43,7 @@ namespace THREE
 
             }
 
+            scope.manager.itemStart(url);
             return image;
 
         }

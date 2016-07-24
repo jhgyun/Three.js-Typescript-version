@@ -102,7 +102,7 @@ if (Object.assign === undefined)
 //
 namespace THREE
 {
-    export var REVISION = '78';
+    export var REVISION = '79';
     // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent.button
 
     export var MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };

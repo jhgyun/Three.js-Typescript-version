@@ -72,17 +72,17 @@ namespace THREE
 
         /** Get sequence of points using getPoint( t ) */
         getPoints(divisions?: number) :T[]
-        { 
-            if (!divisions) divisions = 5;
+        {  
+           	if (!divisions) divisions = 5;
 
-            var d, pts = [];
+            var points = [];
 
-            for (d = 0; d <= divisions; d++)
+            for (var d = 0; d <= divisions; d++)
             { 
-                pts.push(this.getPoint(d / divisions)); 
+                points.push(this.getPoint(d / divisions)); 
             }
 
-            return pts; 
+            return points;
         } 
 
         /** Get sequence of points using getPointAt( u )*/ 
@@ -90,13 +90,12 @@ namespace THREE
         { 
             if (!divisions) divisions = 5;
 
-            var d, pts = [];
-
-            for (d = 0; d <= divisions; d++)
+            var points = []; 
+            for (var d = 0; d <= divisions; d++)
             { 
-                pts.push(this.getPointAt(d / divisions)); 
+                points.push(this.getPointAt(d / divisions)); 
             } 
-            return pts; 
+            return points;
         } 
 
         /**  Get total curve arc length */

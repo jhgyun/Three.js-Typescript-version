@@ -16,7 +16,7 @@ namespace THREE
 
             this.type = 'SpotLight';
 
-            this.position.set(0, 1, 0);
+            this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
 
             this.target = new Object3D();

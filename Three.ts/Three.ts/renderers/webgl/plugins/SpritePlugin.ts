@@ -319,6 +319,8 @@ namespace THREE
                 var sprite = sprites[i];
                 var material = sprite.material as SpriteMaterial;
 
+                if (material.visible === false) continue;
+
                 gl.uniform1f(uniforms.alphaTest, material.alphaTest);
                 gl.uniformMatrix4fv(uniforms.modelViewMatrix, false, sprite.modelViewMatrix.elements);
 

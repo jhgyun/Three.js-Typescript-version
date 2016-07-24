@@ -36,8 +36,8 @@ namespace THREE
         boundingSphere: Sphere = null;
 
         // update flags 
-        verticesNeedUpdate = false;
         elementsNeedUpdate = false;
+        verticesNeedUpdate = false; 
         uvsNeedUpdate = false;
         normalsNeedUpdate = false;
         colorsNeedUpdate = false;

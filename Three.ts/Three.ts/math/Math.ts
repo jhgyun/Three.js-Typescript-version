@@ -131,4 +131,9 @@ if (Math.DEG2RAD === undefined)
     };
 } 
 
-THREE["Math"] = Math;
+var _math = Math;
+namespace THREE
+{
+    export var Math = _math;
+}
+//THREE["Math"] = Math;

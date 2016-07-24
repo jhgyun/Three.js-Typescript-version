@@ -10,8 +10,9 @@ namespace THREE
         data: InterleavedBuffer;
         //itemSize: number;
         offset: number;
+        normalized: boolean;
 
-        constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number)
+        constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized?: boolean)
         {
             super(null, itemSize);
 
@@ -19,11 +20,16 @@ namespace THREE
             this.data = interleavedBuffer;
             //this.itemSize = itemSize;
             this.offset = offset;
+            this.normalized = normalized === true;
         }  
 
         get count()
         { 
             return this.data.count; 
+        }
+        get array()
+        { 
+            return this.data.array; 
         }
         setX(index: number, x: number)
         { 

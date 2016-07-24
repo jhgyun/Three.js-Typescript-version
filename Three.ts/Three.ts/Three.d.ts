@@ -580,6 +580,7 @@ declare namespace THREE {
         angle(): number;
         distanceTo(v: Vector2): number;
         distanceToSquared(v: Vector2): number;
+        distanceToManhattan(v: Vector2): number;
         setLength(length: number): this;
         lerp(v: Vector2, alpha: number): this;
         lerpVectors(v1: Vector2, v2: Vector2, alpha: any): this;
@@ -656,6 +657,7 @@ declare namespace THREE {
         angleTo(v: Vector3): number;
         distanceTo(v: Vector3): number;
         distanceToSquared(v: Vector3): number;
+        distanceToManhattan(v: Vector3): number;
         setFromSpherical(s: {
             phi: number;
             radius: number;
@@ -763,6 +765,7 @@ declare namespace THREE {
         add(color: Color): this;
         addColors(color1: Color, color2: Color): this;
         addScalar(s: number): this;
+        sub(color: Color): this;
         multiply(color: Color): this;
         multiplyScalar(s: number): this;
         lerp(color: Color, alpha: number): this;
@@ -1385,8 +1388,8 @@ declare namespace THREE {
         lineDistances: number[];
         boundingBox: Box3;
         boundingSphere: Sphere;
-        verticesNeedUpdate: boolean;
         elementsNeedUpdate: boolean;
+        verticesNeedUpdate: boolean;
         uvsNeedUpdate: boolean;
         normalsNeedUpdate: boolean;
         colorsNeedUpdate: boolean;
@@ -1478,7 +1481,7 @@ declare namespace THREE {
         lookAt(vector: Vector3): this;
         center(): Vector3;
         setFromObject(object: Object3D): this;
-        updateFromObject(object: any): this;
+        updateFromObject(object: Object3D): this;
         fromGeometry(geometry: any): this;
         fromDirectGeometry(geometry: DirectGeometry): this;
         computeBoundingBox(): void;
@@ -1597,6 +1600,8 @@ declare namespace THREE {
         uvs2?: any[];
         dispose?(): any;
         computeBoundingSphere?(): any;
+        __directGeometry?: DirectGeometry;
+        computeGroups?(geometry: IGeometry): any;
     }
 }
 declare namespace THREE {
@@ -1650,8 +1655,10 @@ declare namespace THREE {
     class InterleavedBufferAttribute extends BufferAttribute {
         data: InterleavedBuffer;
         offset: number;
-        constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number);
+        normalized: boolean;
+        constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized?: boolean);
         count: number;
+        array: any;
         setX(index: number, x: number): this;
         setY(index: number, y: number): this;
         setZ(index: number, z: number): this;
@@ -1747,6 +1754,8 @@ declare namespace THREE {
         getLength(): any;
         updateArcLengths(): void;
         getCurveLengths(): any;
+        getSpacedPoints(divisions?: number): any[];
+        getPoints(divisions?: number): Vector2[];
         createPointsGeometry(divisions: any): Geometry;
         createSpacedPointsGeometry(divisions: any): Geometry;
         createGeometry(points: any): Geometry;
@@ -1761,23 +1770,28 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class Path extends CurvePath {
-        actions: {
-            action: string;
-            args: number[];
-        }[];
+        currentPoint: Vector2;
         constructor(points?: Vector2[]);
         fromPoints(vectors: Vector2[]): void;
         moveTo(x: number, y: number): void;
         lineTo(x: number, y: number): void;
-        quadraticCurveTo(aCPx: any, aCPy: any, aX: any, aY: any): void;
-        bezierCurveTo(aCP1x: any, aCP1y: any, aCP2x: any, aCP2y: any, aX: any, aY: any): void;
+        quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): void;
+        bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): void;
         splineThru(pts: Vector2[]): void;
-        arc(aX: any, aY: any, aRadius: any, aStartAngle: any, aEndAngle: any, aClockwise: any): void;
-        absarc(aX: any, aY: any, aRadius: any, aStartAngle: any, aEndAngle: any, aClockwise: any): void;
-        ellipse(aX: any, aY: any, xRadius: any, yRadius: any, aStartAngle: any, aEndAngle: any, aClockwise: any, aRotation?: number): void;
-        absellipse(aX: any, aY: any, xRadius: any, yRadius: any, aStartAngle: any, aEndAngle: any, aClockwise: any, aRotation?: number): void;
-        getSpacedPoints(divisions: any): any[];
-        getPoints(divisions: any): any[];
+        arc(aX: number, aY: number, aRadius: number, aStartAngle: number, aEndAngle: number, aClockwise: boolean): void;
+        absarc(aX: number, aY: number, aRadius: number, aStartAngle: number, aEndAngle: number, aClockwise: boolean): void;
+        ellipse(aX: number, aY: number, xRadius: number, yRadius: number, aStartAngle: number, aEndAngle: number, aClockwise: boolean, aRotation?: number): void;
+        absellipse(aX: number, aY: number, xRadius: number, yRadius: number, aStartAngle: number, aEndAngle: number, aClockwise: boolean, aRotation?: number): void;
+    }
+    class ShapePath {
+        subPaths: Path[];
+        currentPath: Path;
+        constructor();
+        moveTo(x: number, y: number): void;
+        lineTo(x: number, y: number): void;
+        quadraticCurveTo(aCPx: number, aCPy: number, aX: number, aY: number): void;
+        bezierCurveTo(aCP1x: number, aCP1y: number, aCP2x: number, aCP2y: number, aX: number, aY: number): void;
+        splineThru(pts: Vector2[]): void;
         toShapes(isCCW: any, noHoles: any): any[];
     }
 }
@@ -1789,11 +1803,11 @@ declare namespace THREE {
         makeGeometry(options?: ShapeGeometryOptions): ShapeGeometry;
         getPointsHoles(divisions: any): any[];
         extractAllPoints(divisions: any): {
-            shape: any[];
+            shape: Vector2[];
             holes: any[];
         };
         extractPoints(divisions: any): {
-            shape: any[];
+            shape: Vector2[];
             holes: any[];
         };
     }
@@ -2228,7 +2242,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class GridHelper extends LineSegments {
-        constructor(size: number, step: number, acolor1?: number, acolor2?: number);
+        constructor(size: number, divisions: number, acolor1?: number, acolor2?: number);
     }
 }
 declare namespace THREE {
@@ -2322,7 +2336,7 @@ declare namespace THREE {
         }[]) => number;
         triangulate: (contour: any, indices: any) => any[];
         triangulateShape: (contour: any, holes: any) => any[];
-        isClockWise: (pts: any) => boolean;
+        isClockWise: (pts: Vector2[]) => boolean;
         b2: (t: any, p0: any, p1: any, p2: any) => number;
         b3: (t: any, p0: any, p1: any, p2: any, p3: any) => number;
     };
@@ -3237,6 +3251,10 @@ interface Math {
     nearestPowerOfTwo: (value: number) => number;
     nextPowerOfTwo: (value: number) => number;
 }
+declare var _math: Math;
+declare namespace THREE {
+    var Math: Math;
+}
 declare namespace THREE {
     class Plane {
         normal: Vector3;
@@ -3737,6 +3755,9 @@ declare namespace THREE {
                     value: any;
                 };
                 "tFlip": {
+                    value: number;
+                };
+                "opacity": {
                     value: number;
                 };
             };
@@ -4325,6 +4346,7 @@ declare namespace THREE {
         private _projScreenMatrix;
         private _lightShadows;
         private _shadowMapSize;
+        private _maxShadowMapSize;
         private _lookTarget;
         private _lightPositionWorld;
         private _renderList;
@@ -4346,7 +4368,7 @@ declare namespace THREE {
         type: number;
         renderReverseSided: boolean;
         renderSingleSided: boolean;
-        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects);
+        constructor(_renderer: WebGLRenderer, _lights: LightArrayCache, _objects: WebGLObjects, capabilities: WebGLCapabilities);
         private getDepthMaterial(object, material, isPointLight, lightPositionWorld);
         private projectObject(object, camera, shadowCamera);
         render(scene: Scene, camera: Camera): void;

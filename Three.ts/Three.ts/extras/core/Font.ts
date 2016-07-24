@@ -44,24 +44,21 @@ namespace THREE
 
                 if (!glyph) return;
 
-                var path = new Path();
+                var path = new ShapePath();
 
                 var pts = [], b2 = ShapeUtils.b2, b3 = ShapeUtils.b3;
                 var x, y, cpx, cpy, cpx0, cpy0, cpx1, cpy1, cpx2, cpy2, laste;
 
                 if (glyph.o)
-                {
-
+                { 
                     var outline = glyph._cachedOutline || (glyph._cachedOutline = glyph.o.split(' '));
 
                     for (var i = 0, l = outline.length; i < l;)
-                    {
-
+                    { 
                         var action = outline[i++];
 
                         switch (action)
-                        {
-
+                        { 
                             case 'm': // moveTo
 
                                 x = outline[i++] * scale + offset;

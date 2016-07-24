@@ -247,6 +247,10 @@ namespace THREE
             var dx = this.x - v.x, dy = this.y - v.y;
             return dx * dx + dy * dy; 
         }
+        distanceToManhattan(v: Vector2)
+        { 
+            return Math.abs(this.x - v.x) + Math.abs(this.y - v.y); 
+        } 
         setLength(length: number)
         { 
             return this.multiplyScalar(length / this.length()); 

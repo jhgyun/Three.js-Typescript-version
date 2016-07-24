@@ -167,7 +167,8 @@ namespace THREE
 
                 minFilter: this.minFilter,
                 magFilter: this.magFilter,
-                anisotropy: this.anisotropy
+                anisotropy: this.anisotropy,
+                flipY: this.flipY
             };
 
             if (this.image !== undefined)

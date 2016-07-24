@@ -90,7 +90,7 @@ namespace THREE
                 this.makeEmpty(); 
                 object.traverse(function (node)
                 {
-                    var geometry = node.geometry;
+                    var geometry: IGeometry = node.geometry;
                     if (geometry !== undefined)
                     {
                         if (geometry instanceof Geometry)
@@ -103,16 +103,34 @@ namespace THREE
                                 scope.expandByPoint(v1);
                             }
                         }
-                        else if (geometry instanceof BufferGeometry && geometry.attributes['position'] !== undefined)
+                        else if (geometry instanceof THREE.BufferGeometry)
                         {
-                            var positions = geometry.attributes['position'].array;
-                            for (var i = 0, il = positions.length; i < il; i += 3)
+                            var attribute = geometry.attributes.position;
+                            if (attribute !== undefined)
                             {
-                                v1.fromArray(positions, i);
-                                v1.applyMatrix4(node.matrixWorld);
-                                scope.expandByPoint(v1);
+                                var array, offset, stride;
+
+                                if (attribute instanceof THREE.InterleavedBufferAttribute)
+                                {
+                                    array = attribute.data.array;
+                                    offset = attribute.offset;
+                                    stride = attribute.data.stride; 
+                                }
+                                else
+                                {
+                                    array = attribute.array;
+                                    offset = 0;
+                                    stride = 3;
+                                }
+
+                                for (let i = offset, il = array.length; i < il; i += stride)
+                                {
+                                    v1.fromArray(array, i);
+                                    v1.applyMatrix4(node.matrixWorld);
+                                    scope.expandByPoint(v1);
+                                }
                             }
-                        }
+                        } 
                     }
                 });
 
