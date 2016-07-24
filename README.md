@@ -18,7 +18,7 @@ You can test it with original examples.
 ...
 var THREE; 
 (function (THREE) {
-    THREE.REVISION = '78';
+    THREE.REVISION = '79';
     THREE.MOUSE = { LEFT: 0, MIDDLE: 1, RIGHT: 2 };
     THREE.CullFaceNone = 0;
     THREE.CullFaceBack = 1;
