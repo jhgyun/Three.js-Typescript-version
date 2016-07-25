@@ -25,7 +25,7 @@
             this.numPlanes = 0;
         }
 
-        init(planes: Plane[], enableLocalClipping: boolean, camera: Camera)
+        public init(planes: Plane[], enableLocalClipping: boolean, camera: Camera)
         { 
             var enabled =
                 planes.length !== 0 ||
@@ -41,17 +41,17 @@
             this.numGlobalPlanes = planes.length; 
             return enabled; 
         };
-        beginShadows()
+        public beginShadows()
         { 
             this.renderingShadows = true;
             this.projectPlanes(null); 
         };
-        endShadows()
+        public endShadows()
         { 
             this.renderingShadows = false;
             this.resetGlobalState(); 
         };
-        setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache, fromCache)
+        public setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache, fromCache)
         {
 
             if (!this.localClippingEnabled ||

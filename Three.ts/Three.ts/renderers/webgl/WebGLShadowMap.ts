@@ -359,7 +359,12 @@ namespace THREE
 
                 if (shadow.map === null)
                 {
-                    var pars = { minFilter: NearestFilter, magFilter: NearestFilter, format: RGBAFormat };
+                    var pars: WebGLRenderTargetOptions =
+                        {
+                            minFilter: NearestFilter,
+                            magFilter: NearestFilter,
+                            format: RGBAFormat
+                        };
 
                     shadow.map = new WebGLRenderTarget(_shadowMapSize.x, _shadowMapSize.y, pars);
                     shadowCamera.updateProjectionMatrix();

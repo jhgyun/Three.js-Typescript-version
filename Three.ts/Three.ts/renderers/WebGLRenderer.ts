@@ -30,16 +30,16 @@ namespace THREE
     {
         hash: string;
         ambient: number[];
-        directional: any[];
-        directionalShadowMap: any[];
-        directionalShadowMatrix: any[];
-        spot: any[];
-        spotShadowMap: any[];
-        spotShadowMatrix: any[];
-        point: any[];
-        pointShadowMap: any[];
-        pointShadowMatrix: any[];
-        hemi: any[];
+        directional: ILightUniforms[];
+        directionalShadowMap: Texture[];
+        directionalShadowMatrix: Matrix4[];
+        spot: ILightUniforms[];
+        spotShadowMap: Texture[];
+        spotShadowMatrix: Matrix4[];
+        point: ILightUniforms[];
+        pointShadowMap: Texture[];
+        pointShadowMatrix: Matrix4[];
+        hemi: ILightUniforms[];
         shadows: Light[]
     }
     interface TmpMaterialProperty
@@ -51,7 +51,15 @@ namespace THREE
         uniformsList?;
         dynamicUniforms?;
     }
-     
+    interface IRenderItem
+    {
+        id?: number;
+        object?: Object3D;
+        geometry?: IGeometry;
+        material?: IMaterial;
+        z?: number;
+        group?: any;
+    }
     export interface WebGLRendererParams
     {
         canvas?: HTMLCanvasElement,
@@ -100,10 +108,10 @@ namespace THREE
         _premultipliedAlpha: boolean;
         _preserveDrawingBuffer: boolean;
         lights: Light[];
-        opaqueObjects;
-        opaqueObjectsLastIndex;
-        transparentObjects;
-        transparentObjectsLastIndex: number;
+        private opaqueObjects: IRenderItem[];
+        private opaqueObjectsLastIndex: number;
+        private transparentObjects: IRenderItem[];
+        private transparentObjectsLastIndex: number;
         morphInfluences: Float32Array;
         sprites: Sprite[];
         lensFlares: LensFlare[]; 
@@ -1054,7 +1062,7 @@ namespace THREE
         {
             return Math.abs(b[0]) - Math.abs(a[0]);
         }
-        private painterSortStable(a, b)
+        private painterSortStable(a: IRenderItem, b: IRenderItem)
         {
             if (a.object.renderOrder !== b.object.renderOrder)
             {
@@ -1095,7 +1103,7 @@ namespace THREE
         }
 
         // Rendering
-        public render(scene, camera, renderTarget, forceClear)
+        public render(scene, camera, renderTarget?, forceClear?: boolean)
         {
             if (camera instanceof Camera === false)
             {
@@ -1148,7 +1156,8 @@ namespace THREE
 
             //
 
-            if (this._clippingEnabled) this._clipping.beginShadows();
+            if (this._clippingEnabled)
+                this._clipping.beginShadows();
 
             this.setupShadows(this.lights);
 
@@ -1248,9 +1257,11 @@ namespace THREE
             // _gl.finish();
 
         }
-        private pushRenderItem(object, geometry, material, z, group)
+        private pushRenderItem(object: Object3D, geometry: IGeometry, material: IMaterial, z: number, group: IGeometryGroup)
         {
-            var array, index;
+            var array: IRenderItem[];
+            var index: number;
+
             // allocate the next position in the appropriate array 
             if (material.transparent)
             {
@@ -1264,8 +1275,7 @@ namespace THREE
             }
 
             // recycle existing render item or grow the array 
-            var renderItem = array[index];
-
+            var renderItem = array[index]; 
             if (renderItem !== undefined)
             {
                 renderItem.id = object.id;
@@ -2172,16 +2182,14 @@ namespace THREE
             var lightCache = this.lightCache;
 
             var l, ll;
-            var light;
+            var light: Light;
             var
-                r = 0, g = 0, b = 0,
-                color,
-                intensity,
-                distance,
-                shadowMap,
-
-                viewMatrix = camera.matrixWorldInverse,
-
+                r: number = 0, g: number = 0, b: number = 0,
+                color: Color,
+                intensity: number,
+                distance: number,
+                shadowMap: Texture, 
+                viewMatrix = camera.matrixWorldInverse, 
                 directionalLength = 0,
                 pointLength = 0,
                 spotLength = 0,
@@ -2201,8 +2209,7 @@ namespace THREE
                 { 
                     r += color.r * intensity;
                     g += color.g * intensity;
-                    b += color.b * intensity;
-
+                    b += color.b * intensity; 
                 }
                 else if (light instanceof DirectionalLight)
                 { 
@@ -2253,8 +2260,7 @@ namespace THREE
                     {
                         uniforms.shadowBias = light.shadow.bias;
                         uniforms.shadowRadius = light.shadow.radius;
-                        uniforms.shadowMapSize = light.shadow.mapSize;
-
+                        uniforms.shadowMapSize = light.shadow.mapSize; 
                     }
 
                     _lights.spotShadowMap[spotLength] = shadowMap;
@@ -2308,10 +2314,8 @@ namespace THREE
                     uniforms.skyColor.copy(light.color).multiplyScalar(intensity);
                     uniforms.groundColor.copy(light.groundColor).multiplyScalar(intensity);
 
-                    _lights.hemi[hemiLength++] = uniforms;
-
-                }
-
+                    _lights.hemi[hemiLength++] = uniforms; 
+                } 
             }
 
             _lights.ambient[0] = r;
@@ -2478,7 +2482,5 @@ namespace THREE
         {
             readRenderTargetPixels(this, renderTarget, x, y, width, height, buffer);
         } 
-    }
-
-   
+    }    
 }

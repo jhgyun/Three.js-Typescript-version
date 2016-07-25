@@ -3812,16 +3812,16 @@ declare namespace THREE {
     interface LightArrayCache {
         hash: string;
         ambient: number[];
-        directional: any[];
-        directionalShadowMap: any[];
-        directionalShadowMatrix: any[];
-        spot: any[];
-        spotShadowMap: any[];
-        spotShadowMatrix: any[];
-        point: any[];
-        pointShadowMap: any[];
-        pointShadowMatrix: any[];
-        hemi: any[];
+        directional: ILightUniforms[];
+        directionalShadowMap: Texture[];
+        directionalShadowMatrix: Matrix4[];
+        spot: ILightUniforms[];
+        spotShadowMap: Texture[];
+        spotShadowMatrix: Matrix4[];
+        point: ILightUniforms[];
+        pointShadowMap: Texture[];
+        pointShadowMatrix: Matrix4[];
+        hemi: ILightUniforms[];
         shadows: Light[];
     }
     interface WebGLRendererParams {
@@ -3869,10 +3869,10 @@ declare namespace THREE {
         _premultipliedAlpha: boolean;
         _preserveDrawingBuffer: boolean;
         lights: Light[];
-        opaqueObjects: any;
-        opaqueObjectsLastIndex: any;
-        transparentObjects: any;
-        transparentObjectsLastIndex: number;
+        private opaqueObjects;
+        private opaqueObjectsLastIndex;
+        private transparentObjects;
+        private transparentObjectsLastIndex;
         morphInfluences: Float32Array;
         sprites: Sprite[];
         lensFlares: LensFlare[];
@@ -3960,7 +3960,7 @@ declare namespace THREE {
         private absNumericalSort(a, b);
         private painterSortStable(a, b);
         private reversePainterSortStable(a, b);
-        render(scene: any, camera: any, renderTarget: any, forceClear: any): void;
+        render(scene: any, camera: any, renderTarget?: any, forceClear?: boolean): void;
         private pushRenderItem(object, geometry, material, z, group);
         private isObjectViewable(object);
         private isSpriteViewable(sprite);
@@ -4376,11 +4376,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class WebGLState {
-        buffers: {
-            color: WebGLColorBuffer;
-            depth: WebGLDepthBuffer;
-            stencil: WebGLStencilBuffer;
-        };
+        private buffers;
         private gl;
         private newAttributes;
         private maxVertexAttributes;
@@ -4447,30 +4443,53 @@ declare namespace THREE {
         reset(): void;
     }
     class WebGLColorBuffer {
-        setMask: (colorMask: boolean) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (r: number, g: number, b: number, a: number) => void;
-        reset: () => void;
+        private gl;
+        private state;
+        private locked;
+        private color;
+        private currentColorMask;
+        private currentColorClear;
         constructor(gl: WebGLRenderingContext, state: any);
+        setMask(colorMask: boolean): void;
+        setLocked(lock: boolean): void;
+        setClear(r: number, g: number, b: number, a: number): void;
+        reset(): void;
     }
     class WebGLDepthBuffer {
-        setTest: (depthTest: boolean) => void;
-        setMask: (depthMask: boolean) => void;
-        setFunc: (depthFunc: number) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (depth: number) => void;
-        reset: () => void;
-        constructor(gl: WebGLRenderingContext, state: any);
+        private gl;
+        private state;
+        private locked;
+        private currentDepthMask;
+        private currentDepthFunc;
+        private currentDepthClear;
+        constructor(gl: WebGLRenderingContext, state: WebGLState);
+        setTest(depthTest: boolean): void;
+        setMask(depthMask: boolean): void;
+        setFunc(depthFunc: number): void;
+        setLocked(lock: boolean): void;
+        setClear(depth: number): void;
+        reset(): void;
     }
     class WebGLStencilBuffer {
-        setTest: (stencilTest: boolean) => void;
-        setMask: (stencilMask: number) => void;
-        setFunc: (stencilFunc: number, stencilRef: number, stencilMask: number) => void;
-        setOp: (stencilFail: number, stencilZFail: number, stencilZPass: number) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (stencil: number) => void;
-        reset: () => void;
-        constructor(gl: WebGLRenderingContext, state: any);
+        private gl;
+        private state;
+        private locked;
+        private currentStencilMask;
+        private currentStencilFunc;
+        private currentStencilRef;
+        private currentStencilFuncMask;
+        private currentStencilFail;
+        private currentStencilZFail;
+        private currentStencilZPass;
+        private currentStencilClear;
+        constructor(gl: WebGLRenderingContext, state: WebGLState);
+        setTest(stencilTest: boolean): void;
+        setMask(stencilMask: number): void;
+        setFunc(stencilFunc: number, stencilRef: number, stencilMask: number): void;
+        setOp(stencilFail: number, stencilZFail: number, stencilZPass: number): void;
+        setLocked(lock: boolean): void;
+        setClear(stencil: number): void;
+        reset(): void;
     }
 }
 declare var WebGL2RenderingContext: any;

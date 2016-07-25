@@ -6,12 +6,12 @@ namespace THREE
 {
     export class WebGLState
     {
-        buffers: {
+        private buffers: {
             color: WebGLColorBuffer,
             depth: WebGLDepthBuffer,
             stencil: WebGLStencilBuffer
-        }; 
-         
+        };
+
         private gl: WebGLRenderingContext;
         private newAttributes: Uint8Array;
         private maxVertexAttributes: number;
@@ -39,15 +39,15 @@ namespace THREE
         private currentScissor: Vector4;
         private currentViewport: Vector4;
         private emptyTextures: any;
-        private extensions: any; 
+        private extensions: any;
         private renderer: WebGLRenderer;
 
         constructor(renderer: WebGLRenderer)
-        { 
+        {
             var _this = this;
             var gl = this.gl = renderer.context;
             var extensions = this.extensions = renderer.extensions;
-            this.renderer = renderer;  
+            this.renderer = renderer;
 
             this.buffers = {
                 color: new WebGLColorBuffer(gl, this),
@@ -113,7 +113,7 @@ namespace THREE
             return texture;
         }
 
-        enableAttribute(attribute)
+        public enableAttribute(attribute)
         {
             this.newAttributes[attribute] = 1;
 
@@ -130,7 +130,7 @@ namespace THREE
             }
 
         }
-        enableAttributeAndDivisor(attribute, meshPerAttribute, extension)
+        public enableAttributeAndDivisor(attribute, meshPerAttribute, extension)
         {
             this.newAttributes[attribute] = 1;
             if (this.enabledAttributes[attribute] === 0)
@@ -145,7 +145,7 @@ namespace THREE
                 this.attributeDivisors[attribute] = meshPerAttribute;
             }
         }
-        disableUnusedAttributes()
+        public disableUnusedAttributes()
         {
             for (var i = 0, l = this.enabledAttributes.length; i !== l; ++i)
             {
@@ -156,7 +156,7 @@ namespace THREE
                 }
             }
         }
-        enable(id: number)
+        public enable(id: number)
         {
             if (this.capabilities[id] !== true)
             {
@@ -164,7 +164,7 @@ namespace THREE
                 this.capabilities[id] = true;
             }
         }
-        disable(id: number)
+        public disable(id: number)
         {
             if (this.capabilities[id] !== false)
             {
@@ -172,11 +172,11 @@ namespace THREE
                 this.capabilities[id] = false;
             }
         }
-        getCompressedTextureFormats()
+        public getCompressedTextureFormats()
         {
             if (this.compressedTextureFormats === null)
             {
-                this.compressedTextureFormats = []; 
+                this.compressedTextureFormats = [];
                 if (this.extensions.get('WEBGL_compressed_texture_pvrtc') ||
                     this.extensions.get('WEBGL_compressed_texture_s3tc') ||
                     this.extensions.get('WEBGL_compressed_texture_etc1'))
@@ -189,9 +189,9 @@ namespace THREE
                 }
             }
 
-            return this.compressedTextureFormats; 
+            return this.compressedTextureFormats;
         }
-        setBlending(blending?: number,
+        public setBlending(blending?: number,
             blendEquation?: number,
             blendSrc?: number,
             blendDst?: number,
@@ -275,7 +275,7 @@ namespace THREE
                 }
 
                 this.currentBlending = blending;
-                this.currentPremultipledAlpha = premultipliedAlpha; 
+                this.currentPremultipledAlpha = premultipliedAlpha;
             }
 
             if (blending === CustomBlending)
@@ -307,7 +307,7 @@ namespace THREE
                     this.currentBlendDst = blendDst;
                     this.currentBlendSrcAlpha = blendSrcAlpha;
                     this.currentBlendDstAlpha = blendDstAlpha;
-                } 
+                }
             }
             else
             {
@@ -317,140 +317,140 @@ namespace THREE
                 this.currentBlendEquationAlpha = null;
                 this.currentBlendSrcAlpha = null;
                 this.currentBlendDstAlpha = null;
-            } 
+            }
         }
-        setColorWrite(colorWrite: boolean)
+        public setColorWrite(colorWrite: boolean)
         {
             this.buffers.color.setMask(colorWrite);
         }
-        setDepthTest(depthTest: boolean)
+        public setDepthTest(depthTest: boolean)
         {
             this.buffers.depth.setTest(depthTest);
         }
-        setDepthWrite(depthWrite: boolean)
+        public setDepthWrite(depthWrite: boolean)
         {
             this.buffers.depth.setMask(depthWrite);
         }
-        setDepthFunc(depthFunc: number)
-        { 
-            this.buffers.depth.setFunc(depthFunc); 
+        public setDepthFunc(depthFunc: number)
+        {
+            this.buffers.depth.setFunc(depthFunc);
         }
-        setStencilTest(stencilTest: boolean)
+        public setStencilTest(stencilTest: boolean)
         {
             this.buffers.stencil.setTest(stencilTest);
         }
-        setStencilWrite(stencilWrite: number)
+        public setStencilWrite(stencilWrite: number)
         {
             this.buffers.stencil.setMask(stencilWrite);
         }
-        setStencilFunc(stencilFunc: number, stencilRef: number, stencilMask: number)
-        { 
-            this.buffers.stencil.setFunc(stencilFunc, stencilRef, stencilMask); 
+        public setStencilFunc(stencilFunc: number, stencilRef: number, stencilMask: number)
+        {
+            this.buffers.stencil.setFunc(stencilFunc, stencilRef, stencilMask);
         }
-        setStencilOp(stencilFail: number, stencilZFail: number, stencilZPass: number)
+        public setStencilOp(stencilFail: number, stencilZFail: number, stencilZPass: number)
         {
             this.buffers.stencil.setOp(stencilFail, stencilZFail, stencilZPass);
         }
-        setFlipSided(flipSided: boolean)
-        { 
+        public setFlipSided(flipSided: boolean)
+        {
             if (this.currentFlipSided !== flipSided)
-            { 
+            {
                 if (flipSided)
-                { 
-                    this.gl.frontFace(this.gl.CW); 
+                {
+                    this.gl.frontFace(this.gl.CW);
                 }
                 else
-                { 
-                    this.gl.frontFace(this.gl.CCW); 
+                {
+                    this.gl.frontFace(this.gl.CCW);
                 }
 
-                this.currentFlipSided = flipSided; 
-            } 
+                this.currentFlipSided = flipSided;
+            }
         }
-        setCullFace(cullFace: number)
+        public setCullFace(cullFace: number)
         {
             var gl = this.gl;
             if (cullFace !== CullFaceNone)
-            { 
-                this.enable(gl.CULL_FACE); 
+            {
+                this.enable(gl.CULL_FACE);
                 if (cullFace !== this.currentCullFace)
-                { 
+                {
                     if (cullFace === CullFaceBack)
-                    { 
-                        gl.cullFace(gl.BACK); 
+                    {
+                        gl.cullFace(gl.BACK);
                     }
                     else if (cullFace === CullFaceFront)
-                    { 
-                        gl.cullFace(gl.FRONT); 
+                    {
+                        gl.cullFace(gl.FRONT);
                     }
                     else
-                    { 
-                        gl.cullFace(gl.FRONT_AND_BACK); 
-                    } 
-                } 
+                    {
+                        gl.cullFace(gl.FRONT_AND_BACK);
+                    }
+                }
             }
             else
-            { 
-                this.disable(gl.CULL_FACE); 
-            } 
-            this.currentCullFace = cullFace; 
-        } 
-        setLineWidth(width: number)
-        { 
-            if (width !== this.currentLineWidth)
-            { 
-                this.gl.lineWidth(width); 
-                this.currentLineWidth = width; 
-            } 
+            {
+                this.disable(gl.CULL_FACE);
+            }
+            this.currentCullFace = cullFace;
         }
-        setPolygonOffset(polygonOffset: boolean, factor, units)
+        public setLineWidth(width: number)
+        {
+            if (width !== this.currentLineWidth)
+            {
+                this.gl.lineWidth(width);
+                this.currentLineWidth = width;
+            }
+        }
+        public setPolygonOffset(polygonOffset: boolean, factor, units)
         {
             var gl = this.gl;
             if (polygonOffset)
             {
-                this.enable(gl.POLYGON_OFFSET_FILL); 
+                this.enable(gl.POLYGON_OFFSET_FILL);
                 if (this.currentPolygonOffsetFactor !== factor || this.currentPolygonOffsetUnits !== units)
-                { 
-                    gl.polygonOffset(factor, units); 
+                {
+                    gl.polygonOffset(factor, units);
                     this.currentPolygonOffsetFactor = factor;
-                    this.currentPolygonOffsetUnits = units; 
-                } 
+                    this.currentPolygonOffsetUnits = units;
+                }
             }
             else
-            { 
-                this.disable(gl.POLYGON_OFFSET_FILL); 
-            } 
+            {
+                this.disable(gl.POLYGON_OFFSET_FILL);
+            }
         }
-        getScissorTest()
-        { 
-            return this.currentScissorTest; 
+        public getScissorTest()
+        {
+            return this.currentScissorTest;
         }
-        setScissorTest(scissorTest: boolean)
+        public setScissorTest(scissorTest: boolean)
         {
             var gl = this.gl;
             this.currentScissorTest = scissorTest;
 
             if (scissorTest)
-            { 
-                this.enable(gl.SCISSOR_TEST); 
+            {
+                this.enable(gl.SCISSOR_TEST);
             }
             else
-            { 
-                this.disable(gl.SCISSOR_TEST); 
-            } 
+            {
+                this.disable(gl.SCISSOR_TEST);
+            }
         }
-        activeTexture(webglSlot?: number)
+        public activeTexture(webglSlot?: number)
         {
             var gl = this.gl;
             if (webglSlot === undefined) webglSlot = gl.TEXTURE0 + this.maxTextures - 1;
 
             if (this.currentTextureSlot !== webglSlot)
-            { 
+            {
                 gl.activeTexture(webglSlot);
-                this.currentTextureSlot = webglSlot; 
-            } 
-        };
-        bindTexture(webglType: number, webglTexture: WebGLTexture)
+                this.currentTextureSlot = webglSlot;
+            }
+        }
+        public bindTexture(webglType: number, webglTexture: WebGLTexture)
         {
             if (this.currentTextureSlot === null)
             {
@@ -472,60 +472,60 @@ namespace THREE
                 boundTexture.type = webglType;
                 boundTexture.texture = webglTexture;
             }
-        };
-        compressedTexImage2D(...args)
-        { 
+        }
+        public compressedTexImage2D(...args)
+        {
             try
-            { 
+            {
                 this.gl.compressedTexImage2D.apply(this.gl, arguments);
 
             } catch (error)
-            { 
-                console.error(error); 
-            } 
-        };
-        texImage2D(...args)
-        { 
+            {
+                console.error(error);
+            }
+        }
+        public texImage2D(...args)
+        {
             try
-            { 
-                this.gl.texImage2D.apply(this.gl, arguments); 
+            {
+                this.gl.texImage2D.apply(this.gl, arguments);
             }
             catch (error)
-            { 
-                console.error(error); 
-            } 
-        };
-        clearColor(r: number, g: number, b: number, a: number)
-        { 
-            this.buffers.color.setClear(r, g, b, a); 
-        };
-        clearDepth(depth: number)
+            {
+                console.error(error);
+            }
+        }
+        public clearColor(r: number, g: number, b: number, a: number)
         {
-            this.buffers.depth.setClear(depth); 
-        };
-        clearStencil(stencil: number)
-        { 
-            this.buffers.stencil.setClear(stencil); 
-        };
-        scissor(scissor: Vector4)
-        { 
+            this.buffers.color.setClear(r, g, b, a);
+        }
+        public clearDepth(depth: number)
+        {
+            this.buffers.depth.setClear(depth);
+        }
+        public clearStencil(stencil: number)
+        {
+            this.buffers.stencil.setClear(stencil);
+        }
+        public scissor(scissor: Vector4)
+        {
             if (this.currentScissor.equals(scissor) === false)
-            { 
+            {
                 this.gl.scissor(scissor.x, scissor.y, scissor.z, scissor.w);
-                this.currentScissor.copy(scissor); 
-            } 
-        };
+                this.currentScissor.copy(scissor);
+            }
+        }
 
-        viewport(viewport: Vector4)
-        { 
+        public viewport(viewport: Vector4)
+        {
             if (this.currentViewport.equals(viewport) === false)
-            { 
+            {
                 this.gl.viewport(viewport.x, viewport.y, viewport.z, viewport.w);
-                this.currentViewport.copy(viewport); 
-            } 
-        };
+                this.currentViewport.copy(viewport);
+            }
+        }
 
-        init()
+        public init()
         {
             this.clearColor(0, 0, 0, 1);
             this.clearDepth(1);
@@ -540,15 +540,15 @@ namespace THREE
 
             this.enable(this.gl.BLEND);
             this.setBlending(NormalBlending);
-        };
-        initAttributes()
+        }
+        public initAttributes()
         {
             for (var i = 0, l = this.newAttributes.length; i < l; i++)
             {
                 this.newAttributes[i] = 0;
             }
-        };
-        reset()
+        }
+        public reset()
         {
             var gl = this.gl;
             for (var i = 0; i < this.enabledAttributes.length; i++)
@@ -573,260 +573,246 @@ namespace THREE
 
             this.buffers.color.reset();
             this.buffers.depth.reset();
-            this.buffers.stencil.reset(); 
-        } 
-    }
-
+            this.buffers.stencil.reset();
+        }
+    } 
     export class WebGLColorBuffer
     {
-        setMask: (colorMask: boolean) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (r: number, g: number, b: number, a: number) => void;
-        reset: () => void;
+        private gl: WebGLRenderingContext;
+        private state: WebGLState;
+        private locked: boolean;
+        private color: Vector4;
+        private currentColorMask: boolean;
+        private currentColorClear: Vector4;
 
         constructor(gl: WebGLRenderingContext, state)
-        { 
-            var locked = false;
+        {
+            this.gl = gl;
+            this.state = state;
+            this.locked = false;
 
-            var color = new Vector4();
-            var currentColorMask: boolean = null;
-            var currentColorClear = new Vector4();
-
-            this.setMask = function (colorMask)
-            { 
-                if (currentColorMask !== colorMask && !locked)
-                { 
-                    gl.colorMask(colorMask, colorMask, colorMask, colorMask);
-                    currentColorMask = colorMask; 
-                } 
-            }; 
-            this.setLocked = function (lock)
-            { 
-                locked = lock; 
-            };
-            this.setClear = function (r: number, g: number, b: number, a: number)
-            { 
-                color.set(r, g, b, a); 
-                if (currentColorClear.equals(color) === false)
-                { 
-                    gl.clearColor(r, g, b, a);
-                    currentColorClear.copy(color); 
-                } 
-            }; 
-            this.reset = function ()
-            { 
-                locked = false; 
-                currentColorMask = null;
-                currentColorClear = new Vector4(); 
-            }; 
-        } 
-    }
-
+            this.color = new Vector4();
+            this.currentColorMask = null;
+            this.currentColorClear = new Vector4();
+        }
+        public setMask(colorMask: boolean)
+        {
+            if (this.currentColorMask !== colorMask && !this.locked)
+            {
+                this.gl.colorMask(colorMask, colorMask, colorMask, colorMask);
+                this.currentColorMask = colorMask;
+            }
+        }
+        public setLocked(lock: boolean)
+        {
+            this.locked = lock;
+        }
+        public setClear(r: number, g: number, b: number, a: number)
+        {
+            this.color.set(r, g, b, a);
+            if (this.currentColorClear.equals(this.color) === false)
+            {
+                this.gl.clearColor(r, g, b, a);
+                this.currentColorClear.copy(this.color);
+            }
+        }
+        public reset()
+        {
+            this.locked = false;
+            this.currentColorMask = null;
+            this.currentColorClear = new Vector4();
+        }
+    } 
     export class WebGLDepthBuffer
     {
-        setTest: (depthTest: boolean) => void;
-        setMask: (depthMask: boolean) => void;
-        setFunc: (depthFunc: number) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (depth: number) => void;
-        reset: () => void;
+        private gl: WebGLRenderingContext;
+        private state: WebGLState;
+        private locked = false;
+        private currentDepthMask: boolean = null;
+        private currentDepthFunc: number = null;
+        private currentDepthClear: number = null;
 
-        constructor(gl: WebGLRenderingContext, state)
-        { 
-            var locked = false;
-
-            var currentDepthMask: boolean = null;
-            var currentDepthFunc: number = null;
-            var currentDepthClear: number = null;
-
-            this.setTest = function (depthTest)
-            { 
-                if (depthTest)
-                { 
-                    state.enable(gl.DEPTH_TEST); 
+        constructor(gl: WebGLRenderingContext, state: WebGLState)
+        {
+            this.gl = gl;
+            this.state = state;
+        }
+        public setTest(depthTest: boolean)
+        {
+            if (depthTest)
+            {
+                this.state.enable(this.gl.DEPTH_TEST);
+            }
+            else
+            {
+                this.state.disable(this.gl.DEPTH_TEST);
+            }
+        }
+        public setMask(depthMask: boolean)
+        {
+            if (this.currentDepthMask !== depthMask && !this.locked)
+            {
+                this.gl.depthMask(depthMask);
+                this.currentDepthMask = depthMask;
+            }
+        }
+        public setFunc(depthFunc: number)
+        {
+            var gl = this.gl;
+            if (this.currentDepthFunc !== depthFunc)
+            {
+                if (depthFunc)
+                {
+                    switch (depthFunc)
+                    {
+                        case NeverDepth:
+                            gl.depthFunc(gl.NEVER);
+                            break;
+                        case AlwaysDepth:
+                            gl.depthFunc(gl.ALWAYS);
+                            break;
+                        case LessDepth:
+                            gl.depthFunc(gl.LESS);
+                            break;
+                        case LessEqualDepth:
+                            gl.depthFunc(gl.LEQUAL);
+                            break;
+                        case EqualDepth:
+                            gl.depthFunc(gl.EQUAL);
+                            break;
+                        case GreaterEqualDepth:
+                            gl.depthFunc(gl.GEQUAL);
+                            break;
+                        case GreaterDepth:
+                            gl.depthFunc(gl.GREATER);
+                            break;
+                        case NotEqualDepth:
+                            gl.depthFunc(gl.NOTEQUAL);
+                            break;
+                        default:
+                            gl.depthFunc(gl.LEQUAL);
+                    }
                 }
                 else
-                { 
-                    state.disable(gl.DEPTH_TEST); 
-                } 
-            }; 
-            this.setMask = function (depthMask)
-            { 
-                if (currentDepthMask !== depthMask && !locked)
-                { 
-                    gl.depthMask(depthMask);
-                    currentDepthMask = depthMask; 
-                } 
-            }; 
-            this.setFunc = function (depthFunc)
-            { 
-                if (currentDepthFunc !== depthFunc)
-                { 
-                    if (depthFunc)
-                    { 
-                        switch (depthFunc)
-                        { 
-                            case NeverDepth: 
-                                gl.depthFunc(gl.NEVER);
-                                break; 
-                            case AlwaysDepth: 
-                                gl.depthFunc(gl.ALWAYS);
-                                break; 
-                            case LessDepth: 
-                                gl.depthFunc(gl.LESS);
-                                break;  
-                            case LessEqualDepth: 
-                                gl.depthFunc(gl.LEQUAL);
-                                break; 
-                            case EqualDepth: 
-                                gl.depthFunc(gl.EQUAL);
-                                break; 
-                            case GreaterEqualDepth: 
-                                gl.depthFunc(gl.GEQUAL);
-                                break; 
-                            case GreaterDepth: 
-                                gl.depthFunc(gl.GREATER);
-                                break; 
-                            case NotEqualDepth: 
-                                gl.depthFunc(gl.NOTEQUAL);
-                                break; 
-                            default: 
-                                gl.depthFunc(gl.LEQUAL); 
-                        }
-
-                    }
-                    else
-                    { 
-                        gl.depthFunc(gl.LEQUAL); 
-                    }
-
-                    currentDepthFunc = depthFunc; 
+                {
+                    gl.depthFunc(gl.LEQUAL);
                 }
 
-            }; 
-            this.setLocked = function (lock)
-            { 
-                locked = lock; 
-            }; 
-            this.setClear = function (depth)
-            { 
-                if (currentDepthClear !== depth)
-                { 
-                    gl.clearDepth(depth);
-                    currentDepthClear = depth; 
-                } 
-            }; 
-            this.reset = function ()
-            { 
-                locked = false; 
-                currentDepthMask = null;
-                currentDepthFunc = null;
-                currentDepthClear = null; 
-            }; 
+                this.currentDepthFunc = depthFunc;
+            }
+        }
+        public setLocked(lock: boolean)
+        {
+            this.locked = lock;
         };
-    }
-
+        public setClear(depth: number)
+        {
+            if (this.currentDepthClear !== depth)
+            {
+                this.gl.clearDepth(depth);
+                this.currentDepthClear = depth;
+            }
+        };
+        public reset()
+        {
+            this.locked = false;
+            this.currentDepthMask = null;
+            this.currentDepthFunc = null;
+            this.currentDepthClear = null;
+        };
+    } 
     export class WebGLStencilBuffer
-    {
-        setTest: (stencilTest: boolean) => void;
-        setMask: (stencilMask: number) => void;
-        setFunc: (stencilFunc: number, stencilRef: number, stencilMask: number) => void;
-        setOp: (stencilFail: number, stencilZFail: number, stencilZPass: number) => void;
-        setLocked: (lock: boolean) => void;
-        setClear: (stencil: number) => void;
-        reset: () => void;
+    { 
+        private gl: WebGLRenderingContext;
+        private state: WebGLState;
+        private locked = false;
+        private currentStencilMask: number = null;
+        private currentStencilFunc: number = null;
+        private currentStencilRef: number = null;
+        private currentStencilFuncMask: number = null;
+        private currentStencilFail: number = null;
+        private currentStencilZFail: number = null;
+        private currentStencilZPass: number = null;
+        private currentStencilClear: number = null;
 
-        constructor(gl: WebGLRenderingContext, state)
-        { 
-            var locked = false;
-            var currentStencilMask: number = null;
-            var currentStencilFunc: number = null;
-            var currentStencilRef: number = null;
-            var currentStencilFuncMask: number = null;
-            var currentStencilFail: number= null;
-            var currentStencilZFail: number = null;
-            var currentStencilZPass: number= null;
-            var currentStencilClear: number = null;
+        constructor(gl: WebGLRenderingContext, state: WebGLState)
+        {
+            this.gl = gl;
+            this.state = state;
+        }
 
-            this.setTest = function (stencilTest)
-            { 
-                if (stencilTest)
-                { 
-                    state.enable(gl.STENCIL_TEST); 
-                }
-                else
-                { 
-                    state.disable(gl.STENCIL_TEST); 
-                } 
-            }; 
-            this.setMask = function (stencilMask)
-            { 
-                if (currentStencilMask !== stencilMask && !locked)
-                { 
-                    gl.stencilMask(stencilMask);
-                    currentStencilMask = stencilMask;
+        public setTest(stencilTest: boolean)
+        {
+            if (stencilTest)
+            {
+                this.state.enable(this.gl.STENCIL_TEST);
+            }
+            else
+            {
+                this.state.disable(this.gl.STENCIL_TEST);
+            }
+        }
+        public setMask(stencilMask: number)
+        {
+            if (this.currentStencilMask !== stencilMask && !this.locked)
+            {
+                this.gl.stencilMask(stencilMask);
+                this.currentStencilMask = stencilMask;
+            }
 
-                }
+        }
+        public setFunc(stencilFunc: number, stencilRef: number, stencilMask: number)
+        {
+            if (this.currentStencilFunc !== stencilFunc ||
+                this.currentStencilRef !== stencilRef ||
+                this.currentStencilFuncMask !== stencilMask)
+            {
+                this.gl.stencilFunc(stencilFunc, stencilRef, stencilMask);
 
-            };
+                this.currentStencilFunc = stencilFunc;
+                this.currentStencilRef = stencilRef;
+                this.currentStencilFuncMask = stencilMask;
+            }
+        }
+        public setOp(stencilFail: number, stencilZFail: number, stencilZPass: number)
+        {
+            if (this.currentStencilFail !== stencilFail ||
+                this.currentStencilZFail !== stencilZFail ||
+                this.currentStencilZPass !== stencilZPass)
+            {
+                this.gl.stencilOp(stencilFail, stencilZFail, stencilZPass);
 
-            this.setFunc = function (stencilFunc, stencilRef, stencilMask)
-            { 
-                if (currentStencilFunc !== stencilFunc ||
-                    currentStencilRef !== stencilRef ||
-                    currentStencilFuncMask !== stencilMask)
-                { 
-                    gl.stencilFunc(stencilFunc, stencilRef, stencilMask);
+                this.currentStencilFail = stencilFail;
+                this.currentStencilZFail = stencilZFail;
+                this.currentStencilZPass = stencilZPass;
+            }
 
-                    currentStencilFunc = stencilFunc;
-                    currentStencilRef = stencilRef;
-                    currentStencilFuncMask = stencilMask; 
-                } 
-            }; 
-            this.setOp = function (stencilFail, stencilZFail, stencilZPass)
-            { 
-                if (currentStencilFail !== stencilFail ||
-                    currentStencilZFail !== stencilZFail ||
-                    currentStencilZPass !== stencilZPass)
-                { 
-                    gl.stencilOp(stencilFail, stencilZFail, stencilZPass);
+        }
+        public setLocked(lock: boolean)
+        {
+            this.locked = lock;
+        }
+        public setClear(stencil: number)
+        {
+            if (this.currentStencilClear !== stencil)
+            {
+                this.gl.clearStencil(stencil);
+                this.currentStencilClear = stencil;
+            }
+        }
+        public reset()
+        {
+            this.locked = false;
 
-                    currentStencilFail = stencilFail;
-                    currentStencilZFail = stencilZFail;
-                    currentStencilZPass = stencilZPass; 
-                }
+            this.currentStencilMask = null;
+            this.currentStencilFunc = null;
+            this.currentStencilRef = null;
+            this.currentStencilFuncMask = null;
+            this.currentStencilFail = null;
+            this.currentStencilZFail = null;
+            this.currentStencilZPass = null;
+            this.currentStencilClear = null;
 
-            };
-
-            this.setLocked = function (lock)
-            { 
-                locked = lock; 
-            };
-
-            this.setClear = function (stencil)
-            { 
-                if (currentStencilClear !== stencil)
-                { 
-                    gl.clearStencil(stencil);
-                    currentStencilClear = stencil; 
-                } 
-            };
-
-            this.reset = function ()
-            { 
-                locked = false; 
-
-                currentStencilMask = null;
-                currentStencilFunc = null;
-                currentStencilRef       = null;
-                currentStencilFuncMask  = null;
-                currentStencilFail      = null;
-                currentStencilZFail     = null;
-                currentStencilZPass = null;
-                currentStencilClear = null;
-
-            };
-
-        };
+        }
     }
 }

@@ -60,8 +60,8 @@ namespace THREE
             this.depthBuffer = options.depthBuffer !== undefined ? options.depthBuffer : true;
             this.stencilBuffer = options.stencilBuffer !== undefined ? options.stencilBuffer : true;
             this.depthTexture = null; 
-        }; 
-        setSize(width: number, height: number)
+        };
+        public setSize(width: number, height: number)
         { 
             if (this.width !== width || this.height !== height)
             { 
@@ -74,11 +74,11 @@ namespace THREE
             this.scissor.set(0, 0, width, height); 
         } 
 
-        clone()
+        public clone()
         { 
             return new ( this.constructor as any)().copy(this); 
         }  
-        copy(source: WebGLRenderTarget)
+        public copy(source: WebGLRenderTarget)
         { 
             this.width = source.width;
             this.height = source.height; 
@@ -89,7 +89,7 @@ namespace THREE
             this.depthTexture = source.depthTexture; 
             return this; 
         }  
-        dispose()
+        public dispose()
         { 
             this.dispatchEvent({ type: 'dispose' }); 
         } 
