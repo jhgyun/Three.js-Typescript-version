@@ -11,6 +11,7 @@ namespace THREE
     {
         matrixWorldInverse = new Matrix4();
         projectionMatrix = new Matrix4();
+        far: number;
 
         constructor()
         {

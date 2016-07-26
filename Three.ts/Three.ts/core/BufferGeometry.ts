@@ -24,8 +24,14 @@ namespace THREE
         uv2?: BufferAttribute;
         lineDistance?: BufferAttribute;
         skinWeight?: BufferAttribute;
+        vertices?: BufferAttribute;
+        vertexNormals?: BufferAttribute; 
+    } 
+    export interface IBufferGeometryMorphAttributes
+    {
+        position?: BufferAttribute[];
+        normal?: BufferAttribute[];
     }
-
     export class BufferGeometry extends EventDispatcher implements IGeometry
     {
         uuid: string;
@@ -33,8 +39,8 @@ namespace THREE
         type = 'BufferGeometry';
         index: BufferAttribute = null;
         attributes: IBufferGeometryAttributes = {}; 
- 
-        morphAttributes: IBufferGeometryAttributes = {};
+
+        morphAttributes: IBufferGeometryMorphAttributes = {};
         groups: IGeometryGroup[] = []; 
         boundingBox: Box3 = null;
         boundingSphere = null;
@@ -61,7 +67,7 @@ namespace THREE
         {
             this.index = index;
         }
-        addAttribute(name: string, attribute: BufferAttributeType)
+        addAttribute(name: string, attribute: BufferAttribute)
         {
             this.attributes[name] = attribute;
             return this;
@@ -156,8 +162,7 @@ namespace THREE
             m1.makeTranslation(x, y, z);
             this.applyMatrix(m1);
             return this;
-        }
-         
+        } 
         scale(x: number, y: number, z: number): this
         {
             // scale geometry  
@@ -370,7 +375,7 @@ namespace THREE
 
             for (var name in geometry.morphTargets)
             {
-                var array = [];
+                var array: Float32Attribute[] = [];
                 var morphTargets = geometry.morphTargets[name];
 
                 for (var i = 0, l = morphTargets.length; i < l; i++)
@@ -534,9 +539,8 @@ namespace THREE
                         var start = group.start;
                         var count = group.count;
 
-                        for (var i = start, il = start + count; i < il; i += 3)
-                        {
-
+                        for (let i = start, il = start + count; i < il; i += 3)
+                        { 
                             vA = indices[i + 0] * 3;
                             vB = indices[i + 1] * 3;
                             vC = indices[i + 2] * 3;
@@ -658,7 +662,7 @@ namespace THREE
                 var array = attribute.array;
                 var itemSize = attribute.itemSize;
 
-                var array2 = new array.constructor(indices.length * itemSize);
+                var array2 = new (array.constructor as any)(indices.length * itemSize);
 
                 var index = 0, index2 = 0;
 

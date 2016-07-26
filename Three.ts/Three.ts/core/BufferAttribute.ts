@@ -14,8 +14,21 @@ namespace THREE
         | Int32Array
         | Uint8ClampedArray
         ;
-     
-    export class BufferAttribute  
+
+    export interface IBufferAttribute
+    {
+        uuid: string;
+        array?: BufferAttributeArray;
+        itemSize?: number;
+        dynamic?: boolean;
+        updateRange?: {
+            offset: number, count: number
+        };
+        version?: number;
+        normalized?: boolean;
+    }
+
+    export class BufferAttribute implements IBufferAttribute
     {
         uuid: string;
         array: BufferAttributeArray;

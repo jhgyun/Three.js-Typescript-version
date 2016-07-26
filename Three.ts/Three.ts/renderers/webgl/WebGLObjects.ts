@@ -26,11 +26,11 @@ namespace THREE
   
         }
 
-        private updateAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, bufferType: number)
+        private updateAttribute(attribute: BufferAttribute, bufferType: number)
         {
             var properties = this.properties;
             
-            var data: BufferAttribute | InterleavedBuffer = attribute as any;
+            var data: IBufferAttribute = attribute as any;
             if (attribute instanceof InterleavedBufferAttribute)
                 data = attribute.data;
 
@@ -45,7 +45,7 @@ namespace THREE
                 this.updateBuffer(attributeProperties, data, bufferType); 
             } 
         }
-        private createBuffer(attributeProperties: IAttributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
+        private createBuffer(attributeProperties: IAttributeProperties, data: IBufferAttribute, bufferType: number)
         {
             var gl = this.gl;
 
@@ -59,7 +59,7 @@ namespace THREE
             attributeProperties.version = data.version;
 
         }
-        private updateBuffer(attributeProperties: IAttributeProperties, data: BufferAttribute | InterleavedBuffer, bufferType: number)
+        private updateBuffer(attributeProperties: IAttributeProperties, data: IBufferAttribute, bufferType: number)
         {
             var gl = this.gl;
 
@@ -111,7 +111,7 @@ namespace THREE
 
         }
 
-        public getAttributeBuffer(attribute: BufferAttribute | InterleavedBufferAttribute): WebGLBuffer
+        public getAttributeBuffer(attribute: BufferAttribute ): WebGLBuffer
         {
             var properties = this.properties;
             if (attribute instanceof InterleavedBufferAttribute)
@@ -160,7 +160,7 @@ namespace THREE
             }
             else
             {
-                var array = attributes.position.array;
+                let array = attributes.position.array;
                 for (var i = 0, l = (array.length / 3) - 1; i < l; i += 3)
                 { 
                     var a = i + 0;
@@ -210,7 +210,7 @@ namespace THREE
             var morphAttributes = geometry.morphAttributes;
             for (var name in morphAttributes)
             { 
-                var array = morphAttributes[name];
+                var array = morphAttributes[name] as BufferAttribute[];
 
                 for (var i = 0, l = array.length; i < l; i++)
                 { 

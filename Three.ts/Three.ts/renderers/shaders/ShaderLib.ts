@@ -16,14 +16,11 @@ namespace THREE
 {
     export var ShaderLib =  {
 
-        'basic': {
-
-            uniforms: UniformsUtils.merge([
-
+        'basic': { 
+            uniforms: UniformsUtils.merge([ 
                 UniformsLib['common'],
                 UniformsLib['aomap'],
-                UniformsLib['fog']
-
+                UniformsLib['fog'] 
             ]),
 
             vertexShader: ShaderChunk['meshbasic_vert'],
@@ -32,9 +29,7 @@ namespace THREE
         },
 
         'lambert': {
-
             uniforms: UniformsUtils.merge([
-
                 UniformsLib['common'],
                 UniformsLib['aomap'],
                 UniformsLib['lightmap'],
@@ -48,7 +43,6 @@ namespace THREE
 
             vertexShader: ShaderChunk['meshlambert_vert'],
             fragmentShader: ShaderChunk['meshlambert_frag']
-
         },
 
         'phong': { 
@@ -62,24 +56,19 @@ namespace THREE
                 UniformsLib['displacementmap'],
                 UniformsLib['fog'],
                 UniformsLib['lights'],
-
                 {
                     "emissive": { value: new Color(0x000000) },
                     "specular": { value: new Color(0x111111) },
                     "shininess": { value: 30 }
                 }
-
             ]),
 
             vertexShader: ShaderChunk['meshphong_vert'],
             fragmentShader: ShaderChunk['meshphong_frag']
-
         },
 
         'standard': {
-
             uniforms: UniformsUtils.merge([
-
                 UniformsLib['common'],
                 UniformsLib['aomap'],
                 UniformsLib['lightmap'],
@@ -91,7 +80,6 @@ namespace THREE
                 UniformsLib['metalnessmap'],
                 UniformsLib['fog'],
                 UniformsLib['lights'],
-
                 {
                     "emissive": { value: new Color(0x000000) },
                     "roughness": { value: 0.5 },
@@ -106,8 +94,7 @@ namespace THREE
 
         },
 
-        'points': {
-
+        'points': { 
             uniforms: UniformsUtils.merge([
 
                 UniformsLib['points'],
@@ -120,24 +107,19 @@ namespace THREE
 
         },
 
-        'dashed': {
-
-            uniforms: UniformsUtils.merge([
-
+        'dashed': { 
+            uniforms: UniformsUtils.merge([ 
                 UniformsLib['common'],
-                UniformsLib['fog'],
-
+                UniformsLib['fog'], 
                 {
                     "scale": { value: 1 },
                     "dashSize": { value: 1 },
                     "totalSize": { value: 2 }
-                }
-
+                } 
             ]),
 
             vertexShader: ShaderChunk['linedashed_vert'],
-            fragmentShader: ShaderChunk['linedashed_frag']
-
+            fragmentShader: ShaderChunk['linedashed_frag'] 
         },
 
         'depth': {
@@ -215,21 +197,23 @@ namespace THREE
 
     };
 
-    ShaderLib['physical'] = {
-
-        uniforms: UniformsUtils.merge([
-
-            ShaderLib['standard'].uniforms,
-
+    ShaderLib['physical'] = { 
+        uniforms: UniformsUtils.merge([ 
+            ShaderLib['standard'].uniforms, 
             {
                 "clearCoat": { value: 0 },
                 "clearCoatRoughness": { value: 0 }
-            }
-
+            } 
         ]),
 
         vertexShader: ShaderChunk['meshphysical_vert'],
-        fragmentShader: ShaderChunk['meshphysical_frag']
-
+        fragmentShader: ShaderChunk['meshphysical_frag'] 
     };
+
+    export interface IShader
+    {
+        uniforms?: IUniforms;
+        vertexShader?: string;
+        fragmentShader?: string;
+    }
 }

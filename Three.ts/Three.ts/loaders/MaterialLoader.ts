@@ -45,7 +45,7 @@ namespace THREE
 
         parse(json)
         {
-            var material = new THREE[json.type];
+            var material : IMaterial = new THREE[json.type];
 
             if (json.uuid !== undefined) material.uuid = json.uuid;
             if (json.name !== undefined) material.name = json.name;

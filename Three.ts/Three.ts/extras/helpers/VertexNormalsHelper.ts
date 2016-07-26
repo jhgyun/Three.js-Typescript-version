@@ -104,7 +104,7 @@ namespace THREE
 
                 // for simplicity, ignore index and drawcalls, and render every normal
 
-                for (var j = 0, jl = objPos.count; j < jl; j++)
+                for (let j = 0, jl = objPos.count; j < jl; j++)
                 {
                     v1.set(objPos.getX(j), objPos.getY(j), objPos.getZ(j)).applyMatrix4(matrixWorld);
 

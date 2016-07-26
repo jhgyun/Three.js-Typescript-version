@@ -42,20 +42,27 @@ namespace THREE
         hemi: ILightUniforms[];
         shadows: Light[]
     }
-    interface TmpMaterialProperty
+    export interface IMaterialPropertyCache
     {
         program?: WebGLProgram;
-        __webglShader?;
+        __webglShader?: {
+            name: string
+            uniforms: IUniforms,
+            vertexShader: string,
+            fragmentShader: string
+        };
+
         numClippingPlanes?: number;
         lightsHash?: string;
-        uniformsList?;
-        dynamicUniforms?;
+        uniformsList?: UniformType[];
+        dynamicUniforms?: UniformType[];
+        clippingState?: Float32Array;
     }
     interface IRenderItem
     {
         id?: number;
         object?: Object3D;
-        geometry?: IGeometry;
+        geometry?: BufferGeometry;
         material?: IMaterial;
         z?: number;
         group?: any;
@@ -626,7 +633,7 @@ namespace THREE
         }
         private releaseMaterialProgramReference(material: IMaterial)
         {
-            var programInfo = this.properties.get(material).program;
+            var programInfo = (this.properties.get(material) as IMaterialPropertyCache).program;
 
             material.program = undefined;
 
@@ -637,22 +644,34 @@ namespace THREE
         }
 
         // Buffer rendering
-        public renderBufferImmediate(object, program: WebGLProgram, material: IMaterial)
+        public renderBufferImmediate(object: ImmediateRenderObject, program: WebGLProgram, material: IMaterial)
         {
             var state = this.state;
             var properties = this.properties;
             var _gl = this.context;
             state.initAttributes();
 
-            var buffers = properties.get(object);
+            var buffers: 
+            {
+                position: WebGLBuffer,
+                normal: WebGLBuffer,
+                uv: WebGLBuffer,
+                color: WebGLBuffer
+            } = properties.get(object);
 
             if (object.hasPositions && !buffers.position) buffers.position = _gl.createBuffer();
             if (object.hasNormals && !buffers.normal) buffers.normal = _gl.createBuffer();
             if (object.hasUvs && !buffers.uv) buffers.uv = _gl.createBuffer();
             if (object.hasColors && !buffers.color) buffers.color = _gl.createBuffer();
 
-            var attributes = program.getAttributes();
+            var attributes: {
+                position: number,
+                normal: number,
+                color: number,
+                uv: number
+            };
 
+            attributes = program.getAttributes() as any; 
             if (object.hasPositions)
             {
                 _gl.bindBuffer(_gl.ARRAY_BUFFER, buffers.position);
@@ -725,7 +744,7 @@ namespace THREE
             object.count = 0;
 
         }
-        public renderBufferDirect(camera, fog, geometry: any, material, object, group: IGeometryGroup)
+        public renderBufferDirect(camera: Camera, fog: IFog, geometry: BufferGeometry, material: IMaterial, object: IObject3D, group: IGeometryGroup)
         {
             var _gl = this.context;
 
@@ -748,7 +767,7 @@ namespace THREE
 
             if (morphTargetInfluences !== undefined)
             {
-                var activeInfluences = [];
+                var activeInfluences: number[][] = [];
 
                 for (let i = 0, l = morphTargetInfluences.length; i < l; i++)
                 {
@@ -767,8 +786,7 @@ namespace THREE
 
                 for (var i = 0, l = activeInfluences.length; i < l; i++)
                 {
-
-                    var influence = activeInfluences[i];
+                    let influence = activeInfluences[i];
                     this.morphInfluences[i] = influence[0];
 
                     if (influence[0] !== 0)
@@ -912,17 +930,17 @@ namespace THREE
             }
         };
 
-        public setupVertexAttributes(material, program, geometry, startIndex?)
+        public setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: IGeometry, startIndex?: number)
         {
             var state = this.state;
             var _gl = this.context;
             var objects = this.objects;
 
-            var extension;
+            var extension: ANGLE_instanced_arrays;
 
             if (geometry instanceof InstancedBufferGeometry)
             {
-                extension = this.extensions.get('ANGLE_instanced_arrays');
+                extension = this.extensions.get('ANGLE_instanced_arrays')  ;
 
                 if (extension === null)
                 {
@@ -942,7 +960,7 @@ namespace THREE
             var materialDefaultAttributeValues = material.defaultAttributeValues;
             for (var name in programAttributes)
             {
-                var programAttribute = programAttributes[name];
+                var programAttribute: number = programAttributes[name];
                 if (programAttribute >= 0)
                 {
                     var geometryAttribute = geometryAttributes[name];
@@ -1006,8 +1024,7 @@ namespace THREE
                             }
                             else
                             {
-                                state.enableAttribute(programAttribute);
-
+                                state.enableAttribute(programAttribute); 
                             }
                             _gl.bindBuffer(_gl.ARRAY_BUFFER, buffer);
                             _gl.vertexAttribPointer(programAttribute, size, type, normalized, stride * data.array.BYTES_PER_ELEMENT, (startIndex * stride + offset) * data.array.BYTES_PER_ELEMENT);
@@ -1103,7 +1120,7 @@ namespace THREE
         }
 
         // Rendering
-        public render(scene, camera, renderTarget?, forceClear?: boolean)
+        public render(scene: Scene, camera: Camera, renderTarget?: WebGLRenderTarget, forceClear?: boolean)
         {
             if (camera instanceof Camera === false)
             {
@@ -1210,14 +1227,14 @@ namespace THREE
                 this.backgroundBoxMesh.material.uniforms["tCube"].value = background;
                 this.backgroundBoxMesh.modelViewMatrix.multiplyMatrices(this.backgroundCamera2.matrixWorldInverse, this.backgroundBoxMesh.matrixWorld);
                 this.objects.update(this.backgroundBoxMesh);
-                this.renderBufferDirect(this.backgroundCamera2, null, this.backgroundBoxMesh.geometry, this.backgroundBoxMesh.material, this.backgroundBoxMesh, null);
+                this.renderBufferDirect(this.backgroundCamera2, null, this.backgroundBoxMesh.geometry as BufferGeometry, this.backgroundBoxMesh.material, this.backgroundBoxMesh, null);
 
             }
             else if (background instanceof Texture)
             {
                 this.backgroundPlaneMesh.material.map = background;
                 this.objects.update(this.backgroundPlaneMesh);
-                this.renderBufferDirect(this.backgroundCamera, null, this.backgroundPlaneMesh.geometry, this.backgroundPlaneMesh.material, this.backgroundPlaneMesh, null);
+                this.renderBufferDirect(this.backgroundCamera, null, this.backgroundPlaneMesh.geometry as BufferGeometry, this.backgroundPlaneMesh.material, this.backgroundPlaneMesh, null);
             }
 
             // 
@@ -1257,7 +1274,7 @@ namespace THREE
             // _gl.finish();
 
         }
-        private pushRenderItem(object: Object3D, geometry: IGeometry, material: IMaterial, z: number, group: IGeometryGroup)
+        private pushRenderItem(object: Object3D, geometry: BufferGeometry, material: IMaterial, z: number, group: IGeometryGroup)
         {
             var array: IRenderItem[];
             var index: number;
@@ -1302,7 +1319,7 @@ namespace THREE
         }
 
         // TODO Duplicated code (Frustum)
-        private isObjectViewable(object)
+        private isObjectViewable(object: Object3D)
         {
             var geometry = object.geometry;
 
@@ -1314,7 +1331,7 @@ namespace THREE
 
             return this.isSphereViewable(this._sphere);
         }
-        private isSpriteViewable(sprite)
+        private isSpriteViewable(sprite: Sprite)
         {
             this._sphere.center.set(0, 0, 0);
             this._sphere.radius = 0.7071067811865476;
@@ -1323,7 +1340,7 @@ namespace THREE
             return this.isSphereViewable(this._sphere);
 
         }
-        private isSphereViewable(sphere)
+        private isSphereViewable(sphere: Sphere)
         {
             if (!this._frustum.intersectsSphere(sphere)) return false;
 
@@ -1436,7 +1453,7 @@ namespace THREE
                 this.projectObject(children[i], camera);
             }
         }
-        private renderObjects(renderList, camera, fog, overrideMaterial?)
+        private renderObjects(renderList: IRenderItem[], camera: Camera, fog: IFog, overrideMaterial?)
         {
             for (var i = 0, l = renderList.length; i < l; i++)
             {
@@ -1467,9 +1484,9 @@ namespace THREE
                 }
             }
         }
-        private initMaterial(material: IMaterial, fog, object)
+        private initMaterial(material: IMaterial, fog: IFog, object: IObject3D)
         {
-            var materialProperties = this.properties.get(material) as TmpMaterialProperty;
+            var materialProperties = this.properties.get(material) as IMaterialPropertyCache;
 
             var parameters = this.programCache.getParameters(
                 material, this._lights, fog, this._clipping.numPlanes, object);
@@ -1504,7 +1521,7 @@ namespace THREE
             {
                 if (parameters.shaderID)
                 {
-                    var shader = ShaderLib[parameters.shaderID];
+                    var shader: IShader = ShaderLib[parameters.shaderID];
                     materialProperties.__webglShader = {
                         name: material.type,
                         uniforms: UniformsUtils.clone(shader.uniforms),
@@ -1519,8 +1536,7 @@ namespace THREE
                         uniforms: material.uniforms,
                         vertexShader: material.vertexShader,
                         fragmentShader: material.fragmentShader
-                    };
-
+                    }; 
                 }
 
                 material.__webglShader = materialProperties.__webglShader;
@@ -1563,8 +1579,7 @@ namespace THREE
             if (!(material instanceof ShaderMaterial) &&
                 !(material instanceof RawShaderMaterial) ||
                 material.clipping === true)
-            {
-
+            { 
                 materialProperties.numClippingPlanes = this._clipping.numPlanes;
                 uniforms.clippingPlanes = this._clipping.uniform;
             }
@@ -1590,20 +1605,17 @@ namespace THREE
                 uniforms.spotShadowMap.value = _lights.spotShadowMap;
                 uniforms.spotShadowMatrix.value = _lights.spotShadowMatrix;
                 uniforms.pointShadowMap.value = _lights.pointShadowMap;
-                uniforms.pointShadowMatrix.value = _lights.pointShadowMatrix;
-
+                uniforms.pointShadowMatrix.value = _lights.pointShadowMatrix; 
             }
 
-            var progUniforms = materialProperties.program.getUniforms(),
-                uniformsList =
-                    WebGLUniforms.seqWithValue(progUniforms.seq, uniforms);
+            var progUniforms = materialProperties.program.getUniforms();
+            var uniformsList = WebGLUniforms.seqWithValue(progUniforms.seq, uniforms);
 
             materialProperties.uniformsList = uniformsList;
-            materialProperties.dynamicUniforms =
-                WebGLUniforms.splitDynamic(uniformsList, uniforms);
+            materialProperties.dynamicUniforms =  WebGLUniforms.splitDynamic(uniformsList, uniforms);
 
         }
-        private setMaterial(material)
+        private setMaterial(material: IMaterial)
         {
             var state = this.state;
             var _gl = this.context;
@@ -1630,18 +1642,17 @@ namespace THREE
             state.setColorWrite(material.colorWrite);
             state.setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
         }
-        private setProgram(camera, fog, material: IMaterial, object)
+        private setProgram(camera: Camera, fog: IFog, material: IMaterial, object: IObject3D)
         {
             this._usedTextureUnits = 0;
             var _gl = this.context;
 
-            var materialProperties = this.properties.get(material);
+            var materialProperties: IMaterialPropertyCache = this.properties.get(material);
 
             if (this._clippingEnabled)
             {
                 if (this._localClippingEnabled || camera !== this._currentCamera)
                 {
-
                     var useCache =
                         camera === this._currentCamera &&
                         material.id === this._currentMaterialId;
@@ -1687,8 +1698,7 @@ namespace THREE
                 m_uniforms = materialProperties.__webglShader.uniforms;
 
             if (program.id !== this._currentProgram)
-            {
-
+            { 
                 _gl.useProgram(program.program);
                 this._currentProgram = program.id;
 
@@ -1710,13 +1720,11 @@ namespace THREE
                 p_uniforms.set(_gl, camera, 'projectionMatrix');
 
                 if (this.capabilities.logarithmicDepthBuffer)
-                {
-
+                { 
                     p_uniforms.setValue(_gl, 'logDepthBufFC',
                         2.0 / (Math.log(camera.far + 1.0) / Math.LN2));
                 }
-
-
+                 
                 if (camera !== this._currentCamera)
                 {
                     this._currentCamera = camera;
@@ -1740,10 +1748,8 @@ namespace THREE
                     var uCamPos = p_uniforms.map.cameraPosition;
 
                     if (uCamPos !== undefined)
-                    {
-
-                        uCamPos.setValue(_gl,
-                            this._vector3.setFromMatrixPosition(camera.matrixWorld));
+                    { 
+                        uCamPos.setValue(_gl, this._vector3.setFromMatrixPosition(camera.matrixWorld));
                     }
                 }
 
@@ -1753,10 +1759,8 @@ namespace THREE
                     material instanceof MeshStandardMaterial ||
                     material instanceof ShaderMaterial ||
                     material.skinning)
-                {
-
-                    p_uniforms.setValue(_gl, 'viewMatrix', camera.matrixWorldInverse);
-
+                { 
+                    p_uniforms.setValue(_gl, 'viewMatrix', camera.matrixWorldInverse); 
                 }
 
                 p_uniforms.set(_gl, this, 'toneMappingExposure');
@@ -1823,7 +1827,6 @@ namespace THREE
                 }
 
                 // refresh single material specific uniforms
-
                 if (material instanceof LineBasicMaterial)
                 {
                     this.refreshUniformsLine(m_uniforms, material);
@@ -1832,7 +1835,6 @@ namespace THREE
                 {
                     this.refreshUniformsLine(m_uniforms, material);
                     this.refreshUniformsDash(m_uniforms, material);
-
                 }
                 else if (material instanceof PointsMaterial)
                 {
@@ -1841,22 +1843,18 @@ namespace THREE
                 else if (material instanceof MeshLambertMaterial)
                 {
                     this.refreshUniformsLambert(m_uniforms, material);
-
                 }
                 else if (material instanceof MeshPhongMaterial)
                 {
                     this.refreshUniformsPhong(m_uniforms, material);
-
                 }
                 else if (material instanceof MeshPhysicalMaterial)
                 {
                     this.refreshUniformsPhysical(m_uniforms, material);
-
                 }
                 else if (material instanceof MeshStandardMaterial)
                 {
                     this.refreshUniformsStandard(m_uniforms, material);
-
                 }
                 else if (material instanceof MeshDepthMaterial)
                 {
@@ -1866,7 +1864,6 @@ namespace THREE
                         m_uniforms.displacementScale.value = material.displacementScale;
                         m_uniforms.displacementBias.value = material.displacementBias;
                     }
-
                 }
                 else if (material instanceof MeshNormalMaterial)
                 {
@@ -1875,7 +1872,6 @@ namespace THREE
 
                 WebGLUniforms.upload(
                     _gl, materialProperties.uniformsList, m_uniforms, this);
-
             }
 
             // common matrices 
@@ -1889,21 +1885,17 @@ namespace THREE
 
             if (dynUniforms !== null)
             {
-                WebGLUniforms.evalDynamic(
-                    dynUniforms, m_uniforms, object, camera);
-
+                WebGLUniforms.evalDynamic( dynUniforms, m_uniforms, object, camera); 
                 WebGLUniforms.upload(_gl, dynUniforms, m_uniforms, this);
             }
 
-            return program;
-
+            return program; 
         }
 
         // Uniforms (refresh uniforms objects)
-        private refreshUniformsCommon(uniforms, material)
+        private refreshUniformsCommon(uniforms: IUniforms, material: IMaterial)
         {
-            uniforms.opacity.value = material.opacity;
-
+            uniforms.opacity.value = material.opacity; 
             uniforms.diffuse.value = material.color;
 
             if (material.emissive)
@@ -1994,18 +1986,18 @@ namespace THREE
             uniforms.refractionRatio.value = material.refractionRatio;
 
         }
-        private refreshUniformsLine(uniforms, material)
+        private refreshUniformsLine(uniforms: IUniforms, material: LineBasicMaterial | LineDashedMaterial)
         {
             uniforms.diffuse.value = material.color;
             uniforms.opacity.value = material.opacity;
         }
-        private refreshUniformsDash(uniforms, material)
+        private refreshUniformsDash(uniforms: IUniforms, material: LineDashedMaterial)
         {
             uniforms.dashSize.value = material.dashSize;
             uniforms.totalSize.value = material.dashSize + material.gapSize;
             uniforms.scale.value = material.scale;
         }
-        private refreshUniformsPoints(uniforms, material)
+        private refreshUniformsPoints(uniforms: IUniforms, material: PointsMaterial)
         {
             uniforms.diffuse.value = material.color;
             uniforms.opacity.value = material.opacity;
@@ -2023,15 +2015,14 @@ namespace THREE
             }
 
         }
-        private refreshUniformsFog(uniforms, fog)
+        private refreshUniformsFog(uniforms: IUniforms, fog: IFog)
         {
             uniforms.fogColor.value = fog.color;
 
             if (fog instanceof Fog)
             {
                 uniforms.fogNear.value = fog.near;
-                uniforms.fogFar.value = fog.far;
-
+                uniforms.fogFar.value = fog.far; 
             }
             else if (fog instanceof FogExp2)
             {
@@ -2039,7 +2030,7 @@ namespace THREE
             }
 
         }
-        private refreshUniformsLambert(uniforms, material)
+        private refreshUniformsLambert(uniforms: IUniforms, material: MeshLambertMaterial)
         {
             if (material.lightMap)
             {
@@ -2052,7 +2043,7 @@ namespace THREE
                 uniforms.emissiveMap.value = material.emissiveMap;
             }
         }
-        private refreshUniformsPhong(uniforms, material)
+        private refreshUniformsPhong(uniforms: IUniforms, material: MeshPhongMaterial)
         {
             uniforms.specular.value = material.specular;
             uniforms.shininess.value = Math.max(material.shininess, 1e-4); // to prevent pow( 0.0, 0.0 )
@@ -2087,7 +2078,7 @@ namespace THREE
                 uniforms.displacementBias.value = material.displacementBias;
             }
         }
-        private refreshUniformsStandard(uniforms, material)
+        private refreshUniformsStandard(uniforms: IUniforms, material: MeshStandardMaterial)
         {
             uniforms.roughness.value = material.roughness;
             uniforms.metalness.value = material.metalness;
@@ -2138,20 +2129,18 @@ namespace THREE
                 uniforms.envMapIntensity.value = material.envMapIntensity;
             }
         }
-        private refreshUniformsPhysical(uniforms, material)
+        private refreshUniformsPhysical(uniforms: IUniforms, material: MeshPhysicalMaterial)
         {
             uniforms.clearCoat.value = material.clearCoat;
             uniforms.clearCoatRoughness.value = material.clearCoatRoughness;
 
-            this.refreshUniformsStandard(uniforms, material);
-
+            this.refreshUniformsStandard(uniforms, material); 
         }
 
         // If uniforms are marked as clean, they don't need to be loaded to the GPU.
-        private markUniformsLightsNeedsUpdate(uniforms, value)
+        private markUniformsLightsNeedsUpdate(uniforms: IUniforms, value: boolean)
         {
-            uniforms.ambientLightColor.needsUpdate = value;
-
+            uniforms.ambientLightColor.needsUpdate = value; 
             uniforms.directionalLights.needsUpdate = value;
             uniforms.pointLights.needsUpdate = value;
             uniforms.spotLights.needsUpdate = value;

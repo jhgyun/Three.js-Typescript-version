@@ -157,8 +157,8 @@ namespace THREE
         }
 
         private gl: WebGLRenderingContext;
-        private program: _WebGLProgram;
-        private renderer: WebGLRenderer;
+        public program: _WebGLProgram;
+        public renderer: WebGLRenderer;
         public code: string;
         private material;
         private parameters: IWebGLProgramParameters;
@@ -557,12 +557,9 @@ namespace THREE
 
         public id = WebGLProgram.programIdCount++;
         public diagnostics: any; 
-
-        /**
-        * {[index:string] : number}
-        */
-        private cachedAttributes;
-        public getAttributes()
+         
+        private cachedAttributes: { [index: string]: number }; 
+        public getAttributes(): { [index: string]: number }
         { 
             if (this.cachedAttributes === undefined)
             {
@@ -571,8 +568,8 @@ namespace THREE
             return this.cachedAttributes; 
         };
 
-        private cachedUniforms: WebGLUniforms; 
-        public getUniforms()
+        private cachedUniforms: WebGLUniforms;
+        public getUniforms(): WebGLUniforms
         {
             if (this.cachedUniforms === undefined)
             {

@@ -4,10 +4,8 @@
 
 namespace THREE
 {
-    export var UniformsLib = {
-
-        common: {
-
+    export var UniformsLib = { 
+        common: { 
             "diffuse": { value: new Color(0xeeeeee) },
             "opacity": { value: 1.0 },
 
@@ -24,18 +22,14 @@ namespace THREE
 
         },
 
-        aomap: {
-
+        aomap: { 
             "aoMap": { value: null },
-            "aoMapIntensity": { value: 1 }
-
+            "aoMapIntensity": { value: 1 } 
         },
 
-        lightmap: {
-
+        lightmap: { 
             "lightMap": { value: null },
-            "lightMapIntensity": { value: 1 }
-
+            "lightMapIntensity": { value: 1 } 
         },
 
         emissivemap: {

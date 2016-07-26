@@ -10,6 +10,19 @@
 
 namespace THREE
 { 
+    export interface GeometryMorphTargets
+    {
+        name?: string;
+        vertices?: Vector3[];
+    }
+    export interface GeometryMorphTargetNormals
+    {
+        faceNormals?: Vector3[];
+        vertexNormals?: {
+            a: Vector3, b: Vector3, c: Vector3
+        }[];
+    }
+
     export class Geometry extends EventDispatcher implements IGeometry
     {
         private _id = GeometryIdCount++;
@@ -22,13 +35,13 @@ namespace THREE
         vertices: Vector3[] = [];
         colors: Color[] = [];
         faces: Face3[] = [];
-        faceVertexUvs: Vector2[][][] = [[]];
+        faceVertexUvs: Vector2[][][] = [[]]; //0:uv1, 1:uv2
 
-        morphTargets = [];
-        morphNormals = [];
+        morphTargets: GeometryMorphTargets[] = [];
+        morphNormals: GeometryMorphTargetNormals[] = [];
 
         skinWeights: Vector4[] = [];
-        skinIndices = [];
+        skinIndices: Vector4[] = [];
 
         lineDistances: number[] = [];
 
@@ -89,7 +102,6 @@ namespace THREE
 
             return this;
         }
-
         rotateX(angle: number)
         {
             // rotate geometry around world x-axis  
@@ -99,7 +111,6 @@ namespace THREE
             this.applyMatrix(m1);
             return this;
         }
-
         rotateY(angle: number)
         {
             // rotate geometry around world y-axis  
@@ -109,7 +120,6 @@ namespace THREE
             this.applyMatrix(m1);
             return this;
         }
-
         rotateZ(angle: number)
         {
             // rotate geometry around world z-axis   
@@ -119,7 +129,6 @@ namespace THREE
             this.applyMatrix(m1);
             return this;
         }
-
         translate(x: number, y: number, z: number)
         {
             // translate geometry  
@@ -129,7 +138,6 @@ namespace THREE
             this.applyMatrix(m1);
             return this;
         }
-
         scale(x: number, y: number, z: number)
         {
             // scale geometry  
@@ -139,7 +147,6 @@ namespace THREE
             this.applyMatrix(m1);
             return this;
         }
-
         lookAt(vector: Vector3)
         {
             var obj: Object3D = Geometry[".obj.m1"] || (Geometry[".obj.m1"] = new Object3D()); 
@@ -147,7 +154,6 @@ namespace THREE
             obj.updateMatrix();
             this.applyMatrix(obj.matrix);
         }
-
         fromBufferGeometry(geometry: BufferGeometry)
         {
             var scope = this;
@@ -264,7 +270,6 @@ namespace THREE
             this.translate(offset.x, offset.y, offset.z);
             return offset;
         }
-
         normalize()
         {
             this.computeBoundingSphere();
@@ -283,7 +288,6 @@ namespace THREE
             this.applyMatrix(matrix);
             return this;
         }
-
         computeFaceNormals()
         {
             var cb = new Vector3(), ab = new Vector3();
@@ -381,7 +385,6 @@ namespace THREE
                 this.normalsNeedUpdate = true;
             }
         }
-
         computeMorphNormals()
         {
             var i: number, il: number, f: number, fl: number,
@@ -433,10 +436,11 @@ namespace THREE
                     this.morphNormals[i].faceNormals = [];
                     this.morphNormals[i].vertexNormals = [];
 
-                    var dstNormalsFace = this.morphNormals[i].faceNormals;
+                    var dstNormalsFace   = this.morphNormals[i].faceNormals;
                     var dstNormalsVertex = this.morphNormals[i].vertexNormals;
 
-                    var faceNormal, vertexNormals;
+                    var faceNormal: Vector3;
+                    var vertexNormals: { a: Vector3, b: Vector3, c: Vector3 };
 
                     for (f = 0, fl = this.faces.length; f < fl; f++)
                     {
@@ -457,7 +461,8 @@ namespace THREE
                 tmpGeo.computeVertexNormals();
 
                 // store morph normals 
-                var faceNormal, vertexNormals;
+                var faceNormal: Vector3;
+                var vertexNormals: { a: Vector3, b: Vector3, c: Vector3 };
 
                 for (f = 0, fl = this.faces.length; f < fl; f++)
                 {
@@ -480,7 +485,6 @@ namespace THREE
                 face.vertexNormals = face.__originalVertexNormals;
             }
         }
-
         computeLineDistances()
         {
             var d = 0;
@@ -503,7 +507,6 @@ namespace THREE
             }
             this.boundingBox.setFromPoints(this.vertices);
         }
-
         computeBoundingSphere()
         {
             if (this.boundingSphere === null)
@@ -512,7 +515,6 @@ namespace THREE
             }
             this.boundingSphere.setFromPoints(this.vertices);
         }
-
         merge(geometry: Geometry, matrix?: Matrix4, materialIndexOffset = 0)
         {
             var normalMatrix,
@@ -676,7 +678,6 @@ namespace THREE
             this.vertices = unique;
             return diff;
         }
-
         sortFacesByMaterialIndex()
         {
             var faces = this.faces;
@@ -715,7 +716,6 @@ namespace THREE
             if (newUvs1) this.faceVertexUvs[0] = newUvs1;
             if (newUvs2) this.faceVertexUvs[1] = newUvs2;
         }
-
         toJSON(...args)
         {
             var data: any = {
@@ -880,7 +880,6 @@ namespace THREE
             data.data.faces = faces;
             return data;
         }
-
         clone()
         {
             return new Geometry().copy(this);

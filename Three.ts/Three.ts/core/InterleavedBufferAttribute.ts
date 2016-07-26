@@ -27,7 +27,7 @@ namespace THREE
         { 
             return this.data.count; 
         }
-        get array()
+        get array(): BufferAttributeArray
         { 
             return this.data.array; 
         }

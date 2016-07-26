@@ -7,12 +7,14 @@
 
 namespace THREE
 {
+    export interface ILODLevel
+    {
+        distance?: number;
+        object?: Object3D;
+    }
     export class LOD extends Object3D
     {
-        private _level: {
-            distance: number,
-            object: Object3D
-        }[] = [];
+        private _level: ILODLevel[] = [];
 
         constructor()
         {

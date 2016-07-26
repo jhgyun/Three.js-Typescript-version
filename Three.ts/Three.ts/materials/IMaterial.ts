@@ -51,11 +51,13 @@
         roughness?: number;
         metalness?: number;
         emissive?: Color;
+        emissiveIntensity?: number;
         specular?: Color;
         shininess?: number;
         map?: Texture;
         alphaMap?: Texture;
         lightMap?: Texture;
+        lightMapIntensity?: number;
         bumpMap?: Texture;
         bumpScale?: number;
         normalMap?: Texture;
@@ -69,13 +71,15 @@
         specularMap?: Texture;
         envMap?: Texture;
         aoMap?: Texture;
+        aoMapIntensity?: number;
         reflectivity?: number;
+        refractionRatio?: number;
         size?: number;
         sizeAttenuation?: boolean;
         wireframe?: boolean;
         wireframeLinewidth?: number;
         clipping?: boolean;
-        uniforms?: any;
+        uniforms?: IUniforms;
         morphTargets?: boolean;
         dispose?();
 
@@ -90,11 +94,15 @@
         vertexShader?: string;
         fragmentShader?: string;
         program?;
-        numSupportedMorphTargets?;
-        morphNormals?;
+        numSupportedMorphTargets?: number;
+        morphNormals?: boolean;
         numSupportedMorphNormals?: number;
         skinning?;
         needsUpdate?: boolean;
         linewidth?: number;
+
+        defaultAttributeValues?: any;
+
+        materials?: IMaterial[];
     }
 }

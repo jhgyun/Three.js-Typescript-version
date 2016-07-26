@@ -51,9 +51,8 @@
             this.renderingShadows = false;
             this.resetGlobalState(); 
         };
-        public setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache, fromCache)
+        public setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache: IMaterialPropertyCache, fromCache?: boolean)
         {
-
             if (!this.localClippingEnabled ||
                 planes === null || planes.length === 0 ||
                 this.renderingShadows && !clipShadows)

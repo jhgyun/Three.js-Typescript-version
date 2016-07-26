@@ -26,15 +26,14 @@ namespace THREE
             return merged;
         },
 
-        clone: function (uniforms_src)
+        clone: function (uniforms_src: IUniforms)
         {
-            var uniforms_dst = {};
+            var uniforms_dst: IUniforms = {};
             for (var u in uniforms_src)
             {
                 uniforms_dst[u] = {};
                 for (var p in uniforms_src[u])
-                {
-
+                { 
                     var parameter_src = uniforms_src[u][p];
 
                     if (parameter_src instanceof Color ||
@@ -59,5 +58,5 @@ namespace THREE
             }
             return uniforms_dst;
         }
-    };
+    }; 
 }

@@ -61,13 +61,13 @@
     <TypeScriptCompile Include="core\EventDispatcher.ts" />
     <TypeScriptCompile Include="core\Face3.ts" />
     <TypeScriptCompile Include="core\Geometry.ts" />
-    <TypeScriptCompile Include="core\IBufferAttribute.ts" />
     <TypeScriptCompile Include="core\IGeometry.ts" />
     <TypeScriptCompile Include="core\InstancedBufferAttribute.ts" />
     <TypeScriptCompile Include="core\InstancedBufferGeometry.ts" />
     <TypeScriptCompile Include="core\InstancedInterleavedBuffer.ts" />
     <TypeScriptCompile Include="core\InterleavedBuffer.ts" />
     <TypeScriptCompile Include="core\InterleavedBufferAttribute.ts" />
+    <TypeScriptCompile Include="core\IObject3D.ts" />
     <TypeScriptCompile Include="core\Layers.ts" />
     <TypeScriptCompile Include="core\Object3D.ts" />
     <TypeScriptCompile Include="core\Raycaster.ts" />
@@ -216,6 +216,7 @@
     <TypeScriptCompile Include="objects\Skeleton.ts" />
     <TypeScriptCompile Include="objects\SkinnedMesh.ts" />
     <TypeScriptCompile Include="objects\Sprite.ts" />
+    <TypeScriptCompile Include="renderers\shaders\IUniforms.ts" />
     <TypeScriptCompile Include="renderers\shaders\ShaderChunk.ts" />
     <TypeScriptCompile Include="renderers\shaders\ShaderLib.ts" />
     <TypeScriptCompile Include="renderers\shaders\UniformsLib.ts" />

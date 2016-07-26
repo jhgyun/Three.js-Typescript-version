@@ -290,7 +290,7 @@ namespace THREE
                 }
                 else
                 {
-                    for (var i = 0, l = positions.length; i < l; i += 9)
+                    for (let i = 0, l = positions.length; i < l; i += 9)
                     {
                         a = i / 3;
                         b = a + 1;

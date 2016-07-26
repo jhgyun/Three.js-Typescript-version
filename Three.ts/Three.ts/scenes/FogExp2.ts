@@ -5,7 +5,7 @@
 
 namespace THREE
 {
-    export class FogExp2
+    export class FogExp2 implements IFog
     {
         name = '';
         color: Color;

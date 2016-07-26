@@ -60,4 +60,16 @@ namespace THREE
             return extension; 
         };
     }
+
+    export type GLenum = number;
+    export type GLint = number;
+    export type GLsizei = number;
+    export type GLuint = number;
+    export type GLintptr = number;
+    export interface ANGLE_instanced_arrays
+    {
+        drawArraysInstancedANGLE(mode: GLenum, first: GLint, count: GLsizei, primcount: GLsizei);
+        drawElementsInstancedANGLE(mode: GLenum, count: GLsizei, type: GLenum, offset: GLintptr, primcount: GLsizei);
+        vertexAttribDivisorANGLE(index: GLuint, divisor: GLuint); 
+    }
 }

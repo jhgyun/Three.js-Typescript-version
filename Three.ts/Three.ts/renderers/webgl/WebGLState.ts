@@ -113,7 +113,7 @@ namespace THREE
             return texture;
         }
 
-        public enableAttribute(attribute)
+        public enableAttribute(attribute: number)
         {
             this.newAttributes[attribute] = 1;
 
@@ -130,7 +130,7 @@ namespace THREE
             }
 
         }
-        public enableAttributeAndDivisor(attribute, meshPerAttribute, extension)
+        public enableAttributeAndDivisor(attribute: number, meshPerAttribute: number, extension)
         {
             this.newAttributes[attribute] = 1;
             if (this.enabledAttributes[attribute] === 0)
@@ -198,7 +198,7 @@ namespace THREE
             blendEquationAlpha?: number,
             blendSrcAlpha?: number,
             blendDstAlpha?: number,
-            premultipliedAlpha?: number)
+            premultipliedAlpha?: boolean)
         {
             var gl = this.gl;
 
@@ -220,15 +220,13 @@ namespace THREE
                     if (premultipliedAlpha)
                     {
                         gl.blendEquationSeparate(gl.FUNC_ADD, gl.FUNC_ADD);
-                        gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ONE, gl.ONE);
-
+                        gl.blendFuncSeparate(gl.ONE, gl.ONE, gl.ONE, gl.ONE); 
                     }
                     else
                     {
                         gl.blendEquation(gl.FUNC_ADD);
                         gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-                    }
-
+                    } 
                 }
                 else if (blending === SubtractiveBlending)
                 {

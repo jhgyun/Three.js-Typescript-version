@@ -5,7 +5,16 @@
 
 namespace THREE
 {
-    export class Fog
+    export interface IFog
+    {
+        name?: string;
+        color?: Color;
+        near?: number;
+        far?: number;
+        density?: number;
+    }
+
+    export class Fog implements IFog
     {
         name = '';
         color: Color;

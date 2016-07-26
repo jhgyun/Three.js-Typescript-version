@@ -62,11 +62,11 @@ namespace THREE
      // --- Uniform Classes --- 
     export class StructuredUniform
     {
-        id;
+        id: number | string;
         public seq: UniformType[] = [];
         public map: { [index: string]: UniformType } = {};
 
-        constructor(id: any)
+        constructor(id: number | string)
         {
             this.id = id;
             this.seq = [];
@@ -87,11 +87,11 @@ namespace THREE
     }  
     export class SingleUniform
     {
-        id;
+        id: number | string;
         addr: WebGLUniformLocation;
         setValue: (gl: WebGLRenderingContext, value, ...args) => void;
 
-        constructor(id, activeInfo, addr, singularSetter)
+        constructor(id: number | string, activeInfo: WebGLActiveInfo, addr: WebGLUniformLocation, singularSetter)
         {
             this.id = id;
             this.addr = addr;
@@ -101,11 +101,11 @@ namespace THREE
     } 
     export class PureArrayUniform
     {
-        id;
-        addr;
-        size;
+        id: number | string;
+        addr: WebGLUniformLocation;
+        size: number;
         setValue: (gl: WebGLRenderingContext, value, ...args) => void;
-        constructor(id: any, activeInfo, addr, pureArraySetter)
+        constructor(id: number | string, activeInfo: WebGLActiveInfo, addr: WebGLUniformLocation, pureArraySetter)
         {
             this.id = id;
             this.addr = addr;
@@ -114,7 +114,13 @@ namespace THREE
             // this.path = activeInfo.name; // DEBUG 
         }
     }
-     
+
+    export interface WebGLUniformsMap
+    {
+        [index: string]: UniformType;
+
+        cameraPosition?: UniformType;
+    }
     export class WebGLUniforms
     { 
         private static emptyTexture = new Texture();
@@ -122,10 +128,10 @@ namespace THREE
         private static arrayCacheF32: Float32Array[] = [];
         private static arrayCacheI32: Int32Array[] = [];
 
-        public id;
-        private gl;
+        public id: number | string;
+        private gl: WebGLRenderingContext;
         public seq: UniformType[] = [];
-        public map: { [index: string]: UniformType } = {};
+        public map: WebGLUniformsMap = {};
         private addr: WebGLUniformLocation;
         private size: number;
         private renderer: WebGLRenderer;
@@ -165,24 +171,22 @@ namespace THREE
             if (v !== undefined) this.setValue(gl, name, v);
         }
 
-        public static upload(gl, seq, values, renderer)
+        public static upload(gl: WebGLRenderingContext, seq: UniformType[], values: IUniforms, renderer: WebGLRenderer)
         {
             for (var i = 0, n = seq.length; i !== n; ++i)
             {
                 var u = seq[i],
                     v = values[u.id];
-
                 if (v.needsUpdate !== false)
                 {
                     // note: always updating when .needsUpdate is undefined
-
                     u.setValue(gl, v.value, renderer);
                 }
             }
         };
-        public static seqWithValue(seq: UniformType[], values)
+        public static seqWithValue(seq: UniformType[], values: IUniforms)
         {
-            var r = [];
+            var r: UniformType[] = [];
             for (var i = 0, n = seq.length; i !== n; ++i)
             {
                 var u = seq[i];
@@ -190,21 +194,19 @@ namespace THREE
             }
             return r;
         }
-        public static splitDynamic(seq, values)
+        public static splitDynamic(seq: UniformType[], values: IUniforms)
         {
-            var r = null,
+            var r: UniformType[] = null,
                 n = seq.length,
                 w = 0;
 
             for (var i = 0; i !== n; ++i)
-            {
-
+            { 
                 var u = seq[i],
                     v = values[u.id];
 
                 if (v && v.dynamic === true)
-                {
-
+                { 
                     if (r === null) r = [];
                     r.push(u);
                 }
@@ -222,7 +224,7 @@ namespace THREE
             return r;
 
         }
-        public static evalDynamic(seq, values, object, camera)
+        public static evalDynamic(seq: UniformType[], values: IUniforms, object, camera)
         {
             for (var i = 0, n = seq.length; i !== n; ++i)
             {
@@ -230,7 +232,6 @@ namespace THREE
                     f = v.onUpdateCallback;
                 if (f !== undefined) f.call(v, object, camera);
             }
-
         }
           
         // Array Caches (provide typed arrays for temporary by size)

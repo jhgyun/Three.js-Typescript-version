@@ -21,6 +21,7 @@
 namespace THREE
 {
     export class Object3D extends EventDispatcher
+        implements IObject3D
     {
         static DefaultUp = new Vector3(0, 1, 0);
         static DefaultMatrixAutoUpdate = true;
@@ -191,7 +192,6 @@ namespace THREE
             }
             return func.apply(this, arguments);
         }
-
         translateX(distance: number): this
         {
             var v1 = new Vector3(1, 0, 0);
@@ -202,7 +202,6 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-
         translateY(distance: number): this
         {
             var v1 = new Vector3(0, 1, 0);
@@ -212,7 +211,6 @@ namespace THREE
             }
             return func.apply(this, arguments);
         }
-
         translateZ(distance: number): this
         {
             var v1 = new Vector3(0, 0, 1);
@@ -222,7 +220,6 @@ namespace THREE
             }
             return func.apply(this, arguments);
         }
-
         localToWorld(vector: Vector3): Vector3
         {
             return vector.applyMatrix4(this.matrixWorld);
@@ -305,17 +302,14 @@ namespace THREE
                 this.children.splice(index, 1);
             }
         }
-
         getObjectById(id: number)
         {
             return this.getObjectByProperty('id', id);
         }
-
         getObjectByName(name: string)
         {
             return this.getObjectByProperty('name', name);
         }
-
         getObjectByProperty(name: string, value: any)
         {
             if (this[name] === value) return this;
@@ -333,7 +327,6 @@ namespace THREE
 
             return undefined;
         }
-
         getWorldPosition(optionalTarget?: Vector3)
         {
             var result = optionalTarget || new Vector3();
@@ -341,7 +334,6 @@ namespace THREE
             this.updateMatrixWorld(true);
             return result.setFromMatrixPosition(this.matrixWorld);
         }
-
         getWorldQuaternion(optionalTarget?: Quaternion): Quaternion
         {
             var position =   new Vector3() ;
@@ -360,7 +352,6 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-
         getWorldRotation(optionalTarget?: Euler): Euler
         {
             var quaternion =   new Quaternion() ;
@@ -375,7 +366,6 @@ namespace THREE
 
             return  func.apply(this, arguments);
         }
-
         getWorldScale(optionalTarget?: Vector3): Vector3
         {
             var position = new Vector3() ;
@@ -393,7 +383,6 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-
         getWorldDirection(optionalTarget?: Vector3)
         {
             var quaternion =   new Quaternion() ;
@@ -409,9 +398,7 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-
         raycast(raycaster: Raycaster, intersects) { }
-
         traverse(callback: (obj: Object3D) => any)
         {
             callback(this);
@@ -423,7 +410,6 @@ namespace THREE
                 children[i].traverse(callback);
             }
         }
-
         traverseVisible(callback: (obj: Object3D) => any)
         {
             if (this.visible === false) return;
@@ -435,7 +421,6 @@ namespace THREE
                 children[i].traverseVisible(callback);
             }
         }
-
         traverseAncestors(callback: (obj: Object3D) => any)
         {
             var parent = this.parent;
@@ -446,13 +431,11 @@ namespace THREE
                 parent.traverseAncestors(callback);
             }
         }
-
         updateMatrix()
         {
             this.matrix.compose(this.position, this.quaternion, this.scale);
             this.matrixWorldNeedsUpdate = true;
         }
-
         updateMatrixWorld(force?: boolean)
         {
             if (this.matrixAutoUpdate === true) this.updateMatrix();
@@ -478,7 +461,6 @@ namespace THREE
                 this.children[i].updateMatrixWorld(force);
             }
         }
-
         toJSON(meta)
         {
 
@@ -594,12 +576,10 @@ namespace THREE
             }
 
         }
-
         clone(recursive?: boolean): this
         {
             return new (this.constructor as any)().copy(this, recursive);
         }
-
         copy(source: Object3D, recursive?: boolean)
         {
             if (recursive === undefined) recursive = true;

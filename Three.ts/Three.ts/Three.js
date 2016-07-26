@@ -6642,7 +6642,8 @@ var THREE;
                     this.morphNormals[i].vertexNormals = [];
                     var dstNormalsFace = this.morphNormals[i].faceNormals;
                     var dstNormalsVertex = this.morphNormals[i].vertexNormals;
-                    var faceNormal, vertexNormals;
+                    var faceNormal;
+                    var vertexNormals;
                     for (f = 0, fl = this.faces.length; f < fl; f++) {
                         faceNormal = new THREE.Vector3();
                         vertexNormals = { a: new THREE.Vector3(), b: new THREE.Vector3(), c: new THREE.Vector3() };
@@ -6654,7 +6655,8 @@ var THREE;
                 tmpGeo.vertices = this.morphTargets[i].vertices;
                 tmpGeo.computeFaceNormals();
                 tmpGeo.computeVertexNormals();
-                var faceNormal, vertexNormals;
+                var faceNormal;
+                var vertexNormals;
                 for (f = 0, fl = this.faces.length; f < fl; f++) {
                     face = this.faces[f];
                     faceNormal = morphNormals.faceNormals[f];
@@ -7310,10 +7312,10 @@ var THREE;
                         var group = groups[j];
                         var start = group.start;
                         var count = group.count;
-                        for (var i = start, il = start + count; i < il; i += 3) {
-                            vA = indices[i + 0] * 3;
-                            vB = indices[i + 1] * 3;
-                            vC = indices[i + 2] * 3;
+                        for (var i_2 = start, il_2 = start + count; i_2 < il_2; i_2 += 3) {
+                            vA = indices[i_2 + 0] * 3;
+                            vB = indices[i_2 + 1] * 3;
+                            vC = indices[i_2 + 2] * 3;
                             pA.fromArray(positions, vA);
                             pB.fromArray(positions, vB);
                             pC.fromArray(positions, vC);
@@ -7804,12 +7806,12 @@ var THREE;
 (function (THREE) {
     var InterleavedBuffer = (function () {
         function InterleavedBuffer(array, stride) {
-            this.array = array;
-            this.stride = stride;
             this.uuid = THREE.Math.generateUUID();
             this.dynamic = false;
             this.updateRange = { offset: 0, count: -1 };
             this.version = 0;
+            this.array = array;
+            this.stride = stride;
         }
         ;
         Object.defineProperty(InterleavedBuffer.prototype, "length", {
@@ -11553,8 +11555,8 @@ var THREE;
                     }
                 }
                 else {
-                    for (var i = 0, l = positions.length; i < l; i += 9) {
-                        a = i / 3;
+                    for (var i_3 = 0, l_1 = positions.length; i_3 < l_1; i_3 += 9) {
+                        a = i_3 / 3;
                         b = a + 1;
                         c = a + 2;
                         intersection = Mesh.checkBufferGeometryIntersection(this, raycaster, ray, positions, uvs, a, b, c);
@@ -12234,9 +12236,9 @@ var THREE;
                 var objPos = objGeometry.attributes.position;
                 var objNorm = objGeometry.attributes.normal;
                 var idx = 0;
-                for (var j = 0, jl = objPos.count; j < jl; j++) {
-                    v1.set(objPos.getX(j), objPos.getY(j), objPos.getZ(j)).applyMatrix4(matrixWorld);
-                    v2.set(objNorm.getX(j), objNorm.getY(j), objNorm.getZ(j));
+                for (var j_1 = 0, jl_1 = objPos.count; j_1 < jl_1; j_1++) {
+                    v1.set(objPos.getX(j_1), objPos.getY(j_1), objPos.getZ(j_1)).applyMatrix4(matrixWorld);
+                    v2.set(objNorm.getX(j_1), objNorm.getY(j_1), objNorm.getZ(j_1));
                     v2.applyMatrix3(normalMatrix).normalize().multiplyScalar(this.size).add(v1);
                     position.setXYZ(idx, v1.x, v1.y, v1.z);
                     idx = idx + 1;
@@ -13818,8 +13820,8 @@ var THREE;
                     console.warn('THREE.JSONLoader: "morphColors" no longer supported. Using them as face colors.');
                     var faces = geometry.faces;
                     var morphColors = json.morphColors[0].colors;
-                    for (var i_2 = 0, l_1 = faces.length; i_2 < l_1; i_2++) {
-                        faces[i_2].color.fromArray(morphColors, i_2 * 3);
+                    for (var i_4 = 0, l_2 = faces.length; i_4 < l_2; i_4++) {
+                        faces[i_4].color.fromArray(morphColors, i_4 * 3);
                     }
                 }
             }
@@ -18851,7 +18853,8 @@ var THREE;
                 buffers.uv = _gl.createBuffer();
             if (object.hasColors && !buffers.color)
                 buffers.color = _gl.createBuffer();
-            var attributes = program.getAttributes();
+            var attributes;
+            attributes = program.getAttributes();
             if (object.hasPositions) {
                 _gl.bindBuffer(_gl.ARRAY_BUFFER, buffers.position);
                 _gl.bufferData(_gl.ARRAY_BUFFER, object.positionArray, _gl.DYNAMIC_DRAW);
@@ -18913,9 +18916,9 @@ var THREE;
             var morphTargetInfluences = object.morphTargetInfluences;
             if (morphTargetInfluences !== undefined) {
                 var activeInfluences = [];
-                for (var i_3 = 0, l_2 = morphTargetInfluences.length; i_3 < l_2; i_3++) {
-                    var influence = morphTargetInfluences[i_3];
-                    activeInfluences.push([influence, i_3]);
+                for (var i_5 = 0, l_3 = morphTargetInfluences.length; i_5 < l_3; i_5++) {
+                    var influence = morphTargetInfluences[i_5];
+                    activeInfluences.push([influence, i_5]);
                 }
                 activeInfluences.sort(this.absNumericalSort);
                 if (activeInfluences.length > 8) {
@@ -18923,10 +18926,10 @@ var THREE;
                 }
                 var morphAttributes = geometry.morphAttributes;
                 for (var i = 0, l = activeInfluences.length; i < l; i++) {
-                    var influence = activeInfluences[i];
-                    this.morphInfluences[i] = influence[0];
-                    if (influence[0] !== 0) {
-                        var index_1 = influence[1];
+                    var influence_1 = activeInfluences[i];
+                    this.morphInfluences[i] = influence_1[0];
+                    if (influence_1[0] !== 0) {
+                        var index_1 = influence_1[1];
                         if (material.morphTargets === true && morphAttributes.position)
                             geometry.addAttribute('morphTarget' + i, morphAttributes.position[index_1]);
                         if (material.morphNormals === true && morphAttributes.normal)
@@ -19359,8 +19362,8 @@ var THREE;
                 }
             }
             var children = object.children;
-            for (var i_4 = 0, l_3 = children.length; i_4 < l_3; i_4++) {
-                this.projectObject(children[i_4], camera);
+            for (var i_6 = 0, l_4 = children.length; i_6 < l_4; i_6++) {
+                this.projectObject(children[i_6], camera);
             }
         };
         WebGLRenderer.prototype.renderObjects = function (renderList, camera, fog, overrideMaterial) {
@@ -19466,10 +19469,10 @@ var THREE;
                 uniforms.pointShadowMap.value = _lights.pointShadowMap;
                 uniforms.pointShadowMatrix.value = _lights.pointShadowMatrix;
             }
-            var progUniforms = materialProperties.program.getUniforms(), uniformsList = THREE.WebGLUniforms.seqWithValue(progUniforms.seq, uniforms);
+            var progUniforms = materialProperties.program.getUniforms();
+            var uniformsList = THREE.WebGLUniforms.seqWithValue(progUniforms.seq, uniforms);
             materialProperties.uniformsList = uniformsList;
-            materialProperties.dynamicUniforms =
-                THREE.WebGLUniforms.splitDynamic(uniformsList, uniforms);
+            materialProperties.dynamicUniforms = THREE.WebGLUniforms.splitDynamic(uniformsList, uniforms);
         };
         WebGLRenderer.prototype.setMaterial = function (material) {
             var state = this.state;
@@ -21106,8 +21109,8 @@ var THREE;
                 }
             }
             else {
-                var array = attributes.position.array;
-                for (var i = 0, l = (array.length / 3) - 1; i < l; i += 3) {
+                var array_1 = attributes.position.array;
+                for (var i = 0, l = (array_1.length / 3) - 1; i < l; i += 3) {
                     var a = i + 0;
                     var b = i + 1;
                     var c = i + 2;
@@ -21577,7 +21580,8 @@ var THREE;
         ;
         WebGLPrograms.prototype.allocateBones = function (object) {
             var capabilities = this.capabilities;
-            if (capabilities.floatVertexTextures && object && object.skeleton && object.skeleton.useVertexTexture) {
+            if (capabilities.floatVertexTextures
+                && object && object.skeleton && object.skeleton.useVertexTexture) {
                 return 1024;
             }
             else {
@@ -21719,7 +21723,6 @@ var THREE;
             }
             return program;
         };
-        ;
         WebGLPrograms.prototype.releaseProgram = function (program) {
             var programs = this.programs;
             if (--program.usedTimes === 0) {
@@ -21729,7 +21732,6 @@ var THREE;
                 program.destroy();
             }
         };
-        ;
         return WebGLPrograms;
     }());
     THREE.WebGLPrograms = WebGLPrograms;

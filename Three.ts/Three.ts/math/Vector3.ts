@@ -464,11 +464,11 @@ namespace THREE
             this.z = sinPhiRadius * Math.cos(s.theta); 
             return this; 
         }
-        setFromMatrixPosition(m: Matrix3| Matrix4)
+        setFromMatrixPosition(m: Matrix4)
         { 
             return this.setFromMatrixColumn(m, 3); 
         }
-        setFromMatrixScale(m: Matrix3 | Matrix4)
+        setFromMatrixScale(m: Matrix4)
         { 
             var sx = this.setFromMatrixColumn(m, 0).length();
             var sy = this.setFromMatrixColumn(m, 1).length();
@@ -478,7 +478,7 @@ namespace THREE
             this.z = sz; 
             return this; 
         }
-        setFromMatrixColumn(m: Matrix3 | Matrix4, index)
+        setFromMatrixColumn(m: Matrix4, index)
         { 
             return this.fromArray(m.elements, index * 4); 
         }

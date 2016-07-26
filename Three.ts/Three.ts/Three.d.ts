@@ -663,9 +663,9 @@ declare namespace THREE {
             radius: number;
             theta: number;
         }): this;
-        setFromMatrixPosition(m: Matrix3 | Matrix4): this;
-        setFromMatrixScale(m: Matrix3 | Matrix4): this;
-        setFromMatrixColumn(m: Matrix3 | Matrix4, index: any): this;
+        setFromMatrixPosition(m: Matrix4): this;
+        setFromMatrixScale(m: Matrix4): this;
+        setFromMatrixColumn(m: Matrix4, index: any): this;
         equals(v: any): boolean;
         fromArray(array: ArrayLike<number>, offset?: number): this;
         toArray(array?: ArrayLike<number>, offset?: number): ArrayLike<number>;
@@ -1054,7 +1054,7 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    class Object3D extends EventDispatcher {
+    class Object3D extends EventDispatcher implements IObject3D {
         static DefaultUp: Vector3;
         static DefaultMatrixAutoUpdate: boolean;
         private _id;
@@ -1212,6 +1212,7 @@ declare namespace THREE {
     class Camera extends Object3D {
         matrixWorldInverse: Matrix4;
         projectionMatrix: Matrix4;
+        far: number;
         constructor();
         getWorldDirection(optionalTarget?: Vector3): Vector3;
         lookAt(vector: Vector3): void;
@@ -1302,7 +1303,19 @@ declare namespace THREE {
 }
 declare namespace THREE {
     type BufferAttributeArray = Float64Array | Float32Array | Uint16Array | Uint32Array | Uint8Array | Int8Array | Int16Array | Int32Array | Uint8ClampedArray;
-    class BufferAttribute {
+    interface IBufferAttribute {
+        uuid: string;
+        array?: BufferAttributeArray;
+        itemSize?: number;
+        dynamic?: boolean;
+        updateRange?: {
+            offset: number;
+            count: number;
+        };
+        version?: number;
+        normalized?: boolean;
+    }
+    class BufferAttribute implements IBufferAttribute {
         uuid: string;
         array: BufferAttributeArray;
         itemSize: number;
@@ -1372,6 +1385,18 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface GeometryMorphTargets {
+        name?: string;
+        vertices?: Vector3[];
+    }
+    interface GeometryMorphTargetNormals {
+        faceNormals?: Vector3[];
+        vertexNormals?: {
+            a: Vector3;
+            b: Vector3;
+            c: Vector3;
+        }[];
+    }
     class Geometry extends EventDispatcher implements IGeometry {
         private _id;
         uuid: string;
@@ -1381,10 +1406,10 @@ declare namespace THREE {
         colors: Color[];
         faces: Face3[];
         faceVertexUvs: Vector2[][][];
-        morphTargets: any[];
-        morphNormals: any[];
+        morphTargets: GeometryMorphTargets[];
+        morphNormals: GeometryMorphTargetNormals[];
         skinWeights: Vector4[];
-        skinIndices: any[];
+        skinIndices: Vector4[];
         lineDistances: number[];
         boundingBox: Box3;
         boundingSphere: Sphere;
@@ -1444,6 +1469,12 @@ declare namespace THREE {
         uv2?: BufferAttribute;
         lineDistance?: BufferAttribute;
         skinWeight?: BufferAttribute;
+        vertices?: BufferAttribute;
+        vertexNormals?: BufferAttribute;
+    }
+    interface IBufferGeometryMorphAttributes {
+        position?: BufferAttribute[];
+        normal?: BufferAttribute[];
     }
     class BufferGeometry extends EventDispatcher implements IGeometry {
         uuid: string;
@@ -1451,7 +1482,7 @@ declare namespace THREE {
         type: string;
         index: BufferAttribute;
         attributes: IBufferGeometryAttributes;
-        morphAttributes: IBufferGeometryAttributes;
+        morphAttributes: IBufferGeometryMorphAttributes;
         groups: IGeometryGroup[];
         boundingBox: Box3;
         boundingSphere: any;
@@ -1466,7 +1497,7 @@ declare namespace THREE {
         constructor();
         getIndex(): BufferAttribute;
         setIndex(index: any): void;
-        addAttribute(name: string, attribute: BufferAttributeType): this;
+        addAttribute(name: string, attribute: BufferAttribute): this;
         getAttribute(name: string): any;
         removeAttribute(name: string): this;
         addGroup(start: number, count: number, materialIndex?: number): void;
@@ -1513,6 +1544,11 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface IDirectGeometryMorphTargets {
+        [index: string]: Vector3[][];
+        position?: Vector3[][];
+        normal?: Vector3[][];
+    }
     class DirectGeometry extends EventDispatcher implements IGeometry {
         private _id;
         id: number;
@@ -1526,9 +1562,9 @@ declare namespace THREE {
         uvs: Vector2[];
         uvs2: any[];
         groups: any[];
-        morphTargets: any;
-        skinWeights: any[];
-        skinIndices: any[];
+        morphTargets: IDirectGeometryMorphTargets;
+        skinWeights: Vector4[];
+        skinIndices: Vector4[];
         boundingBox: Box3;
         boundingSphere: Sphere;
         verticesNeedUpdate: boolean;
@@ -1591,8 +1627,8 @@ declare namespace THREE {
         id?: number;
         parameters?: any;
         index?: BufferAttribute;
-        attributes?: IBufferGeometryAttributes;
-        morphAttributes?: IBufferGeometryAttributes;
+        attributes?: any;
+        morphAttributes?: any;
         groups?: IGeometryGroup[];
         indices?: any[];
         normals?: Vector3[];
@@ -1602,6 +1638,7 @@ declare namespace THREE {
         computeBoundingSphere?(): any;
         __directGeometry?: DirectGeometry;
         computeGroups?(geometry: IGeometry): any;
+        maxInstancedCount?: number;
     }
 }
 declare namespace THREE {
@@ -1620,18 +1657,18 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    class InterleavedBuffer {
-        array: any;
-        stride: number;
+    class InterleavedBuffer implements IBufferAttribute {
         uuid: string;
         dynamic: boolean;
         updateRange: {
             offset: number;
             count: number;
         };
+        array: BufferAttributeArray;
         version: number;
-        constructor(array?: any, stride?: number);
-        length: any;
+        stride: number;
+        constructor(array?: BufferAttributeArray, stride?: number);
+        length: number;
         count: number;
         needsUpdate: any;
         setDynamic(value: boolean): this;
@@ -1658,18 +1695,56 @@ declare namespace THREE {
         normalized: boolean;
         constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized?: boolean);
         count: number;
-        array: any;
+        array: BufferAttributeArray;
         setX(index: number, x: number): this;
         setY(index: number, y: number): this;
         setZ(index: number, z: number): this;
         setW(index: number, w: number): this;
-        getX(index: number): any;
-        getY(index: number): any;
-        getZ(index: number): any;
-        getW(index: number): any;
+        getX(index: number): number;
+        getY(index: number): number;
+        getZ(index: number): number;
+        getW(index: number): number;
         setXY(index: number, x: number, y: number): this;
         setXYZ(index: number, x: number, y: number, z: number): this;
         setXYZW(index: number, x: number, y: number, z: number, w: number): this;
+    }
+}
+declare namespace THREE {
+    interface IObject3D extends EventDispatcher {
+        id?: number;
+        uuid?: string;
+        name?: string;
+        type?: string;
+        parent?: Object3D;
+        children?: Object3D[];
+        up?: Vector3;
+        geometry?: IGeometry;
+        material?: IMaterial;
+        matrix?: Matrix4;
+        matrixWorld?: Matrix4;
+        matrixAutoUpdate?: boolean;
+        matrixWorldNeedsUpdate?: boolean;
+        layers?: Layers;
+        visible?: boolean;
+        castShadow?: boolean;
+        receiveShadow?: boolean;
+        frustumCulled?: boolean;
+        renderOrder?: number;
+        userData: any;
+        skin?: any;
+        lensFlares?: any[];
+        positionScreen?: Vector3;
+        customUpdateCallback?: any;
+        levels?: ILODLevel[];
+        drawMode?: number;
+        morphTargetBase?: any;
+        morphTargetInfluences?: number[];
+        morphTargetDictionary?: any;
+        bindMode?: string;
+        bindMatrix?: Matrix4;
+        bindMatrixInverse?: Matrix4;
+        skeleton?: Skeleton;
+        z?: number;
     }
 }
 declare namespace THREE {
@@ -2296,6 +2371,15 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class ImmediateRenderObject extends Object3D {
+        hasPositions: boolean;
+        hasNormals: boolean;
+        hasUvs: boolean;
+        hasColors: boolean;
+        positionArray: ArrayBufferView;
+        normalArray: ArrayBufferView;
+        uvArray: ArrayBufferView;
+        colorArray: ArrayBufferView;
+        count: number;
         render: (renderCallback) => any;
         constructor(material: any);
     }
@@ -2559,7 +2643,7 @@ declare namespace THREE {
         load(url: any, onLoad: any, onProgress: any, onError: any): void;
         setTextures(value: any): void;
         getTexture(name: any): any;
-        parse(json: any): any;
+        parse(json: any): IMaterial;
     }
 }
 declare namespace THREE {
@@ -2645,11 +2729,13 @@ declare namespace THREE {
         roughness?: number;
         metalness?: number;
         emissive?: Color;
+        emissiveIntensity?: number;
         specular?: Color;
         shininess?: number;
         map?: Texture;
         alphaMap?: Texture;
         lightMap?: Texture;
+        lightMapIntensity?: number;
         bumpMap?: Texture;
         bumpScale?: number;
         normalMap?: Texture;
@@ -2663,13 +2749,15 @@ declare namespace THREE {
         specularMap?: Texture;
         envMap?: Texture;
         aoMap?: Texture;
+        aoMapIntensity?: number;
         reflectivity?: number;
+        refractionRatio?: number;
         size?: number;
         sizeAttenuation?: boolean;
         wireframe?: boolean;
         wireframeLinewidth?: number;
         clipping?: boolean;
-        uniforms?: any;
+        uniforms?: IUniforms;
         morphTargets?: boolean;
         dispose?(): any;
         __webglShader?: any;
@@ -2682,12 +2770,14 @@ declare namespace THREE {
         vertexShader?: string;
         fragmentShader?: string;
         program?: any;
-        numSupportedMorphTargets?: any;
-        morphNormals?: any;
+        numSupportedMorphTargets?: number;
+        morphNormals?: boolean;
         numSupportedMorphNormals?: number;
         skinning?: any;
         needsUpdate?: boolean;
         linewidth?: number;
+        defaultAttributeValues?: any;
+        materials?: IMaterial[];
     }
 }
 declare namespace THREE {
@@ -3388,13 +3478,14 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface ILODLevel {
+        distance?: number;
+        object?: Object3D;
+    }
     class LOD extends Object3D {
         private _level;
         constructor();
-        levels: {
-            distance: number;
-            object: Object3D;
-        }[];
+        levels: ILODLevel[];
         copy(source: LOD): this;
         addLevel(object: Object3D, distance: number): void;
         getObjectForDistance(distance: number): Object3D;
@@ -3458,6 +3549,113 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface IUniformsValueBase {
+        value?: any;
+        needsUpdate?: boolean;
+        dynamic?: boolean;
+        onUpdateCallback?: (object, camera) => any;
+    }
+    interface IUniformsValue<T> extends IUniformsValueBase {
+        value?: T;
+    }
+    interface IUniformsTextureValue extends IUniformsValue<Texture> {
+    }
+    interface IUniformsValueProperties<T, S> extends IUniformsValue<T> {
+        properties?: S;
+    }
+    interface IUniforms {
+        diffuse?: IUniformsValue<Color>;
+        emissive?: IUniformsValue<Color>;
+        opacity?: IUniformsValue<number>;
+        map?: IUniformsTextureValue;
+        offsetRepeat?: IUniformsValue<Vector4>;
+        specularMap?: IUniformsTextureValue;
+        alphaMap?: IUniformsTextureValue;
+        envMap?: IUniformsTextureValue;
+        flipEnvMap?: IUniformsValue<number>;
+        reflectivity?: IUniformsValue<number>;
+        refractionRatio?: IUniformsValue<number>;
+        emissiveMap?: IUniformsTextureValue;
+        aoMap?: IUniformsTextureValue;
+        aoMapIntensity?: IUniformsValue<number>;
+        lightMap?: IUniformsTextureValue;
+        lightMapIntensity?: IUniformsValue<number>;
+        bumpMap?: IUniformsTextureValue;
+        bumpScale?: IUniformsValue<number>;
+        normalMap?: IUniformsTextureValue;
+        normalScale?: IUniformsValue<Vector2>;
+        displacementMap?: IUniformsTextureValue;
+        displacementScale?: IUniformsValue<number>;
+        displacementBias?: IUniformsValue<number>;
+        roughnessMap?: IUniformsTextureValue;
+        metalnessMap?: IUniformsTextureValue;
+        fogDensity?: IUniformsValue<number>;
+        fogNear?: IUniformsValue<number>;
+        fogFar?: IUniformsValue<number>;
+        fogColor?: IUniformsValue<Color>;
+        ambientLightColor?: IUniformsValue<any[]>;
+        directionalLights?: IUniformsValueProperties<any[], {
+            direction: any;
+            color: any;
+            shadow: any;
+            shadowBias: any;
+            shadowRadius: any;
+            shadowMapSize: any;
+        }>;
+        directionalShadowMap?: IUniformsValue<Texture[]>;
+        directionalShadowMatrix?: IUniformsValue<any[]>;
+        spotLights?: IUniformsValueProperties<any[], {
+            color: any;
+            position: any;
+            direction: any;
+            distance: any;
+            coneCos: any;
+            penumbraCos: any;
+            decay: any;
+            shadow: any;
+            shadowBias: any;
+            shadowRadius: any;
+            shadowMapSize: any;
+        }>;
+        spotShadowMap?: IUniformsValue<Texture[]>;
+        spotShadowMatrix?: IUniformsValue<any[]>;
+        pointLights?: IUniformsValueProperties<any[], {
+            color?: any;
+            position?: any;
+            decay?: any;
+            distance?: any;
+            shadow?: any;
+            shadowBias?: any;
+            shadowRadius?: any;
+            shadowMapSize?: any;
+        }>;
+        pointShadowMap?: IUniformsValue<Texture[]>;
+        pointShadowMatrix?: IUniformsValue<any[]>;
+        hemisphereLights?: IUniformsValueProperties<any[], {
+            direction?: any;
+            skyColor?: any;
+            groundColor?: any;
+        }>;
+        size?: IUniformsValue<number>;
+        scale?: IUniformsValue<number>;
+        clearCoat?: IUniformsValue<number>;
+        clearCoatRoughness?: IUniformsValue<number>;
+        dashSize?: IUniformsValue<number>;
+        totalSize?: IUniformsValue<number>;
+        specular?: IUniformsValue<Color>;
+        shininess?: IUniformsValue<number>;
+        roughness?: IUniformsValue<number>;
+        metalness?: IUniformsValue<number>;
+        envMapIntensity?: IUniformsValue<number>;
+        tCube?: IUniformsValue<any>;
+        tFlip?: IUniformsValue<number>;
+        tEquirect?: IUniformsValue<any>;
+        lightPos?: IUniformsValue<Vector3>;
+        clippingPlanes?: IUniformsValue<Float32Array>;
+        [index: string]: IUniformsValueBase;
+    }
+}
+declare namespace THREE {
     var ShaderChunk: {};
 }
 declare namespace THREE {
@@ -3501,7 +3699,7 @@ declare namespace THREE {
 declare namespace THREE {
     var UniformsUtils: {
         merge: (uniforms: any) => {};
-        clone: (uniforms_src: any) => {};
+        clone: (uniforms_src: IUniforms) => IUniforms;
     };
 }
 declare namespace THREE {
@@ -3786,6 +3984,11 @@ declare namespace THREE {
             fragmentShader: any;
         };
     };
+    interface IShader {
+        uniforms?: IUniforms;
+        vertexShader?: string;
+        fragmentShader?: string;
+    }
 }
 declare namespace THREE {
     function paramThreeToGL(renderer: WebGLRenderer, p: number): any;
@@ -3823,6 +4026,20 @@ declare namespace THREE {
         pointShadowMatrix: Matrix4[];
         hemi: ILightUniforms[];
         shadows: Light[];
+    }
+    interface IMaterialPropertyCache {
+        program?: WebGLProgram;
+        __webglShader?: {
+            name: string;
+            uniforms: IUniforms;
+            vertexShader: string;
+            fragmentShader: string;
+        };
+        numClippingPlanes?: number;
+        lightsHash?: string;
+        uniformsList?: UniformType[];
+        dynamicUniforms?: UniformType[];
+        clippingState?: Float32Array;
     }
     interface WebGLRendererParams {
         canvas?: HTMLCanvasElement;
@@ -3954,13 +4171,13 @@ declare namespace THREE {
         private onMaterialDispose(event);
         private deallocateMaterial(material);
         private releaseMaterialProgramReference(material);
-        renderBufferImmediate(object: any, program: WebGLProgram, material: IMaterial): void;
-        renderBufferDirect(camera: any, fog: any, geometry: any, material: any, object: any, group: IGeometryGroup): void;
-        setupVertexAttributes(material: any, program: any, geometry: any, startIndex?: any): void;
+        renderBufferImmediate(object: ImmediateRenderObject, program: WebGLProgram, material: IMaterial): void;
+        renderBufferDirect(camera: Camera, fog: IFog, geometry: BufferGeometry, material: IMaterial, object: IObject3D, group: IGeometryGroup): void;
+        setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: IGeometry, startIndex?: number): void;
         private absNumericalSort(a, b);
         private painterSortStable(a, b);
         private reversePainterSortStable(a, b);
-        render(scene: any, camera: any, renderTarget?: any, forceClear?: boolean): void;
+        render(scene: Scene, camera: Camera, renderTarget?: WebGLRenderTarget, forceClear?: boolean): void;
         private pushRenderItem(object, geometry, material, z, group);
         private isObjectViewable(object);
         private isSpriteViewable(sprite);
@@ -4130,7 +4347,7 @@ declare namespace THREE {
         init(planes: Plane[], enableLocalClipping: boolean, camera: Camera): boolean;
         beginShadows(): void;
         endShadows(): void;
-        setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache: any, fromCache: any): void;
+        setState(planes: Plane[], clipShadows: boolean, camera: Camera, cache: IMaterialPropertyCache, fromCache?: boolean): void;
         resetGlobalState(): void;
         projectPlanes(planes: Plane[], camera?: Camera, dstOffset?: number, skipTransform?: boolean): Float32Array;
     }
@@ -4141,6 +4358,16 @@ declare namespace THREE {
         private gl;
         constructor(gl: WebGLRenderingContext);
         get(name: string): any;
+    }
+    type GLenum = number;
+    type GLint = number;
+    type GLsizei = number;
+    type GLuint = number;
+    type GLintptr = number;
+    interface ANGLE_instanced_arrays {
+        drawArraysInstancedANGLE(mode: GLenum, first: GLint, count: GLsizei, primcount: GLsizei): any;
+        drawElementsInstancedANGLE(mode: GLenum, count: GLsizei, type: GLenum, offset: GLintptr, primcount: GLsizei): any;
+        vertexAttribDivisorANGLE(index: GLuint, divisor: GLuint): any;
     }
 }
 declare namespace THREE {
@@ -4210,7 +4437,7 @@ declare namespace THREE {
         private createBuffer(attributeProperties, data, bufferType);
         private updateBuffer(attributeProperties, data, bufferType);
         private checkEdge(edges, a, b);
-        getAttributeBuffer(attribute: BufferAttribute | InterleavedBufferAttribute): WebGLBuffer;
+        getAttributeBuffer(attribute: BufferAttribute): WebGLBuffer;
         getWireframeAttribute(geometry: BufferGeometry): BufferAttribute;
         update(object: Object3D): BufferGeometry;
     }
@@ -4231,8 +4458,8 @@ declare namespace THREE {
         private static parseIncludes(string, ...args);
         private static unrollLoops(string);
         private gl;
-        private program;
-        private renderer;
+        program: _WebGLProgram;
+        renderer: WebGLRenderer;
         code: string;
         private material;
         private parameters;
@@ -4243,7 +4470,9 @@ declare namespace THREE {
         id: number;
         diagnostics: any;
         private cachedAttributes;
-        getAttributes(): any;
+        getAttributes(): {
+            [index: string]: number;
+        };
         private cachedUniforms;
         getUniforms(): WebGLUniforms;
         destroy(): void;
@@ -4313,10 +4542,10 @@ declare namespace THREE {
         constructor(renderer: WebGLRenderer, capabilities: WebGLCapabilities);
         private allocateBones(object);
         private getTextureEncodingFromMap(map, gammaOverrideLinear);
-        getParameters(material: IMaterial, lights: LightArrayCache, fog: any, nClipPlanes: any, object: any): IWebGLProgramParameters;
-        getProgramCode(material: any, parameters: any): string;
-        acquireProgram(material: any, parameters: IWebGLProgramParameters, code: string): WebGLProgram;
-        releaseProgram(program: any): void;
+        getParameters(material: IMaterial, lights: LightArrayCache, fog: IFog, nClipPlanes: number, object: IObject3D): IWebGLProgramParameters;
+        getProgramCode(material: IMaterial, parameters: IWebGLProgramParameters): string;
+        acquireProgram(material: IMaterial, parameters: IWebGLProgramParameters, code: string): WebGLProgram;
+        releaseProgram(program: WebGLProgram): void;
     }
 }
 declare namespace THREE {
@@ -4408,13 +4637,13 @@ declare namespace THREE {
         private renderer;
         constructor(renderer: WebGLRenderer);
         private createTexture(type, target, count);
-        enableAttribute(attribute: any): void;
-        enableAttributeAndDivisor(attribute: any, meshPerAttribute: any, extension: any): void;
+        enableAttribute(attribute: number): void;
+        enableAttributeAndDivisor(attribute: number, meshPerAttribute: number, extension: any): void;
         disableUnusedAttributes(): void;
         enable(id: number): void;
         disable(id: number): void;
         getCompressedTextureFormats(): any;
-        setBlending(blending?: number, blendEquation?: number, blendSrc?: number, blendDst?: number, blendEquationAlpha?: number, blendSrcAlpha?: number, blendDstAlpha?: number, premultipliedAlpha?: number): void;
+        setBlending(blending?: number, blendEquation?: number, blendSrc?: number, blendDst?: number, blendEquationAlpha?: number, blendSrcAlpha?: number, blendDstAlpha?: number, premultipliedAlpha?: boolean): void;
         setColorWrite(colorWrite: boolean): void;
         setDepthTest(depthTest: boolean): void;
         setDepthWrite(depthWrite: boolean): void;
@@ -4537,38 +4766,40 @@ declare namespace THREE {
     type UniformType = SingleUniform | PureArrayUniform | StructuredUniform;
     type ContainerUniformType = StructuredUniform | WebGLUniforms;
     class StructuredUniform {
-        id: any;
+        id: number | string;
         seq: UniformType[];
         map: {
             [index: string]: UniformType;
         };
-        constructor(id: any);
+        constructor(id: number | string);
         setValue(gl: WebGLRenderingContext, value: any, ...args: any[]): void;
     }
     class SingleUniform {
-        id: any;
+        id: number | string;
         addr: WebGLUniformLocation;
         setValue: (gl: WebGLRenderingContext, value, ...args) => void;
-        constructor(id: any, activeInfo: any, addr: any, singularSetter: any);
+        constructor(id: number | string, activeInfo: WebGLActiveInfo, addr: WebGLUniformLocation, singularSetter: any);
     }
     class PureArrayUniform {
-        id: any;
-        addr: any;
-        size: any;
+        id: number | string;
+        addr: WebGLUniformLocation;
+        size: number;
         setValue: (gl: WebGLRenderingContext, value, ...args) => void;
-        constructor(id: any, activeInfo: any, addr: any, pureArraySetter: any);
+        constructor(id: number | string, activeInfo: WebGLActiveInfo, addr: WebGLUniformLocation, pureArraySetter: any);
+    }
+    interface WebGLUniformsMap {
+        [index: string]: UniformType;
+        cameraPosition?: UniformType;
     }
     class WebGLUniforms {
         private static emptyTexture;
         private static emptyCubeTexture;
         private static arrayCacheF32;
         private static arrayCacheI32;
-        id: any;
+        id: number | string;
         private gl;
         seq: UniformType[];
-        map: {
-            [index: string]: UniformType;
-        };
+        map: WebGLUniformsMap;
         private addr;
         private size;
         private renderer;
@@ -4576,10 +4807,10 @@ declare namespace THREE {
         setValue(gl: WebGLRenderingContext, name: string, value: any): void;
         set(gl: WebGLRenderingContext, object: any, name: string): void;
         setOptional(gl: WebGLRenderingContext, object: any, name: string): void;
-        static upload(gl: any, seq: any, values: any, renderer: any): void;
-        static seqWithValue(seq: UniformType[], values: any): any[];
-        static splitDynamic(seq: any, values: any): any;
-        static evalDynamic(seq: any, values: any, object: any, camera: any): void;
+        static upload(gl: WebGLRenderingContext, seq: UniformType[], values: IUniforms, renderer: WebGLRenderer): void;
+        static seqWithValue(seq: UniformType[], values: IUniforms): (SingleUniform | PureArrayUniform | StructuredUniform)[];
+        static splitDynamic(seq: UniformType[], values: IUniforms): (SingleUniform | PureArrayUniform | StructuredUniform)[];
+        static evalDynamic(seq: UniformType[], values: IUniforms, object: any, camera: any): void;
         private static uncacheTemporaryArrays();
         private static flatten(array, nBlocks, blockSize);
         private static allocTexUnits(renderer, n);
@@ -4614,7 +4845,14 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    class Fog {
+    interface IFog {
+        name?: string;
+        color?: Color;
+        near?: number;
+        far?: number;
+        density?: number;
+    }
+    class Fog implements IFog {
         name: string;
         color: Color;
         near: number;
@@ -4624,7 +4862,7 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    class FogExp2 {
+    class FogExp2 implements IFog {
         name: string;
         color: Color;
         density: number;

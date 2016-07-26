@@ -11,8 +11,8 @@
         faces?: Face3[];
         faceVertexUvs?: Vector2[][][];
 
-        morphTargets?: any;
-        morphNormals?: any;
+        morphTargets?:  any;
+        morphNormals?:   any;
 
         skinWeights?: Vector4[];
         skinIndices?: any[];
@@ -38,10 +38,10 @@
 
         //BufferGeometry
         index?: BufferAttribute;
-        attributes?: IBufferGeometryAttributes;
-        morphAttributes?: IBufferGeometryAttributes;
+        attributes?: any;
+        morphAttributes?: any;
         groups?: IGeometryGroup[];
-
+        
         //DirectGeometry
         indices?: any[];
         normals?: Vector3[] ;
@@ -52,5 +52,8 @@
         computeBoundingSphere?();
         __directGeometry?: DirectGeometry;
         computeGroups?(geometry: IGeometry);
+
+        //InstancedInterleavedBuffer
+        maxInstancedCount?: number;
     }
 }

@@ -4,15 +4,19 @@
 
 namespace THREE
 {
-    export class InterleavedBuffer
+    export class InterleavedBuffer implements IBufferAttribute
     {
         uuid = Math.generateUUID();
         dynamic = false;
-        updateRange = { offset: 0, count: - 1 };
-
+        updateRange = { offset: 0, count: - 1 }; 
+        array: BufferAttributeArray;
         version = 0;
-        constructor(public array?: any, public stride?: number)
+        stride: number; 
+
+        constructor(array?: BufferAttributeArray, stride?: number)
         {
+            this.array = array;
+            this.stride = stride;
         }; 
         get length()
         { 

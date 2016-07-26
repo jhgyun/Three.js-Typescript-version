@@ -40,10 +40,11 @@
             ];
         };
 
-        private allocateBones(object)
+        private allocateBones(object: IObject3D)
         {
             var capabilities = this.capabilities;
-            if (capabilities.floatVertexTextures && object && object.skeleton && object.skeleton.useVertexTexture)
+            if (capabilities.floatVertexTextures
+                && object && object.skeleton && object.skeleton.useVertexTexture)
             {
                 return 1024;
             }
@@ -98,7 +99,7 @@
 
             return encoding;
         }
-        public getParameters(material: IMaterial, lights: LightArrayCache, fog, nClipPlanes, object)
+        public getParameters(material: IMaterial, lights: LightArrayCache, fog: IFog, nClipPlanes: number, object: IObject3D)
         {
             var renderer = this.renderer;
             var shaderIDs = this.shaderIDs; 
@@ -195,7 +196,7 @@
             return parameters;
 
         };
-        public getProgramCode(material, parameters)
+        public getProgramCode(material: IMaterial, parameters: IWebGLProgramParameters): string
         {
             var parameterNames = this.parameterNames;
 
@@ -226,7 +227,7 @@
             return array.join();
 
         };
-        public acquireProgram(material, parameters: IWebGLProgramParameters, code: string)
+        public acquireProgram(material: IMaterial, parameters: IWebGLProgramParameters, code: string)
         {
             var programs = this.programs;
             var program: WebGLProgram;
@@ -251,8 +252,8 @@
             }
 
             return program;
-        };
-        public releaseProgram(program)
+        }
+        public releaseProgram(program: WebGLProgram)
         {
             var programs = this.programs;
             if (--program.usedTimes === 0)
@@ -264,8 +265,6 @@
                 // Free WebGL resources
                 program.destroy();
             }
-        };
-
-        
+        } 
     }
 }

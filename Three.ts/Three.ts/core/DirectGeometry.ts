@@ -5,6 +5,12 @@
 
 namespace THREE
 {
+    export interface IDirectGeometryMorphTargets
+    {
+        [index: string]: Vector3[][],
+        position?: Vector3[][]; 
+        normal?: Vector3[][];
+    }
     export class DirectGeometry extends EventDispatcher implements IGeometry
     {
         private _id = GeometryIdCount++;
@@ -27,10 +33,10 @@ namespace THREE
 
         groups = [];
 
-        morphTargets: any = {};
+        morphTargets: IDirectGeometryMorphTargets = {};
 
-        skinWeights = [];
-        skinIndices = [];
+        skinWeights: Vector4[] = [];
+        skinIndices: Vector4[] = [];
 
         // this.lineDistances = [];
         boundingBox: Box3 = null;
@@ -114,7 +120,7 @@ namespace THREE
             var morphTargets = geometry.morphTargets;
             var morphTargetsLength = morphTargets.length;
 
-            var morphTargetsPosition;
+            var morphTargetsPosition: Vector3[][] ;
 
             if (morphTargetsLength > 0)
             {
@@ -130,7 +136,7 @@ namespace THREE
             var morphNormals = geometry.morphNormals;
             var morphNormalsLength = morphNormals.length;
 
-            var morphTargetsNormal;
+            var morphTargetsNormal: Vector3[][];
 
             if (morphNormalsLength > 0)
             {
