@@ -17,11 +17,8 @@ namespace THREE
 
         };
 
-
-
         load(url, onLoad, onProgress, onError)
         {
-
             if (this.path !== undefined) url = this.path + url;
 
             var scope = this;
