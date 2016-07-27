@@ -326,6 +326,5 @@
     // File:src/renderers/shaders/ShaderChunk/worldpos_vertex.glsl
 
     ShaderChunk['worldpos_vertex'] = "#if defined( USE_ENVMAP ) || defined( PHONG ) || defined( PHYSICAL ) || defined( LAMBERT ) || defined ( USE_SHADOWMAP )\n	#ifdef USE_SKINNING\n		vec4 worldPosition = modelMatrix * skinned;\n	#else\n		vec4 worldPosition = modelMatrix * vec4( transformed, 1.0 );\n	#endif\n#endif\n";
-
-
+    
 }

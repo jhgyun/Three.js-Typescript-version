@@ -28,8 +28,7 @@ namespace THREE
             this.sprites = renderer.sprites;
             this.gl = renderer.context;
             this.state = renderer.state;
-             
-           
+              
             this.spritePosition = new Vector3();
             this.spriteRotation = new Quaternion();
             this.spriteScale = new Vector3(); 
@@ -381,8 +380,7 @@ namespace THREE
 
             state.enable(gl.CULL_FACE);
 
-            this.renderer.resetGLState();
-
+            this.renderer.resetGLState(); 
         };
     }
 }

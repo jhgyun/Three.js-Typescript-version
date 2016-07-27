@@ -136,7 +136,6 @@ namespace THREE
 
                 return this;
             }
-
             return func.apply(this, arguments);
         } 
 

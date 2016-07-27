@@ -135,5 +135,4 @@ var _math = Math;
 namespace THREE
 {
     export var Math = _math;
-}
-//THREE["Math"] = Math;
+} 
