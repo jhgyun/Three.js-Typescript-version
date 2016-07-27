@@ -20,7 +20,6 @@ namespace THREE
             this.updateMatrix();
 
             this.target = new Object3D();
-
             this.distance = (distance !== undefined) ? distance : 0;
             this.angle = (angle !== undefined) ? angle : Math.PI / 3;
             this.penumbra = (penumbra !== undefined) ? penumbra : 0;

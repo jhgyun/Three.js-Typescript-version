@@ -12,9 +12,7 @@ namespace THREE
             super(skyColor, intensity);
 
             this.type = 'HemisphereLight';
-
             this.castShadow = undefined;
-
             this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
 
