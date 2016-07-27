@@ -185,7 +185,6 @@ namespace THREE
             }
 
         })(),
-
         triangulateShape: function (contour, holes)
         { 
             function removeDupEndPts(points)
@@ -713,7 +712,6 @@ namespace THREE
             return triangles.concat();
 
         },
-
         isClockWise: function (pts: Vector2[])
         {
             return ShapeUtils.area(pts) < 0;
@@ -723,7 +721,6 @@ namespace THREE
         // http://en.wikipedia.org/wiki/B%C3%A9zier_curve
 
         // Quad Bezier Functions
-
         b2: (function ()
         {
 
@@ -790,6 +787,5 @@ namespace THREE
             };
 
         })()
-
     };
 }

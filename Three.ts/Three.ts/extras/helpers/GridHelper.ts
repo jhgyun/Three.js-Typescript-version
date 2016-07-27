@@ -20,7 +20,6 @@ namespace THREE
 
             for (var i = 0, j = 0, k = - size; i <= divisions; i++ , k += step)
             {
-
                 vertices.push(- size, 0, k, size, 0, k);
                 vertices.push(k, 0, - size, k, 0, size);
 
@@ -30,7 +29,6 @@ namespace THREE
                 color.toArray(colors, j); j += 3;
                 color.toArray(colors, j); j += 3;
                 color.toArray(colors, j); j += 3;
-
             }
 
 

@@ -16,7 +16,6 @@ namespace THREE
         { 
             function createPaths(text)
             {
-
                 var chars = String(text).split('');
                 var scale = size / data.resolution;
                 var offset = 0;
@@ -25,21 +24,17 @@ namespace THREE
 
                 for (var i = 0; i < chars.length; i++)
                 {
-
                     var ret = createPath(chars[i], scale, offset);
                     offset += ret.offset;
 
                     paths.push(ret.path);
-
                 }
 
                 return paths;
-
             }
 
             function createPath(c, scale, offset)
             {
-
                 var glyph = data.glyphs[c] || data.glyphs['?'];
 
                 if (!glyph) return;
@@ -165,6 +160,5 @@ namespace THREE
             } 
             return shapes; 
         } 
-
     }
 }

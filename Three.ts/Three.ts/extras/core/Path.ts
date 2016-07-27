@@ -276,7 +276,6 @@ namespace THREE
                 tmpShape.curves = tmpPath.curves;
                 shapes.push(tmpShape);
                 return shapes;
-
             }
 
             var holesFirst = !isClockWise(subPaths[0].getPoints());
@@ -295,7 +294,6 @@ namespace THREE
 
             for (var i = 0, l = subPaths.length; i < l; i++)
             {
-
                 tmpPath = subPaths[i];
                 tmpPoints = tmpPath.getPoints();
                 solid = isClockWise(tmpPoints);
@@ -303,7 +301,6 @@ namespace THREE
 
                 if (solid)
                 {
-
                     if ((!holesFirst) && (newShapes[mainIdx])) mainIdx++;
 
                     newShapes[mainIdx] = { s: new THREE.Shape(), p: tmpPoints };
@@ -371,7 +368,6 @@ namespace THREE
                 { 
                     // console.log("to change: ", toChange);
                     if (!ambiguous) newShapeHoles = betterShapeHoles;
-
                 } 
             }
 

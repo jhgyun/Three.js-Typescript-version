@@ -28,7 +28,6 @@ namespace THREE
         {
             this.curves.push(curve);
         }
-
         closePath()
         {
             // Add a line curve if start and end of lines are not connected
@@ -176,7 +175,6 @@ namespace THREE
         }
 
         // Generate geometry from equidistant sampling along the path
-
         createSpacedPointsGeometry(divisions)
         {
             var pts = this.getSpacedPoints(divisions);

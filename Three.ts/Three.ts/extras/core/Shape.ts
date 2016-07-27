@@ -20,7 +20,6 @@ namespace THREE
         {
             super(points);
             this.holes = [];
-
         };
          
 
@@ -52,10 +51,8 @@ namespace THREE
         extractAllPoints (divisions)
         { 
             return {
-
                 shape: this.getPoints(divisions),
                 holes: this.getPointsHoles(divisions)
-
             }; 
         } 
 
