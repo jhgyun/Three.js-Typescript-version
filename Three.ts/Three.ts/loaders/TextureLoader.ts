@@ -35,11 +35,9 @@ namespace THREE
                 { 
                     onLoad(texture); 
                 }
-
             }, onProgress, onError);
 
             return texture;
-
         }
 
         setCrossOrigin(value)
