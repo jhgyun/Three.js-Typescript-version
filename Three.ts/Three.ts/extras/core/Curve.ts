@@ -251,7 +251,6 @@ namespace THREE
         { 
             var t = this.getUtoTmapping(u);
             return this.getTangent(t);
-
         }
 
 
@@ -270,7 +269,6 @@ namespace THREE
             constructor.prototype.getPoint = getPointFunc;
 
             return constructor;
-
         };
     }
 }
