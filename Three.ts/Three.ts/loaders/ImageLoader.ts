@@ -15,7 +15,6 @@ namespace THREE
             this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
         };
 
-
         load(url, onLoad?, onProgress?, onError?)
         {
             var scope = this;
