@@ -16,7 +16,6 @@ namespace THREE
             super(color, intensity);
 
             this.type = 'DirectionalLight';
-
             this.position.copy(THREE.Object3D.DefaultUp);
             this.updateMatrix();
 
