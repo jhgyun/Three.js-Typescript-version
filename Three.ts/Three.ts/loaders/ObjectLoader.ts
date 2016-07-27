@@ -12,7 +12,6 @@ namespace THREE
 
         constructor(manager?: LoadingManager)
         {
-
             this.manager = (manager !== undefined) ? manager : THREE.DefaultLoadingManager;
             this.texturePath = '';
         };
