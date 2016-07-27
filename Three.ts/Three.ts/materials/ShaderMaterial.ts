@@ -58,7 +58,7 @@ namespace THREE
         morphTargets: boolean; // set to use morph targets
         morphNormals: boolean; // set to use morph normals
         extensions: any;
-        defaultAttributeValues;
+        defaultAttributeValues: { [index: string]: number[] }; 
         index0AttributeName: string;
 
         constructor(parameters?: ShaderMaterialParams)

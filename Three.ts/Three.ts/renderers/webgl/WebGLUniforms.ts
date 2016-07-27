@@ -175,8 +175,9 @@ namespace THREE
         {
             for (var i = 0, n = seq.length; i !== n; ++i)
             {
-                var u = seq[i],
-                    v = values[u.id];
+                var u = seq[i];
+                var v = values[u.id];
+
                 if (v.needsUpdate !== false)
                 {
                     // note: always updating when .needsUpdate is undefined

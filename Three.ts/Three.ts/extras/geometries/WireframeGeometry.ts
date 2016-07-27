@@ -7,7 +7,7 @@ namespace THREE
 {
     export class WireframeGeometry extends BufferGeometry
     {
-        constructor(geometry: Geometry | BufferGeometry)
+        constructor(geometry: IGeometry)
         {
             super();
 
@@ -93,29 +93,23 @@ namespace THREE
                     let numEdges = 0;
 
                     if (groups.length === 0)
-                    {
-
-                        geometry.addGroup(0, indices.length);
-
+                    { 
+                        geometry.addGroup(0, indices.length); 
                     }
 
                     // allocate maximal size
                     var edges = new Uint32Array(2 * indices.length);
 
                     for (var o = 0, ol = groups.length; o < ol; ++o)
-                    {
-
-                        var group = groups[o];
-
+                    { 
+                        var group = groups[o]; 
                         var start = group.start;
                         var count = group.count;
 
                         for (var i = start, il = start + count; i < il; i += 3)
-                        {
-
+                        { 
                             for (var j = 0; j < 3; j++)
-                            {
-
+                            { 
                                 edge[0] = indices[i + j];
                                 edge[1] = indices[i + (j + 1) % 3];
                                 edge.sort(sortFunction);
@@ -123,42 +117,32 @@ namespace THREE
                                 var key = edge.toString();
 
                                 if (hash[key] === undefined)
-                                {
-
+                                { 
                                     edges[2 * numEdges] = edge[0];
                                     edges[2 * numEdges + 1] = edge[1];
                                     hash[key] = true;
-                                    numEdges++;
-
-                                }
-
-                            }
-
-                        }
-
+                                    numEdges++; 
+                                } 
+                            } 
+                        } 
                     }
 
                     var coords = new Float32Array(numEdges * 2 * 3);
 
                     for (var i = 0, l = numEdges; i < l; i++)
-                    {
-
+                    { 
                         for (var j = 0; j < 2; j++)
-                        {
-
+                        { 
                             var index = 6 * i + 3 * j;
                             var index2 = edges[2 * i + j];
 
                             coords[index + 0] = vertices.getX(index2);
                             coords[index + 1] = vertices.getY(index2);
-                            coords[index + 2] = vertices.getZ(index2);
-
-                        }
-
+                            coords[index + 2] = vertices.getZ(index2); 
+                        } 
                     }
 
-                    this.addAttribute('position', new BufferAttribute(coords, 3));
-
+                    this.addAttribute('position', new BufferAttribute(coords, 3)); 
                 }
                 else
                 { 
@@ -187,12 +171,9 @@ namespace THREE
                         } 
                     }
 
-                    this.addAttribute('position', new BufferAttribute(coords, 3));
-
-                }
-
-            }
-
+                    this.addAttribute('position', new BufferAttribute(coords, 3)); 
+                } 
+            } 
         }; 
     }
 }

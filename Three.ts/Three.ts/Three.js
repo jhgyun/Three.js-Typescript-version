@@ -19523,7 +19523,9 @@ var THREE;
             var refreshProgram = false;
             var refreshMaterial = false;
             var refreshLights = false;
-            var program = materialProperties.program, p_uniforms = program.getUniforms(), m_uniforms = materialProperties.__webglShader.uniforms;
+            var program = materialProperties.program;
+            var p_uniforms = program.getUniforms();
+            var m_uniforms = materialProperties.__webglShader.uniforms;
             if (program.id !== this._currentProgram) {
                 _gl.useProgram(program.program);
                 this._currentProgram = program.id;
@@ -23217,7 +23219,8 @@ var THREE;
         };
         WebGLUniforms.upload = function (gl, seq, values, renderer) {
             for (var i = 0, n = seq.length; i !== n; ++i) {
-                var u = seq[i], v = values[u.id];
+                var u = seq[i];
+                var v = values[u.id];
                 if (v.needsUpdate !== false) {
                     u.setValue(gl, v.value, renderer);
                 }

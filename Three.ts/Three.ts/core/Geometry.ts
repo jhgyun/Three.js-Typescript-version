@@ -66,6 +66,7 @@ namespace THREE
         }
         parameters: any;
         _bufferGeometry: BufferGeometry;
+        __directGeometry: DirectGeometry;
 
         applyMatrix(matrix: Matrix4)
         {

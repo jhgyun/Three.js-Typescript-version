@@ -147,10 +147,8 @@ namespace THREE
 
                         // update offsets and counters
                         indexBufferOffset += 6;
-                        groupCount += 6;
-
-                    }
-
+                        groupCount += 6; 
+                    } 
                 }
 
                 // add a group to the geometry. this will ensure multi material support

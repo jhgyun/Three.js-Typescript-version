@@ -218,7 +218,6 @@ namespace THREE
                 } 
             }
             return geometry;
-        }
-
+        } 
     }
 }

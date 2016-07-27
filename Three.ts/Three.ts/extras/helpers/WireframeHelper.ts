@@ -13,7 +13,7 @@ namespace THREE
 
             var color = (hex !== undefined) ? hex : 0xffffff;
 
-            this.geometry = new WireframeGeometry(object.geometry as any);
+            this.geometry = new WireframeGeometry(object.geometry);
             this.material = new LineBasicMaterial({ color: color })
 
             this.matrix = object.matrixWorld;

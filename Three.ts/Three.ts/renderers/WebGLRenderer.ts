@@ -804,11 +804,8 @@ namespace THREE
                     }
                 }
 
-                program.getUniforms().setValue(
-                    _gl, 'morphTargetInfluences', this.morphInfluences);
-
-                updateBuffers = true;
-
+                program.getUniforms().setValue(_gl, 'morphTargetInfluences', this.morphInfluences); 
+                updateBuffers = true; 
             }
 
             //
@@ -930,7 +927,7 @@ namespace THREE
             }
         };
 
-        public setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: IGeometry, startIndex?: number)
+        public setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: BufferGeometry, startIndex?: number)
         {
             var state = this.state;
             var _gl = this.context;
@@ -1050,7 +1047,7 @@ namespace THREE
                     }
                     else if (materialDefaultAttributeValues !== undefined)
                     {
-                        var value = materialDefaultAttributeValues[name];
+                        var value: any = materialDefaultAttributeValues[name];
                         if (value !== undefined)
                         {
                             switch (value.length)
@@ -1693,9 +1690,9 @@ namespace THREE
             var refreshMaterial = false;
             var refreshLights = false;
 
-            var program = materialProperties.program,
-                p_uniforms = program.getUniforms(),
-                m_uniforms = materialProperties.__webglShader.uniforms;
+            var program = materialProperties.program;
+            var p_uniforms = program.getUniforms();
+            var m_uniforms = materialProperties.__webglShader.uniforms;
 
             if (program.id !== this._currentProgram)
             { 
@@ -1704,15 +1701,13 @@ namespace THREE
 
                 refreshProgram = true;
                 refreshMaterial = true;
-                refreshLights = true;
-
+                refreshLights = true; 
             }
 
             if (material.id !== this._currentMaterialId)
             {
                 this._currentMaterialId = material.id;
-                refreshMaterial = true;
-
+                refreshMaterial = true; 
             }
 
             if (refreshProgram || camera !== this._currentCamera)

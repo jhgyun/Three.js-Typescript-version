@@ -1426,6 +1426,7 @@ declare namespace THREE {
         id: number;
         parameters: any;
         _bufferGeometry: BufferGeometry;
+        __directGeometry: DirectGeometry;
         applyMatrix(matrix: Matrix4): this;
         rotateX(angle: number): this;
         rotateY(angle: number): this;
@@ -1471,6 +1472,7 @@ declare namespace THREE {
         skinWeight?: BufferAttribute;
         vertices?: BufferAttribute;
         vertexNormals?: BufferAttribute;
+        [index: string]: BufferAttribute;
     }
     interface IBufferGeometryMorphAttributes {
         position?: BufferAttribute[];
@@ -1498,7 +1500,7 @@ declare namespace THREE {
         getIndex(): BufferAttribute;
         setIndex(index: any): void;
         addAttribute(name: string, attribute: BufferAttribute): this;
-        getAttribute(name: string): any;
+        getAttribute(name: string): BufferAttribute;
         removeAttribute(name: string): this;
         addGroup(start: number, count: number, materialIndex?: number): void;
         clearGroups(): void;
@@ -1513,7 +1515,7 @@ declare namespace THREE {
         center(): Vector3;
         setFromObject(object: Object3D): this;
         updateFromObject(object: Object3D): this;
-        fromGeometry(geometry: any): this;
+        fromGeometry(geometry: Geometry): this;
         fromDirectGeometry(geometry: DirectGeometry): this;
         computeBoundingBox(): void;
         computeBoundingSphere(): void;
@@ -1524,7 +1526,7 @@ declare namespace THREE {
         toNonIndexed(): BufferGeometry;
         toJSON(): any;
         clone(): BufferGeometry;
-        copy(source: any): this;
+        copy(source: BufferGeometry): this;
         dispose(): void;
         static MaxIndex: number;
     }
@@ -1627,7 +1629,7 @@ declare namespace THREE {
         id?: number;
         parameters?: any;
         index?: BufferAttribute;
-        attributes?: any;
+        attributes?: IBufferGeometryAttributes;
         morphAttributes?: any;
         groups?: IGeometryGroup[];
         indices?: any[];
@@ -2193,7 +2195,7 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class WireframeGeometry extends BufferGeometry {
-        constructor(geometry: Geometry | BufferGeometry);
+        constructor(geometry: IGeometry);
     }
 }
 declare namespace THREE {
@@ -2776,7 +2778,9 @@ declare namespace THREE {
         skinning?: any;
         needsUpdate?: boolean;
         linewidth?: number;
-        defaultAttributeValues?: any;
+        defaultAttributeValues?: {
+            [index: string]: number[];
+        };
         materials?: IMaterial[];
     }
 }
@@ -3175,7 +3179,9 @@ declare namespace THREE {
         morphTargets: boolean;
         morphNormals: boolean;
         extensions: any;
-        defaultAttributeValues: any;
+        defaultAttributeValues: {
+            [index: string]: number[];
+        };
         index0AttributeName: string;
         constructor(parameters?: ShaderMaterialParams);
         copy(source: ShaderMaterial): this;
@@ -3593,8 +3599,8 @@ declare namespace THREE {
         fogNear?: IUniformsValue<number>;
         fogFar?: IUniformsValue<number>;
         fogColor?: IUniformsValue<Color>;
-        ambientLightColor?: IUniformsValue<any[]>;
-        directionalLights?: IUniformsValueProperties<any[], {
+        ambientLightColor?: IUniformsValue<number[]>;
+        directionalLights?: IUniformsValueProperties<ILightUniforms[], {
             direction: any;
             color: any;
             shadow: any;
@@ -3603,8 +3609,8 @@ declare namespace THREE {
             shadowMapSize: any;
         }>;
         directionalShadowMap?: IUniformsValue<Texture[]>;
-        directionalShadowMatrix?: IUniformsValue<any[]>;
-        spotLights?: IUniformsValueProperties<any[], {
+        directionalShadowMatrix?: IUniformsValue<Matrix4[]>;
+        spotLights?: IUniformsValueProperties<ILightUniforms[], {
             color: any;
             position: any;
             direction: any;
@@ -3618,8 +3624,8 @@ declare namespace THREE {
             shadowMapSize: any;
         }>;
         spotShadowMap?: IUniformsValue<Texture[]>;
-        spotShadowMatrix?: IUniformsValue<any[]>;
-        pointLights?: IUniformsValueProperties<any[], {
+        spotShadowMatrix?: IUniformsValue<Matrix4[]>;
+        pointLights?: IUniformsValueProperties<ILightUniforms[], {
             color?: any;
             position?: any;
             decay?: any;
@@ -3630,7 +3636,7 @@ declare namespace THREE {
             shadowMapSize?: any;
         }>;
         pointShadowMap?: IUniformsValue<Texture[]>;
-        pointShadowMatrix?: IUniformsValue<any[]>;
+        pointShadowMatrix?: IUniformsValue<Matrix4[]>;
         hemisphereLights?: IUniformsValueProperties<any[], {
             direction?: any;
             skyColor?: any;
@@ -4173,7 +4179,7 @@ declare namespace THREE {
         private releaseMaterialProgramReference(material);
         renderBufferImmediate(object: ImmediateRenderObject, program: WebGLProgram, material: IMaterial): void;
         renderBufferDirect(camera: Camera, fog: IFog, geometry: BufferGeometry, material: IMaterial, object: IObject3D, group: IGeometryGroup): void;
-        setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: IGeometry, startIndex?: number): void;
+        setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: BufferGeometry, startIndex?: number): void;
         private absNumericalSort(a, b);
         private painterSortStable(a, b);
         private reversePainterSortStable(a, b);

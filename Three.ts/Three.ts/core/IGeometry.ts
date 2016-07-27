@@ -38,7 +38,7 @@
 
         //BufferGeometry
         index?: BufferAttribute;
-        attributes?: any;
+        attributes?: IBufferGeometryAttributes;
         morphAttributes?: any;
         groups?: IGeometryGroup[];
         

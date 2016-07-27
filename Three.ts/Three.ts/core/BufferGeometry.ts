@@ -26,6 +26,8 @@ namespace THREE
         skinWeight?: BufferAttribute;
         vertices?: BufferAttribute;
         vertexNormals?: BufferAttribute; 
+
+        [index: string]: BufferAttribute;
     } 
     export interface IBufferGeometryMorphAttributes
     {
@@ -235,8 +237,8 @@ namespace THREE
             { 
                 var direct = geometry.__directGeometry; 
                 if (direct === undefined || geometry.elementsNeedUpdate === true)
-                { 
-                    return this.fromGeometry(geometry); 
+                {
+                    return this.fromGeometry(geometry as Geometry); 
                 }
 
                 direct.verticesNeedUpdate = geometry.verticesNeedUpdate || geometry.elementsNeedUpdate;
@@ -326,15 +328,14 @@ namespace THREE
                 geometry.groupsNeedUpdate = false; 
             } 
             return this; 
-        } 
-        fromGeometry(geometry)
+        }
+        fromGeometry(geometry: Geometry)
         {
             geometry.__directGeometry = new DirectGeometry().fromGeometry(geometry);
             return this.fromDirectGeometry(geometry.__directGeometry);
         }
         fromDirectGeometry(geometry: DirectGeometry)
-        {
-
+        { 
             var positions = new Float32Array(geometry.vertices.length * 3);
             this.addAttribute('position', new BufferAttribute(positions, 3).copyVector3sArray(geometry.vertices));
 
@@ -757,7 +758,7 @@ namespace THREE
         {
             return new BufferGeometry().copy(this);
         }
-        copy(source)
+        copy(source: BufferGeometry)
         {
             var index = source.index;
             if (index !== null)

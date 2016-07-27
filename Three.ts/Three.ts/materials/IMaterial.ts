@@ -101,7 +101,7 @@
         needsUpdate?: boolean;
         linewidth?: number;
 
-        defaultAttributeValues?: any;
+        defaultAttributeValues?: { [index: string]: number[] };  
 
         materials?: IMaterial[];
     }

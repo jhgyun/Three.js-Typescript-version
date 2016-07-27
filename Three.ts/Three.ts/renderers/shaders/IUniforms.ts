@@ -63,8 +63,8 @@
         fogFar?: IUniformsValue<number>;
         fogColor?: IUniformsValue<Color>;
 
-        ambientLightColor?: IUniformsValue<any[]>;
-        directionalLights?: IUniformsValueProperties<any[], {
+        ambientLightColor?: IUniformsValue<number[]>;
+        directionalLights?: IUniformsValueProperties<ILightUniforms[], {
             direction: any,
             color: any, 
             shadow: any,
@@ -73,11 +73,11 @@
             shadowMapSize: any
         }>;
 
-        directionalShadowMap?: IUniformsValue<Texture[]>; 
-        directionalShadowMatrix?: IUniformsValue<any[]>;  
+        directionalShadowMap?: IUniformsValue<Texture[]>;
+        directionalShadowMatrix?: IUniformsValue<Matrix4[]>;  
 
         spotLights?: IUniformsValueProperties<
-        any[],
+        ILightUniforms[],
         {
             color: any,
             position: any,
@@ -93,9 +93,9 @@
             shadowMapSize: any
         }>;
 
-        spotShadowMap?: IUniformsValue<Texture[]>; 
-        spotShadowMatrix?: IUniformsValue<any[]>;
-        pointLights?: IUniformsValueProperties<any[],
+        spotShadowMap?: IUniformsValue<Texture[]>;
+        spotShadowMatrix?: IUniformsValue<Matrix4[]>;
+        pointLights?: IUniformsValueProperties<ILightUniforms[],
         {
             color?: any;
             position?: any;
@@ -108,8 +108,8 @@
             shadowMapSize?: any;
         }>;
 
-        pointShadowMap?: IUniformsValue<Texture[]>; 
-        pointShadowMatrix?: IUniformsValue<any[]>;  
+        pointShadowMap?: IUniformsValue<Texture[]>;
+        pointShadowMatrix?: IUniformsValue<Matrix4[]>;  
 
         hemisphereLights?: IUniformsValueProperties<any[], {
             direction?: any;
