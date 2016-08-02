@@ -47,8 +47,8 @@ namespace THREE
         { 
             this.x = x; 
             return this; 
-        } 
-        setY(y)
+        }
+        setY(y: number)
         { 
             this.y = y; 
             return this; 
@@ -209,7 +209,7 @@ namespace THREE
             this.y = - this.y; 
             return this; 
         }
-        dot (v)
+        dot(v: Vector2)
         { 
             return this.x * v.x + this.y * v.y; 
         }

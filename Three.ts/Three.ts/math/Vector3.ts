@@ -211,7 +211,7 @@ namespace THREE
             return this;
 
         }
-        applyQuaternion (q)
+        applyQuaternion(q: Quaternion)
         { 
             var x = this.x, y = this.y, z = this.z;
             var qx = q.x, qy = q.y, qz = q.z, qw = q.w;
@@ -230,7 +230,7 @@ namespace THREE
             this.z = iz * qw + iw * - qz + ix * - qy - iy * - qx; 
             return this; 
         }
-        project(camera): this
+        project(camera: Camera): this
         {
             var matrix = new Matrix4();
             var func = Vector3.prototype.project
@@ -243,7 +243,7 @@ namespace THREE
                 }
             return func.apply(this, arguments);
         }
-        unproject(camera): this
+        unproject(camera: Camera): this
         {
             var matrix = new Matrix4();
             var func = Vector3.prototype.unproject
@@ -357,7 +357,7 @@ namespace THREE
             this.z = - this.z; 
             return this; 
         }
-        dot (v)
+        dot(v: Vector3)
         { 
             return this.x * v.x + this.y * v.y + this.z * v.z; 
         }
@@ -478,11 +478,11 @@ namespace THREE
             this.z = sz; 
             return this; 
         }
-        setFromMatrixColumn(m: Matrix4, index)
+        setFromMatrixColumn(m: Matrix4, index: number)
         { 
             return this.fromArray(m.elements, index * 4); 
         }
-        equals (v)
+        equals(v: Vector3)
         { 
             return ((v.x === this.x) && (v.y === this.y) && (v.z === this.z)); 
         }

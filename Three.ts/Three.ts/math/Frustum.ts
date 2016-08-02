@@ -84,10 +84,10 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-        intersectsSprite(sprite: { matrixWorld: Matrix4 }): boolean
+        intersectsSprite(sprite: Sprite): boolean
         {
             var sphere = new Sphere();
-            var func = Frustum.prototype.intersectsSprite = function (sprite: { matrixWorld: Matrix4 })
+            var func = Frustum.prototype.intersectsSprite = function (sprite)
             {
                 sphere.center.set(0, 0, 0);
                 sphere.radius = 0.7071067811865476;

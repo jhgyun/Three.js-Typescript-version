@@ -517,7 +517,7 @@ declare namespace THREE {
         applyToBuffer(buffer: Buffer, offset?: number, length?: number): Buffer;
         determinant(): number;
         transpose(): this;
-        setPosition(v: any): this;
+        setPosition(v: Vector3): this;
         getInverse(m: Matrix4, throwOnDegenerate?: boolean): this;
         scale(v: Vector3): this;
         getMaxScaleOnAxis(): number;
@@ -532,7 +532,7 @@ declare namespace THREE {
         makeFrustum(left: number, right: number, bottom: number, top: number, near: number, far: number): this;
         makePerspective(fov: number, aspect: number, near: number, far: number): this;
         makeOrthographic(left: number, right: number, top: number, bottom: number, near: number, far: number): this;
-        equals(matrix: any): boolean;
+        equals(matrix: Matrix4): boolean;
         fromArray(array: ArrayLike<number>): this;
         toArray(array?: ArrayLike<number>, offset?: number): ArrayLike<number>;
     }
@@ -547,7 +547,7 @@ declare namespace THREE {
         set(x: number, y: number): this;
         setScalar(scalar: number): this;
         setX(x: number): this;
-        setY(y: any): this;
+        setY(y: number): this;
         setComponent(index: number, value: number): void;
         getComponent(index: number): number;
         clone(): Vector2;
@@ -572,7 +572,7 @@ declare namespace THREE {
         round(): this;
         roundToZero(): this;
         negate(): this;
-        dot(v: any): number;
+        dot(v: Vector2): number;
         lengthSq(): number;
         length(): number;
         lengthManhattan(): number;
@@ -625,9 +625,9 @@ declare namespace THREE {
         applyMatrix3(m: Matrix3): this;
         applyMatrix4(m: Matrix4): this;
         applyProjection(m: Matrix4): this;
-        applyQuaternion(q: any): this;
-        project(camera: any): this;
-        unproject(camera: any): this;
+        applyQuaternion(q: Quaternion): this;
+        project(camera: Camera): this;
+        unproject(camera: Camera): this;
         transformDirection(m: Matrix4): this;
         divide(v: Vector3): this;
         divideScalar(scalar: number): this;
@@ -641,7 +641,7 @@ declare namespace THREE {
         round(): this;
         roundToZero(): this;
         negate(): this;
-        dot(v: any): number;
+        dot(v: Vector3): number;
         lengthSq(): number;
         length(): number;
         lengthManhattan(): number;
@@ -665,8 +665,8 @@ declare namespace THREE {
         }): this;
         setFromMatrixPosition(m: Matrix4): this;
         setFromMatrixScale(m: Matrix4): this;
-        setFromMatrixColumn(m: Matrix4, index: any): this;
-        equals(v: any): boolean;
+        setFromMatrixColumn(m: Matrix4, index: number): this;
+        equals(v: Vector3): boolean;
         fromArray(array: ArrayLike<number>, offset?: number): this;
         toArray(array?: ArrayLike<number>, offset?: number): ArrayLike<number>;
         fromAttribute(attribute: {
@@ -718,10 +718,10 @@ declare namespace THREE {
         length(): number;
         lengthManhattan(): number;
         normalize(): this;
-        setLength(length: any): this;
+        setLength(length: number): this;
         lerp(v: Vector4, alpha: number): this;
         lerpVectors(v1: Vector4, v2: Vector4, alpha: number): this;
-        equals(v: any): boolean;
+        equals(v: Vector4): boolean;
         fromArray(array: ArrayLike<number>, offset?: number): this;
         toArray(array?: ArrayLike<number>, offset?: number): ArrayLike<number>;
         fromAttribute(attribute: {
@@ -991,7 +991,7 @@ declare namespace THREE {
         union(box: Box3): this;
         private static applyMatrix4_points;
         applyMatrix4(matrix: Matrix4): this;
-        translate(offset: any): this;
+        translate(offset: Vector3): this;
         equals(box: Box3): boolean;
     }
 }
@@ -2388,23 +2388,23 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class MorphBlendMesh extends Mesh {
-        animationsMap: any;
-        animationsList: any[];
-        firstAnimation: any;
+        private animationsMap;
+        private animationsList;
+        private firstAnimation;
         constructor(geometry: Geometry, material: any);
-        createAnimation(name: any, start: any, end: any, fps: any): void;
-        autoCreateAnimations(fps: any): void;
-        setAnimationDirectionForward(name: any): void;
-        setAnimationDirectionBackward(name: any): void;
-        setAnimationFPS(name: any, fps: any): void;
-        setAnimationDuration(name: any, duration: any): void;
-        setAnimationWeight: (name: any, weight: any) => void;
-        setAnimationTime: (name: any, time: any) => void;
-        getAnimationTime: (name: any) => number;
-        getAnimationDuration(name: any): number;
-        playAnimation(name: any): void;
-        stopAnimation(name: any): void;
-        update(delta: any): void;
+        createAnimation(name: string, start: number, end: number, fps: number): void;
+        autoCreateAnimations(fps: number): void;
+        setAnimationDirectionForward(name: string): void;
+        setAnimationDirectionBackward(name: string): void;
+        setAnimationFPS(name: string, fps: number): void;
+        setAnimationDuration(name: string, duration: number): void;
+        setAnimationWeight: (name: string, weight: number) => void;
+        setAnimationTime: (name: string, time: number) => void;
+        getAnimationTime: (name: string) => number;
+        getAnimationDuration(name: string): number;
+        playAnimation(name: string): void;
+        stopAnimation(name: string): void;
+        update(delta: number): void;
     }
 }
 declare namespace THREE {
@@ -2423,8 +2423,8 @@ declare namespace THREE {
         triangulate: (contour: any, indices: any) => any[];
         triangulateShape: (contour: any, holes: any) => any[];
         isClockWise: (pts: Vector2[]) => boolean;
-        b2: (t: any, p0: any, p1: any, p2: any) => number;
-        b3: (t: any, p0: any, p1: any, p2: any, p3: any) => number;
+        b2: (t: number, p0: number, p1: number, p2: number) => number;
+        b3: (t: number, p0: number, p1: number, p2: number, p3: number) => number;
     };
 }
 declare namespace THREE {
@@ -3254,9 +3254,7 @@ declare namespace THREE {
         copy(frustum: Frustum): this;
         setFromMatrix(m: Matrix4): this;
         intersectsObject(object: Object3D): boolean;
-        intersectsSprite(sprite: {
-            matrixWorld: Matrix4;
-        }): boolean;
+        intersectsSprite(sprite: Sprite): boolean;
         intersectsSphere(sphere: Sphere): boolean;
         intersectsBox(box: Box3): boolean;
         containsPoint(point: Vector3): boolean;
@@ -3326,7 +3324,7 @@ declare namespace THREE {
         closestPointToPointParameter(point: Vector3, clampToLine: boolean): number;
         closestPointToPoint(point: Vector3, clampToLine: boolean, optionalTarget?: Vector3): Vector3;
         applyMatrix4(matrix: Matrix4): this;
-        equals(line: any): any;
+        equals(line: Line3): boolean;
     }
 }
 interface Math {
@@ -3997,6 +3995,264 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    function paramThreeToGL(renderer: WebGLRenderer, p: number): any;
+}
+declare namespace THREE {
+    function readRenderTargetPixels(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget, x: number, y: number, width: number, height: number, buffer: ArrayBufferView): void;
+}
+declare namespace THREE {
+    interface InfoRenderer {
+        calls?: number;
+        vertices?: number;
+        faces?: number;
+        points?: number;
+    }
+    interface InfoMemory {
+        geometries?: number;
+        textures?: number;
+    }
+    interface WebGLRendererInfo {
+        render: InfoRenderer;
+        memory: InfoMemory;
+        programs: any;
+    }
+    interface LightArrayCache {
+        hash: string;
+        ambient: number[];
+        directional: ILightUniforms[];
+        directionalShadowMap: Texture[];
+        directionalShadowMatrix: Matrix4[];
+        spot: ILightUniforms[];
+        spotShadowMap: Texture[];
+        spotShadowMatrix: Matrix4[];
+        point: ILightUniforms[];
+        pointShadowMap: Texture[];
+        pointShadowMatrix: Matrix4[];
+        hemi: ILightUniforms[];
+        shadows: Light[];
+    }
+    interface IMaterialPropertyCache {
+        program?: WebGLProgram;
+        __webglShader?: {
+            name: string;
+            uniforms: IUniforms;
+            vertexShader: string;
+            fragmentShader: string;
+        };
+        numClippingPlanes?: number;
+        lightsHash?: string;
+        uniformsList?: UniformType[];
+        dynamicUniforms?: UniformType[];
+        clippingState?: Float32Array;
+    }
+    interface WebGLRendererParams {
+        canvas?: HTMLCanvasElement;
+        context?: any;
+        alpha?: boolean;
+        depth?: boolean;
+        stencil?: boolean;
+        antialias?: boolean;
+        premultipliedAlpha?: boolean;
+        preserveDrawingBuffer?: boolean;
+    }
+    class WebGLRenderer {
+        domElement: HTMLElement;
+        context: WebGLRenderingContext;
+        autoClear: boolean;
+        autoClearColor: boolean;
+        autoClearDepth: boolean;
+        autoClearStencil: boolean;
+        sortObjects: boolean;
+        clippingPlanes: Plane[];
+        localClippingEnabled: boolean;
+        gammaFactor: number;
+        gammaInput: boolean;
+        gammaOutput: boolean;
+        physicallyCorrectLights: boolean;
+        toneMapping: number;
+        toneMappingExposure: number;
+        toneMappingWhitePoint: number;
+        maxMorphTargets: number;
+        maxMorphNormals: number;
+        info: WebGLRendererInfo;
+        capabilities: WebGLCapabilities;
+        extensions: WebGLExtensions;
+        properties: WebGLProperties;
+        state: WebGLState;
+        shadowMap: WebGLShadowMap;
+        parameters: any;
+        _canvas: HTMLCanvasElement;
+        _context: any;
+        _alpha: boolean;
+        _depth: boolean;
+        _stencil: boolean;
+        _antialias: boolean;
+        _premultipliedAlpha: boolean;
+        _preserveDrawingBuffer: boolean;
+        lights: Light[];
+        private opaqueObjects;
+        private opaqueObjectsLastIndex;
+        private transparentObjects;
+        private transparentObjectsLastIndex;
+        morphInfluences: Float32Array;
+        sprites: Sprite[];
+        lensFlares: LensFlare[];
+        _currentRenderTarget: WebGLRenderTarget;
+        _currentProgram: number;
+        _currentFramebuffer: any;
+        _currentMaterialId: number;
+        _currentGeometryProgram: any;
+        _currentCamera: Camera;
+        private _currentScissor;
+        private _currentScissorTest;
+        private _currentViewport;
+        private _usedTextureUnits;
+        private _clearColor;
+        private _clearAlpha;
+        private _width;
+        private _height;
+        private _pixelRatio;
+        private _scissor;
+        private _scissorTest;
+        private _viewport;
+        private _frustum;
+        private _clipping;
+        private _clippingEnabled;
+        private _localClippingEnabled;
+        private _sphere;
+        private _projScreenMatrix;
+        private _vector3;
+        private _lights;
+        private _infoRender;
+        private textures;
+        private objects;
+        private programCache;
+        private lightCache;
+        private bufferRenderer;
+        private indexedBufferRenderer;
+        private backgroundCamera;
+        private backgroundCamera2;
+        private backgroundPlaneMesh;
+        private backgroundBoxShader;
+        private backgroundBoxMesh;
+        private spritePlugin;
+        private lensFlarePlugin;
+        constructor(parameters?: WebGLRendererParams);
+        private init_context();
+        private init_extensions();
+        private getTargetPixelRatio();
+        private getContext();
+        private glClearColor(r, g, b, a);
+        private setDefaultGLState();
+        resetGLState(): void;
+        getContextAttributes(): WebGLContextAttributes;
+        forceContextLoss(): void;
+        getMaxAnisotropy(): number;
+        getPrecision(): string;
+        getPixelRatio(): number;
+        setPixelRatio(value: number): void;
+        getSize(): {
+            width: number;
+            height: number;
+        };
+        setSize(width: number, height: number, updateStyle?: boolean): void;
+        setViewport(x: number, y: number, width: number, height: number): void;
+        setScissor(x: number, y: number, width: number, height: number): void;
+        setScissorTest(boolean: boolean): void;
+        getClearColor(): Color;
+        setClearColor(color: number | Color, alpha?: number): void;
+        getClearAlpha(): number;
+        setClearAlpha(alpha: any): void;
+        clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
+        clearColor(): void;
+        clearDepth(): void;
+        clearStencil(): void;
+        clearTarget(renderTarget: WebGLRenderTarget, color?: boolean, depth?: boolean, stencil?: boolean): void;
+        dispose(): void;
+        private onContextLost_;
+        private onMaterialDispose_;
+        private onContextLost(event);
+        private onMaterialDispose(event);
+        private deallocateMaterial(material);
+        private releaseMaterialProgramReference(material);
+        renderBufferImmediate(object: ImmediateRenderObject, program: WebGLProgram, material: IMaterial): void;
+        renderBufferDirect(camera: Camera, fog: IFog, geometry: BufferGeometry, material: IMaterial, object: IObject3D, group: IGeometryGroup): void;
+        setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: BufferGeometry, startIndex?: number): void;
+        private absNumericalSort(a, b);
+        private painterSortStable(a, b);
+        private reversePainterSortStable(a, b);
+        render(scene: Scene, camera: Camera, renderTarget?: WebGLRenderTarget, forceClear?: boolean): void;
+        private pushRenderItem(object, geometry, material, z, group);
+        private isObjectViewable(object);
+        private isSpriteViewable(sprite);
+        private isSphereViewable(sphere);
+        private projectObject(object, camera);
+        private renderObjects(renderList, camera, fog, overrideMaterial?);
+        private initMaterial(material, fog, object);
+        private setMaterial(material);
+        private setProgram(camera, fog, material, object);
+        private refreshUniformsCommon(uniforms, material);
+        private refreshUniformsLine(uniforms, material);
+        private refreshUniformsDash(uniforms, material);
+        private refreshUniformsPoints(uniforms, material);
+        private refreshUniformsFog(uniforms, fog);
+        private refreshUniformsLambert(uniforms, material);
+        private refreshUniformsPhong(uniforms, material);
+        private refreshUniformsStandard(uniforms, material);
+        private refreshUniformsPhysical(uniforms, material);
+        private markUniformsLightsNeedsUpdate(uniforms, value);
+        private setupShadows(lights);
+        private setupLights(lights, camera);
+        setFaceCulling(cullFace: number, frontFaceDirection?: number): void;
+        allocTextureUnit(): number;
+        private static warned;
+        setTexture2D(texture: Texture, slot: number): void;
+        private static warned_setTextureCube;
+        setTextureCube(texture: CubeTexture, slot: any): void;
+        getCurrentRenderTarget(): WebGLRenderTarget;
+        setRenderTarget(renderTarget: WebGLRenderTarget): void;
+        readRenderTargetPixels(renderTarget: WebGLRenderTarget, x: number, y: number, width: number, height: number, buffer: ArrayBufferView): void;
+    }
+}
+declare namespace THREE {
+    interface WebGLRenderTargetOptions {
+        wrapS?: number;
+        wrapT?: number;
+        magFilter?: number;
+        minFilter?: number;
+        format?: number;
+        type?: number;
+        anisotropy?: number;
+        encoding?: number;
+        depthBuffer?: boolean;
+        stencilBuffer?: boolean;
+    }
+    class WebGLRenderTarget extends EventDispatcher {
+        uuid: string;
+        width: number;
+        height: number;
+        scissor: Vector4;
+        scissorTest: boolean;
+        viewport: Vector4;
+        texture: Texture;
+        depthBuffer: boolean;
+        stencilBuffer: boolean;
+        depthTexture: Texture;
+        constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
+        setSize(width: number, height: number): void;
+        clone(): any;
+        copy(source: WebGLRenderTarget): this;
+        dispose(): void;
+    }
+}
+declare namespace THREE {
+    class WebGLRenderTargetCube extends WebGLRenderTarget {
+        activeCubeFace: number;
+        activeMipMapLevel: number;
+        constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
+    }
+}
+declare namespace THREE {
     class LensFlarePlugin {
         renderer: WebGLRenderer;
         private flares;
@@ -4590,264 +4846,6 @@ declare namespace THREE {
         private static RePathPart;
         private static addUniform(container, uniformObject);
         private static parseUniform(activeInfo, addr, container);
-    }
-}
-declare namespace THREE {
-    function paramThreeToGL(renderer: WebGLRenderer, p: number): any;
-}
-declare namespace THREE {
-    function readRenderTargetPixels(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget, x: number, y: number, width: number, height: number, buffer: ArrayBufferView): void;
-}
-declare namespace THREE {
-    interface InfoRenderer {
-        calls?: number;
-        vertices?: number;
-        faces?: number;
-        points?: number;
-    }
-    interface InfoMemory {
-        geometries?: number;
-        textures?: number;
-    }
-    interface WebGLRendererInfo {
-        render: InfoRenderer;
-        memory: InfoMemory;
-        programs: any;
-    }
-    interface LightArrayCache {
-        hash: string;
-        ambient: number[];
-        directional: ILightUniforms[];
-        directionalShadowMap: Texture[];
-        directionalShadowMatrix: Matrix4[];
-        spot: ILightUniforms[];
-        spotShadowMap: Texture[];
-        spotShadowMatrix: Matrix4[];
-        point: ILightUniforms[];
-        pointShadowMap: Texture[];
-        pointShadowMatrix: Matrix4[];
-        hemi: ILightUniforms[];
-        shadows: Light[];
-    }
-    interface IMaterialPropertyCache {
-        program?: WebGLProgram;
-        __webglShader?: {
-            name: string;
-            uniforms: IUniforms;
-            vertexShader: string;
-            fragmentShader: string;
-        };
-        numClippingPlanes?: number;
-        lightsHash?: string;
-        uniformsList?: UniformType[];
-        dynamicUniforms?: UniformType[];
-        clippingState?: Float32Array;
-    }
-    interface WebGLRendererParams {
-        canvas?: HTMLCanvasElement;
-        context?: any;
-        alpha?: boolean;
-        depth?: boolean;
-        stencil?: boolean;
-        antialias?: boolean;
-        premultipliedAlpha?: boolean;
-        preserveDrawingBuffer?: boolean;
-    }
-    class WebGLRenderer {
-        domElement: HTMLElement;
-        context: WebGLRenderingContext;
-        autoClear: boolean;
-        autoClearColor: boolean;
-        autoClearDepth: boolean;
-        autoClearStencil: boolean;
-        sortObjects: boolean;
-        clippingPlanes: Plane[];
-        localClippingEnabled: boolean;
-        gammaFactor: number;
-        gammaInput: boolean;
-        gammaOutput: boolean;
-        physicallyCorrectLights: boolean;
-        toneMapping: number;
-        toneMappingExposure: number;
-        toneMappingWhitePoint: number;
-        maxMorphTargets: number;
-        maxMorphNormals: number;
-        info: WebGLRendererInfo;
-        capabilities: WebGLCapabilities;
-        extensions: WebGLExtensions;
-        properties: WebGLProperties;
-        state: WebGLState;
-        shadowMap: WebGLShadowMap;
-        parameters: any;
-        _canvas: HTMLCanvasElement;
-        _context: any;
-        _alpha: boolean;
-        _depth: boolean;
-        _stencil: boolean;
-        _antialias: boolean;
-        _premultipliedAlpha: boolean;
-        _preserveDrawingBuffer: boolean;
-        lights: Light[];
-        private opaqueObjects;
-        private opaqueObjectsLastIndex;
-        private transparentObjects;
-        private transparentObjectsLastIndex;
-        morphInfluences: Float32Array;
-        sprites: Sprite[];
-        lensFlares: LensFlare[];
-        _currentRenderTarget: WebGLRenderTarget;
-        _currentProgram: number;
-        _currentFramebuffer: any;
-        _currentMaterialId: number;
-        _currentGeometryProgram: any;
-        _currentCamera: Camera;
-        private _currentScissor;
-        private _currentScissorTest;
-        private _currentViewport;
-        private _usedTextureUnits;
-        private _clearColor;
-        private _clearAlpha;
-        private _width;
-        private _height;
-        private _pixelRatio;
-        private _scissor;
-        private _scissorTest;
-        private _viewport;
-        private _frustum;
-        private _clipping;
-        private _clippingEnabled;
-        private _localClippingEnabled;
-        private _sphere;
-        private _projScreenMatrix;
-        private _vector3;
-        private _lights;
-        private _infoRender;
-        private textures;
-        private objects;
-        private programCache;
-        private lightCache;
-        private bufferRenderer;
-        private indexedBufferRenderer;
-        private backgroundCamera;
-        private backgroundCamera2;
-        private backgroundPlaneMesh;
-        private backgroundBoxShader;
-        private backgroundBoxMesh;
-        private spritePlugin;
-        private lensFlarePlugin;
-        constructor(parameters?: WebGLRendererParams);
-        private init_context();
-        private init_extensions();
-        private getTargetPixelRatio();
-        private getContext();
-        private glClearColor(r, g, b, a);
-        private setDefaultGLState();
-        resetGLState(): void;
-        getContextAttributes(): WebGLContextAttributes;
-        forceContextLoss(): void;
-        getMaxAnisotropy(): number;
-        getPrecision(): string;
-        getPixelRatio(): number;
-        setPixelRatio(value: number): void;
-        getSize(): {
-            width: number;
-            height: number;
-        };
-        setSize(width: number, height: number, updateStyle?: boolean): void;
-        setViewport(x: number, y: number, width: number, height: number): void;
-        setScissor(x: number, y: number, width: number, height: number): void;
-        setScissorTest(boolean: boolean): void;
-        getClearColor(): Color;
-        setClearColor(color: number | Color, alpha?: number): void;
-        getClearAlpha(): number;
-        setClearAlpha(alpha: any): void;
-        clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
-        clearColor(): void;
-        clearDepth(): void;
-        clearStencil(): void;
-        clearTarget(renderTarget: WebGLRenderTarget, color?: boolean, depth?: boolean, stencil?: boolean): void;
-        dispose(): void;
-        private onContextLost_;
-        private onMaterialDispose_;
-        private onContextLost(event);
-        private onMaterialDispose(event);
-        private deallocateMaterial(material);
-        private releaseMaterialProgramReference(material);
-        renderBufferImmediate(object: ImmediateRenderObject, program: WebGLProgram, material: IMaterial): void;
-        renderBufferDirect(camera: Camera, fog: IFog, geometry: BufferGeometry, material: IMaterial, object: IObject3D, group: IGeometryGroup): void;
-        setupVertexAttributes(material: IMaterial, program: WebGLProgram, geometry: BufferGeometry, startIndex?: number): void;
-        private absNumericalSort(a, b);
-        private painterSortStable(a, b);
-        private reversePainterSortStable(a, b);
-        render(scene: Scene, camera: Camera, renderTarget?: WebGLRenderTarget, forceClear?: boolean): void;
-        private pushRenderItem(object, geometry, material, z, group);
-        private isObjectViewable(object);
-        private isSpriteViewable(sprite);
-        private isSphereViewable(sphere);
-        private projectObject(object, camera);
-        private renderObjects(renderList, camera, fog, overrideMaterial?);
-        private initMaterial(material, fog, object);
-        private setMaterial(material);
-        private setProgram(camera, fog, material, object);
-        private refreshUniformsCommon(uniforms, material);
-        private refreshUniformsLine(uniforms, material);
-        private refreshUniformsDash(uniforms, material);
-        private refreshUniformsPoints(uniforms, material);
-        private refreshUniformsFog(uniforms, fog);
-        private refreshUniformsLambert(uniforms, material);
-        private refreshUniformsPhong(uniforms, material);
-        private refreshUniformsStandard(uniforms, material);
-        private refreshUniformsPhysical(uniforms, material);
-        private markUniformsLightsNeedsUpdate(uniforms, value);
-        private setupShadows(lights);
-        private setupLights(lights, camera);
-        setFaceCulling(cullFace: number, frontFaceDirection?: number): void;
-        allocTextureUnit(): number;
-        private static warned;
-        setTexture2D(texture: Texture, slot: number): void;
-        private static warned_setTextureCube;
-        setTextureCube(texture: CubeTexture, slot: any): void;
-        getCurrentRenderTarget(): WebGLRenderTarget;
-        setRenderTarget(renderTarget: WebGLRenderTarget): void;
-        readRenderTargetPixels(renderTarget: WebGLRenderTarget, x: number, y: number, width: number, height: number, buffer: ArrayBufferView): void;
-    }
-}
-declare namespace THREE {
-    interface WebGLRenderTargetOptions {
-        wrapS?: number;
-        wrapT?: number;
-        magFilter?: number;
-        minFilter?: number;
-        format?: number;
-        type?: number;
-        anisotropy?: number;
-        encoding?: number;
-        depthBuffer?: boolean;
-        stencilBuffer?: boolean;
-    }
-    class WebGLRenderTarget extends EventDispatcher {
-        uuid: string;
-        width: number;
-        height: number;
-        scissor: Vector4;
-        scissorTest: boolean;
-        viewport: Vector4;
-        texture: Texture;
-        depthBuffer: boolean;
-        stencilBuffer: boolean;
-        depthTexture: Texture;
-        constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
-        setSize(width: number, height: number): void;
-        clone(): any;
-        copy(source: WebGLRenderTarget): this;
-        dispose(): void;
-    }
-}
-declare namespace THREE {
-    class WebGLRenderTargetCube extends WebGLRenderTarget {
-        activeCubeFace: number;
-        activeMipMapLevel: number;
-        constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
     }
 }
 declare namespace THREE {

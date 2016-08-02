@@ -376,7 +376,7 @@ namespace THREE
             return this;
         }  
 
-        translate(offset)
+        translate(offset: Vector3)
         {
             this.min.add(offset);
             this.max.add(offset);

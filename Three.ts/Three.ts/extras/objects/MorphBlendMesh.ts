@@ -5,11 +5,34 @@
 
 namespace THREE
 {
+    interface IMorpAnimation
+    {
+        start?: number;
+        end?: number;
+
+        length?: number;
+
+        fps?: number;
+        duration?: number;
+
+        lastFrame?: number;
+        currentFrame?: number;
+
+        active?: boolean;
+
+        time?: number;
+        direction?: number;
+        weight?: number;
+
+        directionBackwards?: boolean;
+        mirroredLoop?: boolean;
+    } 
+
     export class MorphBlendMesh extends Mesh
     {
-        animationsMap: any;
-        animationsList: any[];
-        firstAnimation: any;
+        private animationsMap: { [index: string]: IMorpAnimation };
+        private animationsList: IMorpAnimation[];
+        private firstAnimation: IMorpAnimation;
 
         constructor(geometry: Geometry, material)
         {
@@ -34,11 +57,10 @@ namespace THREE
             this.setAnimationWeight(name, 1);
 
         };
-
-
-        createAnimation(name, start, end, fps)
+         
+        createAnimation(name: string, start: number, end: number, fps: number)
         {
-            var animation = {
+            var animation  = {
 
                 start: start,
                 end: end,
@@ -67,9 +89,8 @@ namespace THREE
 
         };
 
-        autoCreateAnimations(fps)
-        {
-
+        autoCreateAnimations(fps: number)
+        { 
             var pattern = /([a-z]+)_?(\d+)/i;
 
             var firstAnimation, frameRanges = {};
@@ -77,8 +98,7 @@ namespace THREE
             var geometry = this.geometry as Geometry;
 
             for (var i = 0, il = geometry.morphTargets.length; i < il; i++)
-            {
-
+            { 
                 var morph = geometry.morphTargets[i];
                 var chunks = morph.name.match(pattern);
 
@@ -109,7 +129,7 @@ namespace THREE
             this.firstAnimation = firstAnimation;
         }
 
-        setAnimationDirectionForward(name)
+        setAnimationDirectionForward(name: string)
         {
             var animation = this.animationsMap[name];
 
@@ -120,22 +140,18 @@ namespace THREE
             }
         }
 
-        setAnimationDirectionBackward(name)
-        {
-
+        setAnimationDirectionBackward(name: string)
+        { 
             var animation = this.animationsMap[name];
 
             if (animation)
-            {
-
+            { 
                 animation.direction = - 1;
-                animation.directionBackwards = true;
-
-            }
-
+                animation.directionBackwards = true; 
+            } 
         };
 
-        setAnimationFPS(name, fps)
+        setAnimationFPS(name: string, fps: number)
         {
             var animation = this.animationsMap[name];
 
@@ -143,11 +159,10 @@ namespace THREE
             {
                 animation.fps = fps;
                 animation.duration = (animation.end - animation.start) / animation.fps;
-            }
-
+            } 
         };
 
-        setAnimationDuration(name, duration)
+        setAnimationDuration(name: string, duration: number)
         {
             var animation = this.animationsMap[name];
 
@@ -158,7 +173,7 @@ namespace THREE
             }
         }
 
-        setAnimationWeight = function (name, weight)
+        setAnimationWeight = function (name: string, weight: number)
         {
             var animation = this.animationsMap[name];
             if (animation)
@@ -167,7 +182,7 @@ namespace THREE
             }
         }
 
-        setAnimationTime = function (name, time)
+        setAnimationTime = function (name: string, time: number)
         {
             var animation = this.animationsMap[name];
             if (animation)
@@ -176,7 +191,7 @@ namespace THREE
             }
         }
 
-        getAnimationTime = function (name)
+        getAnimationTime = function (name: string)
         {
             var time = 0;
             var animation = this.animationsMap[name];
@@ -188,7 +203,7 @@ namespace THREE
             return time;
         }
 
-        getAnimationDuration(name)
+        getAnimationDuration(name: string)
         {
             var duration = - 1;
             var animation = this.animationsMap[name];
@@ -202,7 +217,7 @@ namespace THREE
 
         };
 
-        playAnimation(name)
+        playAnimation(name: string)
         {
             var animation = this.animationsMap[name];
 
@@ -218,7 +233,7 @@ namespace THREE
 
         };
 
-        stopAnimation(name)
+        stopAnimation(name: string)
         {
             var animation = this.animationsMap[name];
             if (animation)
@@ -227,7 +242,7 @@ namespace THREE
             }
         };
 
-        update(delta)
+        update(delta: number)
         {
             for (var i = 0, il = this.animationsList.length; i < il; i++)
             {

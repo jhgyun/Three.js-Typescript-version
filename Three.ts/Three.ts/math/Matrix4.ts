@@ -463,7 +463,7 @@ namespace THREE
             tmp = te[11]; te[11] = te[14]; te[14] = tmp; 
             return this; 
         }
-        setPosition(v)
+        setPosition(v: Vector3)
         { 
             var te = this.elements; 
             te[12] = v.x;
@@ -726,7 +726,7 @@ namespace THREE
             return this;
 
         }
-        equals (matrix)
+        equals(matrix: Matrix4)
         { 
             var te = this.elements;
             var me = matrix.elements; 

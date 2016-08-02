@@ -724,7 +724,7 @@ namespace THREE
         b2: (function ()
         {
 
-            function b2p0(t, p)
+            function b2p0(t: number, p: number)
             {
 
                 var k = 1 - t;
@@ -732,21 +732,21 @@ namespace THREE
 
             }
 
-            function b2p1(t, p)
+            function b2p1(t: number, p: number)
             {
 
                 return 2 * (1 - t) * t * p;
 
             }
 
-            function b2p2(t, p)
+            function b2p2(t: number, p: number)
             {
 
                 return t * t * p;
 
             }
 
-            return function b2(t, p0, p1, p2)
+            return function b2(t: number, p0: number, p1: number, p2: number)
             {
 
                 return b2p0(t, p0) + b2p1(t, p1) + b2p2(t, p2);
@@ -758,30 +758,30 @@ namespace THREE
         // Cubic Bezier Functions 
         b3: (function ()
         { 
-            function b3p0(t, p)
+            function b3p0(t: number, p: number)
             { 
                 var k = 1 - t;
                 return k * k * k * p; 
             }
 
-            function b3p1(t, p)
+            function b3p1(t: number, p: number)
             { 
                 var k = 1 - t;
                 return 3 * k * k * t * p; 
             }
 
-            function b3p2(t, p)
+            function b3p2(t: number, p: number)
             { 
                 var k = 1 - t;
                 return 3 * k * t * t * p; 
             }
 
-            function b3p3(t, p)
+            function b3p3(t: number, p: number)
             { 
                 return t * t * t * p; 
             }
 
-            return function b3(t, p0, p1, p2, p3)
+            return function b3(t: number, p0: number, p1: number, p2: number, p3: number)
             { 
                 return b3p0(t, p0) + b3p1(t, p1) + b3p2(t, p2) + b3p3(t, p3); 
             };

@@ -86,7 +86,7 @@ namespace THREE
             return this;
         }
 
-        equals(line)
+        equals(line: Line3)
         {
             return line.start.equals(this.start) && line.end.equals(this.end);
         }

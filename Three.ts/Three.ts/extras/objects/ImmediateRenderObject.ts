@@ -23,7 +23,6 @@ namespace THREE
             super(); 
             this.material = material;
             this.render = function (renderCallback) { }; 
-        };
-         
+        }; 
     }
 }

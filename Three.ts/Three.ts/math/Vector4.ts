@@ -424,7 +424,7 @@ namespace THREE
         {
             return this.divideScalar(this.length());
         }
-        setLength(length)
+        setLength(length: number)
         {
             return this.multiplyScalar(length / this.length());
         }
@@ -440,7 +440,7 @@ namespace THREE
         {
             return this.subVectors(v2, v1).multiplyScalar(alpha).add(v1);
         }
-        equals(v)
+        equals(v: Vector4)
         {
             return ((v.x === this.x) && (v.y === this.y) && (v.z === this.z) && (v.w === this.w));
         }
