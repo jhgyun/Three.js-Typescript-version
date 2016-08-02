@@ -52,5 +52,12 @@
 
         //Sprite
         z?: number;
+
+        position?: Vector3;
+        rotation?: Euler;
+        quaternion?: Quaternion;
+        scale?: Vector3;
+        modelViewMatrix?: Matrix4;
+        normalMatrix?: Matrix3;
     }
 }

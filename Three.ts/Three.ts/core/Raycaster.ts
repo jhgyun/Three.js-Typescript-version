@@ -20,7 +20,7 @@ namespace THREE
         };
         linePrecision = 1;
 
-        constructor(origin: Vector3, direction: Vector3, near = 0, far = Infinity)
+        constructor(origin?: Vector3, direction?: Vector3, near?:number , far?:number)
         {
             this.ray = new Ray(origin, direction);
             // direction is assumed to be normalized (for accurate distance calculations)
@@ -34,8 +34,7 @@ namespace THREE
             return a.distance - b.distance;
         }
         static intersectObject(object: Object3D, raycaster: Raycaster, intersects, recursive)
-        {
-
+        { 
             if (object.visible === false) return;
 
             object.raycast(raycaster, intersects);

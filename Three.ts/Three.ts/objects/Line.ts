@@ -27,7 +27,7 @@ namespace THREE
         private static raycast_ray: Ray;
         private static raycast_sphere: Sphere;
 
-        public raycast(raycaster, intersects)
+        public raycast(raycaster: Raycaster, intersects: IntersectResult[])
         { 
             var inverseMatrix = Line.raycast_inverseMatrix;
             var ray = Line.raycast_ray;

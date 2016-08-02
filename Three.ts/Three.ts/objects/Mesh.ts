@@ -7,19 +7,7 @@
  */
 
 namespace THREE
-{
-    export interface IntersectResult
-    {
-        distance?: number;
-        distanceToRay?: number;
-        point?: Vector3;
-        uv?: Vector2;
-        object?: any;
-        face?: Face3; 
-        faceIndex?: number;
-        index?: number
-    }
-
+{ 
     export class Mesh extends Object3D
     {
         drawMode: number;

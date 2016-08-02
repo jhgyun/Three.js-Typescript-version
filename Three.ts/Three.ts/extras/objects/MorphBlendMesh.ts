@@ -26,15 +26,14 @@ namespace THREE
 
         directionBackwards?: boolean;
         mirroredLoop?: boolean;
-    } 
-
+    }  
     export class MorphBlendMesh extends Mesh
     {
         private animationsMap: { [index: string]: IMorpAnimation };
         private animationsList: IMorpAnimation[];
         private firstAnimation: IMorpAnimation;
 
-        constructor(geometry: Geometry, material)
+        constructor(geometry: Geometry, material: IMaterial)
         {
             super(geometry, material);
 
@@ -114,10 +113,8 @@ namespace THREE
                     if (i < range.start) range.start = i;
                     if (i > range.end) range.end = i;
 
-                    if (!firstAnimation) firstAnimation = name;
-
-                }
-
+                    if (!firstAnimation) firstAnimation = name; 
+                } 
             }
 
             for (let name in frameRanges)

@@ -79,7 +79,7 @@ namespace THREE
         }
 
         private static raycast_matrixPosition = new Vector3();
-        raycast(raycaster, intersects)
+        raycast(raycaster: Raycaster, intersects: IntersectResult[])
         {
             var matrixPosition = LOD.raycast_matrixPosition;
             matrixPosition.setFromMatrixPosition(this.matrixWorld);

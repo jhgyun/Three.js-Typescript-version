@@ -6,9 +6,28 @@
 
 namespace THREE
 {
+    export interface IFlare
+    {
+        texture?: Texture;	// THREE.Texture
+        size?: number, 		// size in pixels (-1 = use texture.width)
+        distance?: number, 	// distance (0-1) from light source (0=at light source)
+        x?: number;
+        y?: number;
+        z?: number;	// screen position (-1 => 1) z = 0 is in front z = 1 is back
+        scale?: number; 		// scale
+        rotation?: number; 		// rotation
+        opacity?: number;	// opacity
+        color?: Color ;		// color
+        blending?: number;	// blending
+        wantedRotation?: number;
+        blendEquation?: number;
+        blendSrc?: number;
+        blendDst?: number;
+    }
+
     export class LensFlare extends Object3D
     {
-        lensFlares = [];
+        lensFlares: IFlare[] = [];
         positionScreen = new Vector3();
         customUpdateCallback: any;
 
@@ -65,7 +84,7 @@ namespace THREE
         public updateLensFlares()
         {
             var f, fl = this.lensFlares.length;
-            var flare;
+            var flare: IFlare;
             var vecX = - this.positionScreen.x * 2;
             var vecY = - this.positionScreen.y * 2;
 

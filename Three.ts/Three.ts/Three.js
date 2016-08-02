@@ -7992,8 +7992,6 @@ var THREE;
 (function (THREE) {
     var Raycaster = (function () {
         function Raycaster(origin, direction, near, far) {
-            if (near === void 0) { near = 0; }
-            if (far === void 0) { far = Infinity; }
             this.params = {
                 Mesh: {},
                 Line: {},
@@ -14533,17 +14531,17 @@ var THREE;
                     object = new THREE.Scene();
                     break;
                 case 'PerspectiveCamera':
-                    object = new THREE.PerspectiveCamera(data.fov, data.aspect, data.near, data.far);
+                    var camera = object = new THREE.PerspectiveCamera(data.fov, data.aspect, data.near, data.far);
                     if (data.focus !== undefined)
-                        object.focus = data.focus;
+                        camera.focus = data.focus;
                     if (data.zoom !== undefined)
-                        object.zoom = data.zoom;
+                        camera.zoom = data.zoom;
                     if (data.filmGauge !== undefined)
-                        object.filmGauge = data.filmGauge;
+                        camera.filmGauge = data.filmGauge;
                     if (data.filmOffset !== undefined)
-                        object.filmOffset = data.filmOffset;
+                        camera.filmOffset = data.filmOffset;
                     if (data.view !== undefined)
-                        object.view = Object.assign({}, data.view);
+                        camera.view = Object.assign({}, data.view);
                     break;
                 case 'OrthographicCamera':
                     object = new THREE.OrthographicCamera(data.left, data.right, data.top, data.bottom, data.near, data.far);

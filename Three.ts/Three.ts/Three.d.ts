@@ -1054,6 +1054,16 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface IntersectResult {
+        distance?: number;
+        distanceToRay?: number;
+        point?: Vector3;
+        uv?: Vector2;
+        object?: any;
+        face?: Face3;
+        faceIndex?: number;
+        index?: number;
+    }
     class Object3D extends EventDispatcher implements IObject3D {
         static DefaultUp: Vector3;
         static DefaultMatrixAutoUpdate: boolean;
@@ -1119,7 +1129,7 @@ declare namespace THREE {
         getWorldRotation(optionalTarget?: Euler): Euler;
         getWorldScale(optionalTarget?: Vector3): Vector3;
         getWorldDirection(optionalTarget?: Vector3): any;
-        raycast(raycaster: Raycaster, intersects: any): void;
+        raycast(raycaster: Raycaster, intersects: IntersectResult[]): void;
         traverse(callback: (obj: Object3D) => any): void;
         traverseVisible(callback: (obj: Object3D) => any): void;
         traverseAncestors(callback: (obj: Object3D) => any): void;
@@ -1747,6 +1757,12 @@ declare namespace THREE {
         bindMatrixInverse?: Matrix4;
         skeleton?: Skeleton;
         z?: number;
+        position?: Vector3;
+        rotation?: Euler;
+        quaternion?: Quaternion;
+        scale?: Vector3;
+        modelViewMatrix?: Matrix4;
+        normalMatrix?: Matrix3;
     }
 }
 declare namespace THREE {
@@ -1774,7 +1790,7 @@ declare namespace THREE {
             Sprite: {};
         };
         linePrecision: number;
-        constructor(origin: Vector3, direction: Vector3, near?: number, far?: number);
+        constructor(origin?: Vector3, direction?: Vector3, near?: number, far?: number);
         static ascSort(a: any, b: any): number;
         static intersectObject(object: Object3D, raycaster: Raycaster, intersects: any, recursive: any): void;
         set(origin: Vector3, direction: Vector3): void;
@@ -2216,7 +2232,7 @@ declare namespace THREE {
         private static raycast_inverseMatrix;
         private static raycast_ray;
         private static raycast_sphere;
-        raycast(raycaster: any, intersects: any): void;
+        raycast(raycaster: Raycaster, intersects: IntersectResult[]): void;
         clone(): any;
     }
 }
@@ -2231,16 +2247,6 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
-    interface IntersectResult {
-        distance?: number;
-        distanceToRay?: number;
-        point?: Vector3;
-        uv?: Vector2;
-        object?: any;
-        face?: Face3;
-        faceIndex?: number;
-        index?: number;
-    }
     class Mesh extends Object3D {
         drawMode: number;
         morphTargetBase: any;
@@ -2391,7 +2397,7 @@ declare namespace THREE {
         private animationsMap;
         private animationsList;
         private firstAnimation;
-        constructor(geometry: Geometry, material: any);
+        constructor(geometry: Geometry, material: IMaterial);
         createAnimation(name: string, start: number, end: number, fps: number): void;
         autoCreateAnimations(fps: number): void;
         setAnimationDirectionForward(name: string): void;
@@ -2657,13 +2663,15 @@ declare namespace THREE {
         load(url: any, onLoad: any, onProgress: any, onError: any): void;
         setTexturePath(value: any): void;
         setCrossOrigin(value: any): void;
-        parse(json: any, onLoad: any): any;
-        parseGeometries(json: any): {};
+        parse(json: any, onLoad: (obj: IObject3D) => any): any;
+        parseGeometries(json: any): {
+            [index: string]: IGeometry;
+        };
         parseMaterials(json: any, textures: any): {};
         parseAnimations(json: any): any[];
         parseImages(json: any, onLoad: any): {};
         parseTextures(json: any, images: any): {};
-        parseObject(data: any, geometries: any, materials: any): any;
+        parseObject(data: any, geometries: any, materials: any): Object3D;
     }
 }
 declare namespace THREE {
@@ -3460,8 +3468,8 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class Bone extends Object3D {
-        skin: any;
-        constructor(skin: any);
+        skin: SkinnedMesh;
+        constructor(skin?: SkinnedMesh);
         copy(source: Bone): this;
     }
 }
@@ -3471,8 +3479,25 @@ declare namespace THREE {
     }
 }
 declare namespace THREE {
+    interface IFlare {
+        texture?: Texture;
+        size?: number;
+        distance?: number;
+        x?: number;
+        y?: number;
+        z?: number;
+        scale?: number;
+        rotation?: number;
+        opacity?: number;
+        color?: Color;
+        blending?: number;
+        wantedRotation?: number;
+        blendEquation?: number;
+        blendSrc?: number;
+        blendDst?: number;
+    }
     class LensFlare extends Object3D {
-        lensFlares: any[];
+        lensFlares: IFlare[];
         positionScreen: Vector3;
         customUpdateCallback: any;
         constructor(texture?: any, size?: number, distance?: number, blending?: number, color?: Color);
@@ -3494,7 +3519,7 @@ declare namespace THREE {
         addLevel(object: Object3D, distance: number): void;
         getObjectForDistance(distance: number): Object3D;
         private static raycast_matrixPosition;
-        raycast(raycaster: any, intersects: any): void;
+        raycast(raycaster: Raycaster, intersects: IntersectResult[]): void;
         private static update_v1;
         private static update_v2;
         update(camera: any): void;
@@ -3535,7 +3560,7 @@ declare namespace THREE {
         bindMatrix: Matrix4;
         bindMatrixInverse: Matrix4;
         skeleton: Skeleton;
-        constructor(geometry?: IGeometry, material?: any, useVertexTexture?: boolean);
+        constructor(geometry?: IGeometry, material?: IMaterial, useVertexTexture?: boolean);
         bind(skeleton: Skeleton, bindMatrix: Matrix4): void;
         pose(): void;
         normalizeSkinWeights(): void;

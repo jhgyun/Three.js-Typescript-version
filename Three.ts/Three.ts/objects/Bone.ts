@@ -9,8 +9,8 @@ namespace THREE
 {
     export class Bone extends Object3D
     {
-        skin: any;
-        constructor(skin)
+        skin: SkinnedMesh;
+        constructor(skin?: SkinnedMesh)
         {
             super();
             this.type = 'Bone';

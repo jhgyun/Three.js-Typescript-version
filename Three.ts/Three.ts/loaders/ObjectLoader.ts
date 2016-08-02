@@ -15,11 +15,9 @@ namespace THREE
             this.manager = (manager !== undefined) ? manager : THREE.DefaultLoadingManager;
             this.texturePath = '';
         };
-
-
+        
         load(url, onLoad, onProgress, onError)
         {
-
             if (this.texturePath === '')
             {
                 this.texturePath = url.substring(0, url.lastIndexOf('/') + 1);
@@ -31,7 +29,6 @@ namespace THREE
             loader.load(url, function (text)
             {
                 scope.parse(JSON.parse(text), onLoad);
-
             }, onProgress, onError);
 
         }
@@ -46,7 +43,7 @@ namespace THREE
             this.crossOrigin = value;
         }
 
-        parse(json, onLoad)
+        parse(json, onLoad:( obj:IObject3D)=>any)
         {
             var geometries = this.parseGeometries(json.geometries);
 
@@ -60,20 +57,16 @@ namespace THREE
             var textures = this.parseTextures(json.textures, images);
             var materials = this.parseMaterials(json.materials, textures);
 
-            var object = this.parseObject(json.object, geometries, materials);
+            var object: any = this.parseObject(json.object, geometries, materials);
 
             if (json.animations)
             {
-
                 object.animations = this.parseAnimations(json.animations);
-
             }
 
             if (json.images === undefined || json.images.length === 0)
             {
-
                 if (onLoad !== undefined) onLoad(object);
-
             }
 
             return object;
@@ -81,27 +74,23 @@ namespace THREE
 
         parseGeometries(json)
         {
-
-            var geometries = {};
+            var geometries: { [index: string]: IGeometry } = {};
 
             if (json !== undefined)
-            {
-
+            { 
                 var geometryLoader = new THREE.JSONLoader();
                 var bufferGeometryLoader = new THREE.BufferGeometryLoader();
 
                 for (var i = 0, l = json.length; i < l; i++)
                 {
 
-                    var geometry;
+                    var geometry:IGeometry ;
                     var data = json[i];
 
                     switch (data.type)
-                    {
-
+                    { 
                         case 'PlaneGeometry':
-                        case 'PlaneBufferGeometry':
-
+                        case 'PlaneBufferGeometry': 
                             geometry = new THREE[data.type](
                                 data.width,
                                 data.height,
@@ -187,8 +176,7 @@ namespace THREE
                         case 'DodecahedronGeometry':
                         case 'IcosahedronGeometry':
                         case 'OctahedronGeometry':
-                        case 'TetrahedronGeometry':
-
+                        case 'TetrahedronGeometry': 
                             geometry = new THREE[data.type](
                                 data.radius,
                                 data.detail
@@ -250,19 +238,14 @@ namespace THREE
                             break;
 
                         case 'BufferGeometry':
-
                             geometry = bufferGeometryLoader.parse(data);
-
                             break;
 
                         case 'Geometry':
-
                             geometry = geometryLoader.parse(data.data, this.texturePath).geometry;
-
                             break;
 
                         default:
-
                             console.warn('THREE.ObjectLoader: Unsupported geometry type "' + data.type + '"');
 
                             continue;
@@ -434,26 +417,20 @@ namespace THREE
         }
 
         parseObject(data, geometries, materials)
-        {
-
+        { 
             var matrix: Matrix4 = ObjectLoader[".parseObject.matrix"] || (ObjectLoader[".parseObject.matrix"] = new Matrix4());
 
-
-
-            var object;
+            var object: Object3D;
 
             function getGeometry(name)
             {
 
                 if (geometries[name] === undefined)
-                {
-
-                    console.warn('THREE.ObjectLoader: Undefined geometry', name);
-
+                { 
+                    console.warn('THREE.ObjectLoader: Undefined geometry', name); 
                 }
 
-                return geometries[name];
-
+                return geometries[name]; 
             }
 
             function getMaterial(name)
@@ -474,114 +451,78 @@ namespace THREE
 
             switch (data.type)
             {
-
                 case 'Scene':
-
                     object = new THREE.Scene();
-
                     break;
-
                 case 'PerspectiveCamera':
+                    var camera = object =  new THREE.PerspectiveCamera(data.fov, data.aspect, data.near, data.far);
 
-                    object = new THREE.PerspectiveCamera(data.fov, data.aspect, data.near, data.far);
-
-                    if (data.focus !== undefined) object.focus = data.focus;
-                    if (data.zoom !== undefined) object.zoom = data.zoom;
-                    if (data.filmGauge !== undefined) object.filmGauge = data.filmGauge;
-                    if (data.filmOffset !== undefined) object.filmOffset = data.filmOffset;
-                    if (data.view !== undefined) object.view = Object.assign({}, data.view);
+                    if (data.focus !== undefined) camera.focus = data.focus;
+                    if (data.zoom !== undefined) camera.zoom = data.zoom;
+                    if (data.filmGauge !== undefined) camera.filmGauge = data.filmGauge;
+                    if (data.filmOffset !== undefined) camera.filmOffset = data.filmOffset;
+                    if (data.view !== undefined) camera.view = Object.assign({}, data.view);
 
                     break;
 
                 case 'OrthographicCamera':
-
                     object = new THREE.OrthographicCamera(data.left, data.right, data.top, data.bottom, data.near, data.far);
 
                     break;
-
                 case 'AmbientLight':
-
                     object = new THREE.AmbientLight(data.color, data.intensity);
-
                     break;
 
                 case 'DirectionalLight':
-
                     object = new THREE.DirectionalLight(data.color, data.intensity);
-
                     break;
 
                 case 'PointLight':
-
                     object = new THREE.PointLight(data.color, data.intensity, data.distance, data.decay);
-
                     break;
 
                 case 'SpotLight':
-
                     object = new THREE.SpotLight(data.color, data.intensity, data.distance, data.angle, data.penumbra, data.decay);
-
                     break;
 
                 case 'HemisphereLight':
-
                     object = new THREE.HemisphereLight(data.color, data.groundColor, data.intensity);
-
                     break;
 
                 case 'Mesh':
-
                     var geometry = getGeometry(data.geometry);
                     var material = getMaterial(data.material);
 
                     if (geometry.bones && geometry.bones.length > 0)
                     {
-
                         object = new THREE.SkinnedMesh(geometry, material);
-
-                    } else
+                    }
+                    else
                     {
-
                         object = new THREE.Mesh(geometry, material);
-
                     }
 
                     break;
 
                 case 'LOD':
-
                     object = new THREE.LOD();
-
                     break;
-
                 case 'Line':
-
                     object = new THREE.Line(getGeometry(data.geometry), getMaterial(data.material), data.mode);
-
                     break;
 
                 case 'PointCloud':
                 case 'Points':
-
                     object = new THREE.Points(getGeometry(data.geometry), getMaterial(data.material));
-
                     break;
-
                 case 'Sprite':
-
                     object = new THREE.Sprite(getMaterial(data.material)); 
                     break;
-
                 case 'Group':
-
                     object = new THREE.Group();
-
                     break;
-
                 default:
-
                     object = new THREE.Object3D();
-
             }
 
             object.uuid = data.uuid;
@@ -626,7 +567,7 @@ namespace THREE
 
                     if (child !== undefined)
                     { 
-                        object.addLevel(child, level.distance); 
+                        (object as LOD).addLevel(child, level.distance); 
                     } 
                 } 
             }

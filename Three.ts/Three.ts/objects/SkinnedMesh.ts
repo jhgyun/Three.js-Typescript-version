@@ -14,7 +14,7 @@ namespace THREE
         bindMatrixInverse: Matrix4;
         skeleton: Skeleton;
 
-        constructor(geometry?: IGeometry, material?, useVertexTexture?: boolean)
+        constructor(geometry?: IGeometry, material?: IMaterial, useVertexTexture?: boolean)
         {
             super(geometry, material);
 
@@ -29,7 +29,7 @@ namespace THREE
             // TODO: remove bone creation as there is no reason (other than
             // convenience) for THREE.SkinnedMesh to do this.
 
-            var bones = [];
+            var bones: Bone[] = [];
 
             if (this.geometry && this.geometry["bones"] !== undefined)
             {

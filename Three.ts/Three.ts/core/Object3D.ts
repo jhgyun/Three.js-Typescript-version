@@ -20,6 +20,18 @@
 
 namespace THREE
 {
+    export interface IntersectResult
+    {
+        distance?: number;
+        distanceToRay?: number;
+        point?: Vector3;
+        uv?: Vector2;
+        object?: any;
+        face?: Face3;
+        faceIndex?: number;
+        index?: number
+    }
+
     export class Object3D extends EventDispatcher
         implements IObject3D
     {
@@ -398,7 +410,7 @@ namespace THREE
 
             return func.apply(this, arguments);
         }
-        raycast(raycaster: Raycaster, intersects) { }
+        raycast(raycaster: Raycaster, intersects: IntersectResult[]) { }
         traverse(callback: (obj: Object3D) => any)
         {
             callback(this);
