@@ -19,7 +19,7 @@ namespace THREE
         shadow: LightShadow;
         target: Object3D;
 
-        constructor(color: number, intensity?: number)
+        constructor(color?: Color | number | string, intensity?: number)
         {
             super();
 

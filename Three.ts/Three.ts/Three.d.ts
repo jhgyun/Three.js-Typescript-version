@@ -1484,6 +1484,17 @@ declare namespace THREE {
         vertexNormals?: BufferAttribute;
         [index: string]: BufferAttribute;
     }
+    class BufferGeometryAttributeNames {
+        static position: string;
+        static normal: string;
+        static color: string;
+        static uv: string;
+        static uv2: string;
+        static lineDistance: string;
+        static skinWeight: string;
+        static vertices: string;
+        static vertexNormals: string;
+    }
     interface IBufferGeometryMorphAttributes {
         position?: BufferAttribute[];
         normal?: BufferAttribute[];
@@ -2444,21 +2455,21 @@ declare namespace THREE {
         penumbra: number;
         shadow: LightShadow;
         target: Object3D;
-        constructor(color: number, intensity?: number);
+        constructor(color?: Color | number | string, intensity?: number);
         copy(source: Light): this;
         toJSON(meta: any): any;
     }
 }
 declare namespace THREE {
     class AmbientLight extends Light {
-        constructor(color: number, intensity?: number);
+        constructor(color?: Color | number | string, intensity?: number);
     }
 }
 declare namespace THREE {
     class DirectionalLight extends Light {
         target: Object3D;
         shadow: DirectionalLightShadow;
-        constructor(color: number, intensity?: number);
+        constructor(color?: Color | number | string, intensity?: number);
         copy(source: DirectionalLight): this;
     }
 }
@@ -2482,14 +2493,14 @@ declare namespace THREE {
 }
 declare namespace THREE {
     class HemisphereLight extends Light {
-        constructor(skyColor: number, groundColor: number, intensity?: number);
+        constructor(skyColor?: Color | number | string, groundColor?: number, intensity?: number);
         copy(source: HemisphereLight): this;
     }
 }
 declare namespace THREE {
     class PointLight extends Light {
         shadow: LightShadow;
-        constructor(color: number, intensity?: number, distance?: number, decay?: number);
+        constructor(color?: Color | number | string, intensity?: number, distance?: number, decay?: number);
         power: number;
         set(power: any): void;
         copy(source: PointLight): this;
@@ -2499,7 +2510,7 @@ declare namespace THREE {
     class SpotLight extends Light {
         target: Object3D;
         shadow: SpotLightShadow;
-        constructor(color: number, intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number);
+        constructor(color?: Color | number | string, intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number);
         power: number;
         copy(source: SpotLight): this;
     }

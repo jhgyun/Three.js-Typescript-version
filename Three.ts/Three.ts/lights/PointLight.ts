@@ -9,7 +9,7 @@ namespace THREE
     {
         shadow: LightShadow;
 
-        constructor(color: number, intensity?: number, distance?: number, decay?: number)
+        constructor(color?: Color | number | string, intensity?: number, distance?: number, decay?: number)
         {
             super(color, intensity);
 

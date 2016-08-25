@@ -6977,6 +6977,21 @@ var THREE;
 })(THREE || (THREE = {}));
 var THREE;
 (function (THREE) {
+    var BufferGeometryAttributeNames = (function () {
+        function BufferGeometryAttributeNames() {
+        }
+        BufferGeometryAttributeNames.position = "position";
+        BufferGeometryAttributeNames.normal = "normal";
+        BufferGeometryAttributeNames.color = "color";
+        BufferGeometryAttributeNames.uv = "uv";
+        BufferGeometryAttributeNames.uv2 = "uv2";
+        BufferGeometryAttributeNames.lineDistance = "lineDistance";
+        BufferGeometryAttributeNames.skinWeight = "skinWeight";
+        BufferGeometryAttributeNames.vertices = "vertices";
+        BufferGeometryAttributeNames.vertexNormals = "vertexNormals";
+        return BufferGeometryAttributeNames;
+    }());
+    THREE.BufferGeometryAttributeNames = BufferGeometryAttributeNames;
     var BufferGeometry = (function (_super) {
         __extends(BufferGeometry, _super);
         function BufferGeometry() {

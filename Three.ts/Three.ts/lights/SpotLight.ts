@@ -10,7 +10,7 @@ namespace THREE
         target: Object3D;
         shadow: SpotLightShadow;
 
-        constructor(color: number, intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number)
+        constructor(color?: Color | number | string, intensity?: number, distance?: number, angle?: number, penumbra?: number, decay?: number)
         { 
             super(color, intensity);
 

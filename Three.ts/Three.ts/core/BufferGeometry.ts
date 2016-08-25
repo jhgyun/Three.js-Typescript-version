@@ -28,7 +28,20 @@ namespace THREE
         vertexNormals?: BufferAttribute; 
 
         [index: string]: BufferAttribute;
-    } 
+    }
+    export class BufferGeometryAttributeNames
+    {
+        static position = "position";
+        static normal = "normal";
+        static color = "color";
+        static uv = "uv";
+        static uv2 = "uv2";
+        static lineDistance = "lineDistance";
+        static skinWeight = "skinWeight";
+        static vertices = "vertices";
+        static vertexNormals = "vertexNormals"; 
+    }
+
     export interface IBufferGeometryMorphAttributes
     {
         position?: BufferAttribute[];

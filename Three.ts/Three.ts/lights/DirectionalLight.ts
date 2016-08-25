@@ -11,7 +11,7 @@ namespace THREE
         target: Object3D;
         shadow: DirectionalLightShadow;
 
-        constructor(color: number, intensity?: number)
+        constructor(color?: Color | number | string, intensity?: number)
         {
             super(color, intensity);
 

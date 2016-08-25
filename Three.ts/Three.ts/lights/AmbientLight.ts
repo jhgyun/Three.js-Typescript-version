@@ -7,7 +7,7 @@ namespace THREE
 {
     export class AmbientLight extends Light
     {
-        constructor(color: number, intensity?: number)
+        constructor(color?: Color | number | string, intensity?: number)
         {
             super(color, intensity);
 

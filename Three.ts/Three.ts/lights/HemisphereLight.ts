@@ -7,7 +7,7 @@ namespace THREE
 {
     export class HemisphereLight extends Light
     {
-        constructor(skyColor: number, groundColor: number, intensity?: number)
+        constructor(skyColor?: Color | number | string, groundColor?: number, intensity?: number)
         {
             super(skyColor, intensity);
 
