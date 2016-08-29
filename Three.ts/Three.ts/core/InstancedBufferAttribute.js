@@ -3,10 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="bufferattribute.ts" />
-/*
- * @author benaadams / https://twitter.com/ben_a_adams
- */
 var THREE;
 (function (THREE) {
     var InstancedBufferAttribute = (function (_super) {

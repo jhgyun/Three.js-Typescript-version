@@ -1,9 +1,3 @@
-/// <reference path="../core/object3d.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author mikael emtinger / http://gomo.se/
- * @author WestLangley / http://github.com/WestLangley
-*/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -27,7 +21,6 @@ var THREE;
             return result.set(0, 0, -1).applyQuaternion(quaternion);
         };
         Camera.prototype.lookAt = function (vector) {
-            // This routine does not support cameras with rotated and/or translated parent(s)  
             var m1 = Camera[".lookAt.m1."] || (Camera[".lookAt.m1."] = new THREE.Matrix4());
             m1.lookAt(this.position, vector, this.up);
             this.quaternion.setFromRotationMatrix(m1);

@@ -1,7 +1,3 @@
-/*
-* @author bhouston / http://clara.io
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var Triangle = (function () {
@@ -29,8 +25,6 @@ var THREE;
             return func.apply(this, arguments);
         };
         Triangle.barycoordFromPoint = function (point, a, b, c, optionalTarget) {
-            // static/instance method to calculate barycentric coordinates
-            // based on: http://www.blackpawn.com/texts/pointinpoly/default.html
             var v0 = new THREE.Vector3();
             var v1 = new THREE.Vector3();
             var v2 = new THREE.Vector3();
@@ -45,16 +39,12 @@ var THREE;
                 var dot12 = v1.dot(v2);
                 var denom = (dot00 * dot11 - dot01 * dot01);
                 var result = optionalTarget || new THREE.Vector3();
-                // collinear or singular triangle
                 if (denom === 0) {
-                    // arbitrary location outside of triangle?
-                    // not sure if this is the best idea, maybe should be returning undefined
                     return result.set(-2, -1, -1);
                 }
                 var invDenom = 1 / denom;
                 var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
                 var v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-                // barycentric coordinates must always sum to 1
                 return result.set(1 - u - v, v, u);
             };
             return func.apply(this, arguments);
@@ -125,16 +115,12 @@ var THREE;
             var func = Triangle.prototype.closestPointToPoint = function (point, optionalTarget) {
                 var result = optionalTarget || new THREE.Vector3();
                 var minDistance = Infinity;
-                // project the point onto the plane of the triangle
                 plane.setFromCoplanarPoints(this.a, this.b, this.c);
                 plane.projectPoint(point, projectedPoint);
-                // check if the projection lies within the triangle
                 if (this.containsPoint(projectedPoint) === true) {
-                    // if so, this is the closest point 
                     result.copy(projectedPoint);
                 }
                 else {
-                    // if not, the point falls outside the triangle. the result is the closest point to the triangle's edges or vertices
                     edgeList[0].set(this.a, this.b);
                     edgeList[1].set(this.b, this.c);
                     edgeList[2].set(this.c, this.a);

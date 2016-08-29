@@ -1,13 +1,3 @@
-/// <reference path="../../textures/texture.ts" />
-/// <reference path="../../math/matrix4.ts" />
-/// <reference path="../../math/matrix3.ts" />
-/// <reference path="../../math/vector4.ts" />
-/// <reference path="../../math/vector3.ts" />
-/// <reference path="../../math/vector2.ts" />
-/// <reference path="../../math/color.ts" />
-/*
- * Uniform Utilities
- */
 var THREE;
 (function (THREE) {
     THREE.UniformsUtils = {

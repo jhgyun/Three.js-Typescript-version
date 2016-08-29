@@ -1,8 +1,3 @@
-/// <reference path="../three.ts" /> 
-/// <reference path="vector2.ts" />
-/*
- * @author bhouston / http://clara.io
- */
 var THREE;
 (function (THREE) {
     var Box2 = (function () {
@@ -45,7 +40,6 @@ var THREE;
             return this;
         };
         Box2.prototype.isEmpty = function () {
-            // this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
             return (this.max.x < this.min.x) || (this.max.y < this.min.y);
         };
         Box2.prototype.center = function (optionalTarget) {
@@ -88,13 +82,10 @@ var THREE;
         };
         Box2.prototype.getParameter = function (point, optionalTarget) {
             if (optionalTarget === void 0) { optionalTarget = new THREE.Vector2(); }
-            // This can potentially have a divide by zero if the box
-            // has a size dimension of 0. 
             var result = optionalTarget || new THREE.Vector2();
             return result.set((point.x - this.min.x) / (this.max.x - this.min.x), (point.y - this.min.y) / (this.max.y - this.min.y));
         };
         Box2.prototype.intersectsBox = function (box) {
-            // using 6 splitting planes to rule out intersections. 
             if (box.max.x < this.min.x || box.min.x > this.max.x ||
                 box.max.y < this.min.y || box.min.y > this.max.y) {
                 return false;

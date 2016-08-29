@@ -1,10 +1,3 @@
-/*
- *
- * Reusable set of Tracks that represent an animation.
- *
- * @author Ben Houston / http://clara.io/
- * @author David Sarno / http://lighthaus.us/
- */
 var THREE;
 (function (THREE) {
     var AnimationClip = (function () {
@@ -13,12 +6,9 @@ var THREE;
             this.tracks = tracks;
             this.duration = (duration !== undefined) ? duration : -1;
             this.uuid = THREE.Math.generateUUID();
-            // this means it should figure out its duration by scanning the tracks
             if (this.duration < 0) {
                 this.resetDuration();
             }
-            // maybe only do these on demand, as doing them here could potentially slow down loading
-            // but leaving these here during development as this ensures a lot of testing of these functions
             this.trim();
             this.optimize();
         }
@@ -43,7 +33,6 @@ var THREE;
             }
             return this;
         };
-        // Static methods: 
         AnimationClip.parse = function (json) {
             var tracks = [], jsonTracks = json.tracks, frameTime = 1.0 / (json.fps || 1.0);
             for (var i = 0, n = jsonTracks.length; i !== n; ++i) {
@@ -74,8 +63,6 @@ var THREE;
                 var order = THREE.AnimationUtils.getKeyframeOrder(times);
                 times = THREE.AnimationUtils.sortedArray(times, 1, order);
                 values = THREE.AnimationUtils.sortedArray(values, 1, order);
-                // if there is a key at the first frame, duplicate it as the
-                // last frame as well for perfect loop.
                 if (!noLoop && times[0] === 0) {
                     times.push(numMorphTargets);
                     values.push(values[0]);
@@ -99,11 +86,7 @@ var THREE;
         };
         AnimationClip.CreateClipsFromMorphTargetSequences = function (morphTargets, fps, noLoop) {
             var animationToMorphTargets = {};
-            // tested with https://regex101.com/ on trick sequences
-            // such flamingo_flyA_003, flamingo_run1_003, crdeath0059
             var pattern = /^([\w-]*?)([\d]+)$/;
-            // sort morph target names into animation groups based
-            // patterns like Walk_001, Walk_002, Run_001, Run_002
             for (var i = 0, il = morphTargets.length; i < il; i++) {
                 var morphTarget = morphTargets[i];
                 var parts = morphTarget.name.match(pattern);
@@ -122,19 +105,16 @@ var THREE;
             }
             return clips;
         };
-        // parse the animation.hierarchy format
         AnimationClip.parseAnimation = function (animation, bones, nodeName) {
             if (!animation) {
                 console.error("  no animation in JSONLoader data");
                 return null;
             }
             var addNonemptyTrack = function (trackType, trackName, animationKeys, propertyName, destTracks) {
-                // only return track if there are actually keys.
                 if (animationKeys.length !== 0) {
                     var times = [];
                     var values = [];
                     THREE.AnimationUtils.flattenJSON(animationKeys, times, values, propertyName);
-                    // empty keys are filtered out, so check again
                     if (times.length !== 0) {
                         destTracks.push(new trackType(trackName, times, values));
                     }
@@ -142,19 +122,14 @@ var THREE;
             };
             var tracks = [];
             var clipName = animation.name || 'default';
-            // automatic length determination in AnimationClip.
             var duration = animation.length || -1;
             var fps = animation.fps || 30;
             var hierarchyTracks = animation.hierarchy || [];
             for (var h = 0; h < hierarchyTracks.length; h++) {
                 var animationKeys = hierarchyTracks[h].keys;
-                // skip empty tracks
                 if (!animationKeys || animationKeys.length === 0)
                     continue;
-                // process morph targets in a way exactly compatible
-                // with AnimationHandler.init( animation )
                 if (animationKeys[0].morphTargets) {
-                    // figure out all morph targets used in this track
                     var morphTargetNames = {};
                     for (var k = 0; k < animationKeys.length; k++) {
                         if (animationKeys[k].morphTargets) {
@@ -163,9 +138,6 @@ var THREE;
                             }
                         }
                     }
-                    // create a track for each morph target with all zero
-                    // morphTargetInfluences except for the keys in which
-                    // the morphTarget is named.
                     for (var morphTargetName in morphTargetNames) {
                         var times = [];
                         var values = [];
@@ -179,7 +151,6 @@ var THREE;
                     duration = morphTargetNames.length * (fps || 1.0);
                 }
                 else {
-                    // ...assume skeletal animation
                     var boneName = '.bones[' + bones[h].name + ']';
                     addNonemptyTrack(THREE.VectorKeyframeTrack, boneName + '.position', animationKeys, 'pos', tracks);
                     addNonemptyTrack(THREE.QuaternionKeyframeTrack, boneName + '.quaternion', animationKeys, 'rot', tracks);

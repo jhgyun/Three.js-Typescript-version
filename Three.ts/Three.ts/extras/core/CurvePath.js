@@ -1,17 +1,8 @@
-/// <reference path="curve.ts" />
-/*
- * @author zz85 / http://www.lab4games.net/zz85/blog
- *
- **/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/* *************************************************************
- *	Curved Path - a curve path is simply a array of connected
- *  curves, but retains the api of a curve
- **************************************************************/
 var THREE;
 (function (THREE) {
     var CurvePath = (function (_super) {
@@ -19,34 +10,23 @@ var THREE;
         function CurvePath() {
             _super.call(this);
             this.curves = [];
-            this.autoClose = false; // Automatically closes the path 
+            this.autoClose = false;
         }
         ;
         CurvePath.prototype.add = function (curve) {
             this.curves.push(curve);
         };
         CurvePath.prototype.closePath = function () {
-            // Add a line curve if start and end of lines are not connected
             var startPoint = this.curves[0].getPoint(0);
             var endPoint = this.curves[this.curves.length - 1].getPoint(1);
             if (!startPoint.equals(endPoint)) {
                 this.curves.push(new THREE.LineCurve(endPoint, startPoint));
             }
         };
-        /** To get accurate point with reference to
-        // entire path distance at time t,
-        // following has to be done:
-
-        // 1. Length of each sub path have to be known
-        // 2. Locate and identify type of curve
-        // 3. Get t for the curve
-        // 4. Return curve.getPointAt(t')
-        */
         CurvePath.prototype.getPoint = function (t) {
             var d = t * this.getLength();
             var curveLengths = this.getCurveLengths();
             var i = 0;
-            // To think about boundaries points. 
             while (i < curveLengths.length) {
                 if (curveLengths[i] >= d) {
                     var diff = curveLengths[i] - d;
@@ -58,30 +38,20 @@ var THREE;
                 i++;
             }
             return null;
-            // loop where sum != 0, sum > d , sum+1 <d 
         };
-        /** We cannot use the default THREE.Curve getPoint() with getLength() because in
-        // THREE.Curve, getLength() depends on getPoint() but in THREE.CurvePath
-        // getPoint() depends on getLength */
         CurvePath.prototype.getLength = function () {
             var lens = this.getCurveLengths();
             return lens[lens.length - 1];
         };
-        // cacheLengths must be recalculated.
         CurvePath.prototype.updateArcLengths = function () {
             this.needsUpdate = true;
             this.cacheLengths = null;
             this.getLengths();
         };
-        // Compute lengths and cache them
-        // We cannot overwrite getLengths() because UtoT mapping uses it. 
         CurvePath.prototype.getCurveLengths = function () {
-            // We use cache values if curves and cache array are same length 
             if (this.cacheLengths && this.cacheLengths.length === this.curves.length) {
                 return this.cacheLengths;
             }
-            // Get length of sub-curve
-            // Push sums into cached array
             var lengths = [], sums = 0;
             for (var i = 0, l = this.curves.length; i < l; i++) {
                 sums += this.curves[i].getLength();
@@ -115,7 +85,7 @@ var THREE;
                 for (var j = 0; j < pts.length; j++) {
                     var point = pts[j];
                     if (last && last.equals(point))
-                        continue; // ensures no consecutive points are duplicates
+                        continue;
                     points.push(point);
                     last = point;
                 }
@@ -125,15 +95,10 @@ var THREE;
             }
             return points;
         };
-        /* *************************************************************
-         *	Create Geometries Helpers
-         **************************************************************/
-        /// Generate geometry from path points (for Line or Points objects) 
         CurvePath.prototype.createPointsGeometry = function (divisions) {
             var pts = this.getPoints(divisions);
             return this.createGeometry(pts);
         };
-        // Generate geometry from equidistant sampling along the path
         CurvePath.prototype.createSpacedPointsGeometry = function (divisions) {
             var pts = this.getSpacedPoints(divisions);
             return this.createGeometry(pts);

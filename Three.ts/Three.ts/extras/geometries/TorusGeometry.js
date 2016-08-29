@@ -1,9 +1,3 @@
-/// <reference path="../../core/geometry.ts" />
-/*
- * @author oosmoxiecode
- * @author mrdoob / http://mrdoob.com/
- * based on http://code.google.com/p/away3d/source/browse/trunk/fp10/Away3DLite/src/away3dlite/primitives/Torus.as?r=2888
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

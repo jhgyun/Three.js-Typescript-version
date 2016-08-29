@@ -1,6 +1,3 @@
-/*
-* https://github.com/mrdoob/eventdispatcher.js/
-*/
 var THREE;
 (function (THREE) {
     var EventDispatcher = (function () {

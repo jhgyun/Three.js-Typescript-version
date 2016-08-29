@@ -1,7 +1,3 @@
-/// <reference path="../three.ts" />
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var Color = (function () {
@@ -10,7 +6,6 @@ var THREE;
             this.g = 1;
             this.b = 1;
             if (g === undefined && b === undefined) {
-                // r is THREE.Color, hex or string
                 this.set(r);
             }
             else if (typeof r === 'number')
@@ -60,7 +55,6 @@ var THREE;
             return p;
         };
         Color.prototype.setHSL = function (h, s, l) {
-            // h,s,l ranges are in 0.0 - 1.0
             h = THREE.Math.euclideanModulo(h, 1);
             s = THREE.Math.clamp(s, 0, 1);
             l = THREE.Math.clamp(l, 0, 1);
@@ -86,7 +80,6 @@ var THREE;
             }
             var m;
             if (m = /^((?:rgb|hsl)a?)\(\s*([^\)]*)\)/.exec(style)) {
-                // rgb / hsl
                 var color;
                 var name = m[1];
                 var components = m[2];
@@ -94,7 +87,6 @@ var THREE;
                     case 'rgb':
                     case 'rgba':
                         if (color = /^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(components)) {
-                            // rgb(255,0,0) rgba(255,0,0,0.5)
                             this.r = THREE.Math.min(255, parseInt(color[1], 10)) / 255;
                             this.g = THREE.Math.min(255, parseInt(color[2], 10)) / 255;
                             this.b = THREE.Math.min(255, parseInt(color[3], 10)) / 255;
@@ -102,7 +94,6 @@ var THREE;
                             return this;
                         }
                         if (color = /^(\d+)\%\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(components)) {
-                            // rgb(100%,0%,0%) rgba(100%,0%,0%,0.5)
                             this.r = THREE.Math.min(100, parseInt(color[1], 10)) / 100;
                             this.g = THREE.Math.min(100, parseInt(color[2], 10)) / 100;
                             this.b = THREE.Math.min(100, parseInt(color[3], 10)) / 100;
@@ -113,7 +104,6 @@ var THREE;
                     case 'hsl':
                     case 'hsla':
                         if (color = /^([0-9]*\.?[0-9]+)\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec(components)) {
-                            // hsl(120,50%,50%) hsla(120,50%,50%,0.5)
                             var h = parseFloat(color[1]) / 360;
                             var s = parseInt(color[2], 10) / 100;
                             var l = parseInt(color[3], 10) / 100;
@@ -124,18 +114,15 @@ var THREE;
                 }
             }
             else if (m = /^\#([A-Fa-f0-9]+)$/.exec(style)) {
-                // hex color 
                 var hex = m[1];
                 var size = hex.length;
                 if (size === 3) {
-                    // #ff0
                     this.r = parseInt(hex.charAt(0) + hex.charAt(0), 16) / 255;
                     this.g = parseInt(hex.charAt(1) + hex.charAt(1), 16) / 255;
                     this.b = parseInt(hex.charAt(2) + hex.charAt(2), 16) / 255;
                     return this;
                 }
                 else if (size === 6) {
-                    // #ff0000
                     this.r = parseInt(hex.charAt(0) + hex.charAt(1), 16) / 255;
                     this.g = parseInt(hex.charAt(2) + hex.charAt(3), 16) / 255;
                     this.b = parseInt(hex.charAt(4) + hex.charAt(5), 16) / 255;
@@ -143,14 +130,11 @@ var THREE;
                 }
             }
             if (style && style.length > 0) {
-                // color keywords
                 var hex = THREE.ColorKeywords[style];
                 if (hex !== undefined) {
-                    // red
                     this.setHex(hex);
                 }
                 else {
-                    // unknown color
                     console.warn('THREE.Color: Unknown color ' + style);
                 }
             }
@@ -202,7 +186,6 @@ var THREE;
             return ('000000' + this.getHex().toString(16)).slice(-6);
         };
         Color.prototype.getHSL = function (optionalTarget) {
-            // h,s,l ranges are in 0.0 - 1.0 
             var hsl = optionalTarget || { h: 0, s: 0, l: 0 };
             var r = this.r, g = this.g, b = this.b;
             var max = THREE.Math.max(r, g, b);

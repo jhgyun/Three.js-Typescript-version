@@ -18,8 +18,6 @@ var THREE;
             if (gl.getShaderInfoLog(shader) !== '') {
                 console.warn('THREE.WebGLShader: gl.getShaderInfoLog()', type === gl.VERTEX_SHADER ? 'vertex' : 'fragment', gl.getShaderInfoLog(shader), addLineNumbers(string));
             }
-            // --enable-privileged-webgl-extension
-            // console.log( type, gl.getExtension( 'WEBGL_debug_shaders' ).getTranslatedShaderSource( shader ) );
             return shader;
         };
     })();

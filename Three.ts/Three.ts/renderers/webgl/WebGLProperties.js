@@ -1,6 +1,3 @@
-/*
-* @author fordacious / fordacious.github.io
-*/
 var THREE;
 (function (THREE) {
     var WebGLProperties = (function () {

@@ -1,7 +1,3 @@
-/*
-* @author bhouston / http://clara.io
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var Sphere = (function () {
@@ -60,13 +56,6 @@ var THREE;
             return box.intersectsSphere(this);
         };
         Sphere.prototype.intersectsPlane = function (plane) {
-            // We use the following equation to compute the signed distance from
-            // the center of the sphere to the plane.
-            //
-            // distance = q * n - d
-            //
-            // If this distance is greater than the radius of the sphere,
-            // then there is no intersection. 
             return THREE.Math.abs(this.center.dot(plane.normal) - plane.constant) <= this.radius;
         };
         Sphere.prototype.clampPoint = function (point, optionalTarget) {

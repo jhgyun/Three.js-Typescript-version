@@ -1,7 +1,3 @@
-/// <reference path="polyhedrongeometry.ts" />
-/*
- * @author Abe Pazos / https://hamoid.com
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,18 +11,14 @@ var THREE;
             var t = (1 + THREE.Math.sqrt(5)) / 2;
             var r = 1 / t;
             var vertices = [
-                // (±1, ±1, ±1)
                 -1, -1, -1, -1, -1, 1,
                 -1, 1, -1, -1, 1, 1,
                 1, -1, -1, 1, -1, 1,
                 1, 1, -1, 1, 1, 1,
-                // (0, ±1/φ, ±φ)
                 0, -r, -t, 0, -r, t,
                 0, r, -t, 0, r, t,
-                // (±1/φ, ±φ, 0)
                 -r, -t, 0, -r, t, 0,
                 r, -t, 0, r, t, 0,
-                // (±φ, 0, ±1/φ)
                 -t, 0, -r, t, 0, -r,
                 -t, 0, r, t, 0, r
             ];

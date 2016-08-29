@@ -1,10 +1,3 @@
-/*
-* Spline from Tween.js, slightly optimized (and trashed)
-* http://sole.github.com/tween.js/examples/05_spline.html
-*
-* @author mrdoob / http://mrdoob.com/
-* @author alteredq / http://alteredqualia.com/
-*/
 var THREE;
 (function (THREE) {
     var Spline = (function () {
@@ -55,7 +48,6 @@ var THREE;
         };
         Spline.prototype.getLength = function (nSubDivisions) {
             var i, index, nSamples, position, point = 0, intPoint = 0, oldIntPoint = 0, oldPosition = new THREE.Vector3(), tmpVec = new THREE.Vector3(), chunkLengths = [], totalLength = 0;
-            // first point has 0 length
             chunkLengths[0] = 0;
             if (!nSubDivisions)
                 nSubDivisions = 100;
@@ -74,7 +66,6 @@ var THREE;
                     oldIntPoint = intPoint;
                 }
             }
-            // last point ends with total length
             chunkLengths[chunkLengths.length] = totalLength;
             return { chunks: chunkLengths, total: totalLength };
         };

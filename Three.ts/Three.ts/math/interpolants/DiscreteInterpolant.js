@@ -1,11 +1,3 @@
-/// <reference path="../interpolant.ts" />
-/*
- *
- * Interpolant that evaluates to the sample value at the position preceeding
- * the parameter.
- *
- * @author tschw
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

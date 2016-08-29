@@ -1,12 +1,3 @@
-/*
- *
- * A reference to a real property in the scene graph.
- *
- *
- * @author Ben Houston / http://clara.io/
- * @author David Sarno / http://lighthaus.us/
- * @author tschw
- */
 var THREE;
 (function (THREE) {
     var PropertyBinding = (function () {
@@ -30,25 +21,21 @@ var THREE;
             ];
             this.SetterByBindingTypeAndVersioning = [
                 [
-                    // Direct 
                     this.setValue_direct,
                     this.setValue_direct_setNeedsUpdate,
                     this.setValue_direct_setMatrixWorldNeedsUpdate
                 ],
                 [
-                    // EntireArray 
                     this.setValue_array,
                     this.setValue_array_setNeedsUpdate,
                     this.setValue_array_setMatrixWorldNeedsUpdate
                 ],
                 [
-                    // ArrayElement 
                     this.setValue_arrayElement,
                     this.setValue_arrayElement_setNeedsUpdate,
                     this.setValue_arrayElement_setMatrixWorldNeedsUpdate
                 ],
                 [
-                    // HasToFromArray 
                     this.setValue_fromArray,
                     this.setValue_fromArray_setNeedsUpdate,
                     this.setValue_fromArray_setMatrixWorldNeedsUpdate
@@ -64,34 +51,25 @@ var THREE;
         PropertyBinding.prototype.getValue = function (targetArray, offset) {
             this.bind();
             this.getValue(targetArray, offset);
-            // Note: This class uses a State pattern on a per-method basis:
-            // 'bind' sets 'this.getValue' / 'setValue' and shadows the
-            // prototype version of these methods with one that represents
-            // the bound state. When the property is not found, the methods
-            // become no-ops. 
         };
         PropertyBinding.prototype.setValue = function (sourceArray, offset) {
             this.bind();
             this.setValue(sourceArray, offset);
         };
-        // create getter / setter pair for a property in the scene graph
         PropertyBinding.prototype.bind = function () {
             var targetObject = this.node, parsedPath = this.parsedPath, objectName = parsedPath.objectName, propertyName = parsedPath.propertyName, propertyIndex = parsedPath.propertyIndex;
             if (!targetObject) {
                 targetObject = PropertyBinding.findNode(this.rootNode, parsedPath.nodeName) || this.rootNode;
                 this.node = targetObject;
             }
-            // set fail state so we can just 'return' on error
             this.getValue = this._getValue_unavailable;
             this.setValue = this._setValue_unavailable;
-            // ensure there is a value node
             if (!targetObject) {
                 console.error("  trying to update node for track: " + this.path + " but it wasn't found.");
                 return;
             }
             if (objectName) {
                 var objectIndex = parsedPath.objectIndex;
-                // special cases were we need to reach deeper into the hierarchy to get the face materials....
                 switch (objectName) {
                     case 'materials':
                         if (!targetObject.material) {
@@ -109,10 +87,7 @@ var THREE;
                             console.error('  can not bind to bones as node does not have a skeleton', this);
                             return;
                         }
-                        // potential future optimization: skip this if propertyIndex is already an integer
-                        // and convert the integer string to a true integer.
                         targetObject = targetObject.skeleton.bones;
-                        // support resolving morphTarget names into indices.
                         for (var i = 0; i < targetObject.length; i++) {
                             if (targetObject[i].name === objectIndex) {
                                 objectIndex = i;
@@ -135,7 +110,6 @@ var THREE;
                     targetObject = targetObject[objectIndex];
                 }
             }
-            // resolve property
             var nodeProperty = targetObject[propertyName];
             if (nodeProperty === undefined) {
                 var nodeName = parsedPath.nodeName;
@@ -143,7 +117,6 @@ var THREE;
                     '.' + propertyName + " but it wasn't found.", targetObject);
                 return;
             }
-            // determine versioning scheme
             var versioning = this.Versioning.None;
             if (targetObject.needsUpdate !== undefined) {
                 versioning = this.Versioning.NeedsUpdate;
@@ -153,13 +126,9 @@ var THREE;
                 versioning = this.Versioning.MatrixWorldNeedsUpdate;
                 this.targetObject = targetObject;
             }
-            // determine how the property gets bound
             var bindingType = this.BindingType.Direct;
             if (propertyIndex !== undefined) {
-                // access a sub element of the property array (only primitives are supported right now)
                 if (propertyName === "morphTargetInfluences") {
-                    // potential optimization, skip this if propertyIndex is already an integer, and convert the integer string to a true integer.
-                    // support resolving morphTarget names into indices.
                     if (!targetObject.geometry) {
                         console.error('  can not bind to morphTargetInfluences becasuse node does not have a geometry', this);
                         return;
@@ -180,7 +149,6 @@ var THREE;
                 this.propertyIndex = propertyIndex;
             }
             else if (nodeProperty.fromArray !== undefined && nodeProperty.toArray !== undefined) {
-                // must use copy for Object3D.Euler/Quaternion
                 bindingType = this.BindingType.HasFromToArray;
                 this.resolvedProperty = nodeProperty;
             }
@@ -191,14 +159,11 @@ var THREE;
             else {
                 this.propertyName = propertyName;
             }
-            // select getter / setter
             this.getValue = this.GetterByBindingType[bindingType];
             this.setValue = this.SetterByBindingTypeAndVersioning[bindingType][versioning];
         };
         PropertyBinding.prototype.unbind = function () {
             this.node = null;
-            // back to the prototype version of getValue / setValue
-            // note: avoiding to mutate the shape of 'this' via 'delete'
             this.getValue = this._getValue_unbound;
             this.setValue = this._setValue_unbound;
         };
@@ -221,7 +186,6 @@ var THREE;
         PropertyBinding.prototype.getValue_toArray = function (buffer, offset) {
             this.resolvedProperty.toArray(buffer, offset);
         };
-        // Direct 
         PropertyBinding.prototype.setValue_direct = function (buffer, offset) {
             this.node[this.propertyName] = buffer[offset];
         };
@@ -233,7 +197,6 @@ var THREE;
             this.node[this.propertyName] = buffer[offset];
             this.targetObject.matrixWorldNeedsUpdate = true;
         };
-        // EntireArray 
         PropertyBinding.prototype.setValue_array = function (buffer, offset) {
             var dest = this.resolvedProperty;
             for (var i = 0, n = dest.length; i !== n; ++i) {
@@ -254,7 +217,6 @@ var THREE;
             }
             this.targetObject.matrixWorldNeedsUpdate = true;
         };
-        // ArrayElement 
         PropertyBinding.prototype.setValue_arrayElement = function (buffer, offset) {
             this.resolvedProperty[this.propertyIndex] = buffer[offset];
         };
@@ -287,16 +249,6 @@ var THREE;
         };
         ;
         PropertyBinding.parseTrackName = function (trackName) {
-            // matches strings in the form of:
-            //    nodeName.property
-            //    nodeName.property[accessor]
-            //    nodeName.material.property[accessor]
-            //    uuid.property[accessor]
-            //    uuid.objectName[objectIndex].propertyName[propertyIndex]
-            //    parentName/nodeName.property
-            //    parentName/parentName/nodeName.property[index]
-            //	  .bone[Armature.DEF_cog].position
-            // created and tested via https://regex101.com/#javascript
             var re = /^(([\w]+\/)*)([\w-\d]+)?(\.([\w]+)(\[([\w\d\[\]\_.:\- ]+)\])?)?(\.([\w.]+)(\[([\w\d\[\]\_. ]+)\])?)$/;
             var matches = re.exec(trackName);
             if (!matches) {
@@ -306,12 +258,11 @@ var THREE;
                 re.lastIndex++;
             }
             var results = {
-                // directoryName: matches[ 1 ], // (tschw) currently unused
                 nodeName: matches[3],
                 objectName: matches[5],
                 objectIndex: matches[7],
                 propertyName: matches[9],
-                propertyIndex: matches[11] // allowed to be null, specifies that the whole property is set.
+                propertyIndex: matches[11]
             };
             if (results.propertyName === null || results.propertyName.length === 0) {
                 throw new Error("can not parse propertyName from trackName: " + trackName);
@@ -329,7 +280,6 @@ var THREE;
                 || nodeName === root.uuid) {
                 return root;
             }
-            // search into skeleton bones.
             if (root.skeleton) {
                 var searchSkeleton = function (skeleton) {
                     for (var i = 0; i < skeleton.bones.length; i++) {
@@ -345,7 +295,6 @@ var THREE;
                     return bone;
                 }
             }
-            // search into node subtree.
             if (root.children) {
                 var searchNodeSubtree = function (children) {
                     for (var i = 0; i < children.length; i++) {
@@ -381,9 +330,8 @@ var THREE;
         }
         ;
         PropertyBindingComposite.prototype.getValue = function (array, offset) {
-            this.bind(); // bind all binding
+            this.bind();
             var firstValidIndex = this._targetGroup.nCachedObjects_, binding = this._bindings[firstValidIndex];
-            // and only call .getValue on the first
             if (binding !== undefined)
                 binding.getValue(array, offset);
         };

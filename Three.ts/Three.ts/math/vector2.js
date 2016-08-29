@@ -1,10 +1,3 @@
-/// <reference path="../three.ts" /> 
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author philogb / http://blog.thejit.org/
- * @author egraether / http://egraether.com/
- * @author zz85 / http://www.lab4games.net/zz85/blog
- */
 var THREE;
 (function (THREE) {
     var Vector2 = (function () {
@@ -149,7 +142,6 @@ var THREE;
             return this;
         };
         Vector2.prototype.clamp = function (min, max) {
-            // This function assumes min < max, if this assumption isn't true it will not operate correctly
             this.x = THREE.Math.max(min.x, THREE.Math.min(max.x, this.x));
             this.y = THREE.Math.max(min.y, THREE.Math.min(max.y, this.y));
             return this;
@@ -198,9 +190,6 @@ var THREE;
         Vector2.prototype.normalize = function () {
             return this.divideScalar(this.length());
         };
-        /**
-         * computes the angle in radians with respect to the positive x-axis
-         */
         Vector2.prototype.angle = function () {
             var angle = THREE.Math.atan2(this.y, this.x);
             if (angle < 0)

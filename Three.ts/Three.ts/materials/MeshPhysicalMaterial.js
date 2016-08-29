@@ -1,11 +1,3 @@
-/// <reference path="meshstandardmaterial.ts" />
-/*
- * @author WestLangley / http://github.com/WestLangley
- *
- * parameters = {
- *  reflectivity: <float>
- * }
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -21,7 +13,7 @@ var THREE;
             this.clearCoatRoughness = 0.0;
             this.defines = { 'PHYSICAL': '' };
             this.type = 'MeshPhysicalMaterial';
-            this.reflectivity = 0.5; // maps to F0 = 0.04
+            this.reflectivity = 0.5;
             this.clearCoat = 0.0;
             this.clearCoatRoughness = 0.0;
             this.setValues(parameters);

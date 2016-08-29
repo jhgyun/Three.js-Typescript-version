@@ -1,6 +1,5 @@
 var THREE;
 (function (THREE) {
-    /** Map three.js constants to WebGL constants */
     function paramThreeToGL(renderer, p) {
         var _gl = renderer.context;
         var extensions = renderer.extensions;
@@ -158,7 +157,6 @@ var THREE;
                     return;
                 }
                 if (_gl.checkFramebufferStatus(_gl.FRAMEBUFFER) === _gl.FRAMEBUFFER_COMPLETE) {
-                    // the following if statement ensures valid read requests (no out-of-bounds pixels, see #8604)
                     if ((x >= 0 && x <= (renderTarget.width - width)) && (y >= 0 && y <= (renderTarget.height - height))) {
                         _gl.readPixels(x, y, width, height, THREE.paramThreeToGL(renderer, texture.format), THREE.paramThreeToGL(renderer, texture.type), buffer);
                     }

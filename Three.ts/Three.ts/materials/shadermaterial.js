@@ -1,24 +1,3 @@
-/// <reference path="material.ts" />
-/*
- * @author alteredq / http://alteredqualia.com/
- *
- * parameters = {
- *  defines: { "label" : "value" },
- *  uniforms: { "parameter1": { value: 1.0 }, "parameter2": { value2: 2 } },
- *
- *  fragmentShader: <string>,
- *  vertexShader: <string>,
- *
- *  wireframe: <boolean>,
- *  wireframeLinewidth: <float>,
- *
- *  lights: <bool>,
- *
- *  skinning: <bool>,
- *  morphTargets: <bool>,
- *  morphNormals: <bool>
- * }
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -37,20 +16,18 @@ var THREE;
             this.linewidth = 1;
             this.wireframe = false;
             this.wireframeLinewidth = 1;
-            this.fog = false; // set to use scene fog
-            this.lights = false; // set to use scene lights
-            this.clipping = false; // set to use user-defined clipping planes
-            this.skinning = false; // set to use skinning attribute streams
-            this.morphTargets = false; // set to use morph targets
-            this.morphNormals = false; // set to use morph normals
+            this.fog = false;
+            this.lights = false;
+            this.clipping = false;
+            this.skinning = false;
+            this.morphTargets = false;
+            this.morphNormals = false;
             this.extensions = {
                 derivatives: false,
                 fragDepth: false,
                 drawBuffers: false,
-                shaderTextureLOD: false // set to use shader texture LOD
+                shaderTextureLOD: false
             };
-            // When rendered geometry doesn't include these attributes but the material does,
-            // use these default values in WebGL. This avoids errors when buffer data is missing.
             this.defaultAttributeValues = {
                 'color': [1, 1, 1],
                 'uv': [0, 0],

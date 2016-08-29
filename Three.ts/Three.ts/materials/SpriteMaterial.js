@@ -1,15 +1,3 @@
-/*
-* @author alteredq / http://alteredqualia.com/
-*
-* parameters = {
-*  color: <hex>,
-*  opacity: <float>,
-*  map: new THREE.Texture( <Image> ),
-*
-*	uvOffset: new THREE.Vector2(),
-*	uvScale: new THREE.Vector2()
-* }
-*/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

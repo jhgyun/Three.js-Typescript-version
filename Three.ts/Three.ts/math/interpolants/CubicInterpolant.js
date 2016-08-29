@@ -3,16 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../interpolant.ts" />
-/*
- * Fast and simple cubic spline interpolant.
- *
- * It was derived from a Hermitian construction setting the first derivative
- * at each sample position to the linear slope between neighboring positions
- * over their parameter interval.
- *
- * @author tschw
- */
 var THREE;
 (function (THREE) {
     var CubicInterpolant = (function (_super) {
@@ -34,17 +24,14 @@ var THREE;
             if (tPrev === undefined) {
                 switch (this.getSettings_().endingStart) {
                     case THREE.ZeroSlopeEnding:
-                        // f'(t0) = 0
                         iPrev = i1;
                         tPrev = 2 * t0 - t1;
                         break;
                     case THREE.WrapAroundEnding:
-                        // use the other end of the curve
                         iPrev = pp.length - 2;
                         tPrev = t0 + pp[iPrev] - pp[iPrev + 1];
                         break;
                     default:
-                        // f''(t0) = 0 a.k.a. Natural Spline
                         iPrev = i1;
                         tPrev = t1;
                 }
@@ -52,17 +39,14 @@ var THREE;
             if (tNext === undefined) {
                 switch (this.getSettings_().endingEnd) {
                     case THREE.ZeroSlopeEnding:
-                        // f'(tN) = 0
                         iNext = i1;
                         tNext = 2 * t1 - t0;
                         break;
                     case THREE.WrapAroundEnding:
-                        // use the other end of the curve
                         iNext = 1;
                         tNext = t1 + pp[1] - pp[0];
                         break;
                     default:
-                        // f''(tN) = 0, a.k.a. Natural Spline
                         iNext = i1 - 1;
                         tNext = t0;
                 }
@@ -75,12 +59,10 @@ var THREE;
         };
         CubicInterpolant.prototype.interpolate_ = function (i1, t0, t, t1) {
             var result = this.resultBuffer, values = this.sampleValues, stride = this.valueSize, o1 = i1 * stride, o0 = o1 - stride, oP = this._offsetPrev, oN = this._offsetNext, wP = this._weightPrev, wN = this._weightNext, p = (t - t0) / (t1 - t0), pp = p * p, ppp = pp * p;
-            // evaluate polynomials
             var sP = -wP * ppp + 2 * wP * pp - wP * p;
             var s0 = (1 + wP) * ppp + (-1.5 - 2 * wP) * pp + (-0.5 + wP) * p + 1;
             var s1 = (-1 - wN) * ppp + (1.5 + wN) * pp + 0.5 * p;
             var sN = wN * ppp - wN * pp;
-            // combine data linearly
             for (var i = 0; i !== stride; ++i) {
                 result[i] =
                     sP * values[oP + i] +

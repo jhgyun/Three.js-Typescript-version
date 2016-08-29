@@ -1,14 +1,8 @@
-/*
- * @author mrdoob / http://mrdoob.com/
- *
- * Abstract Base class to block based textures loader (dds, pvr, ...)
- */
 var THREE;
 (function (THREE) {
     var CompressedTextureLoader = (function () {
         function CompressedTextureLoader(manager) {
             this.manager = (manager !== undefined) ? manager : THREE.DefaultLoadingManager;
-            // override in sub classes
             this._parser = null;
         }
         ;
@@ -47,7 +41,6 @@ var THREE;
                 }
             }
             else {
-                // compressed cubemap texture stored in a single DDS file
                 loader.load(url, function (buffer) {
                     var texDatas = scope._parser(buffer, true);
                     if (texDatas.isCubemap) {

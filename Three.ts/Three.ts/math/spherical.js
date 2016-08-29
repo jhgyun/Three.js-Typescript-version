@@ -1,12 +1,3 @@
-/*
-* @author bhouston / http://clara.io
-* @author WestLangley / http://github.com/WestLangley
-*
-* Ref: https://en.wikipedia.org/wiki/Spherical_coordinate_system
-*
-* The poles (phi) are at the positive and negative y axis.
-* The equator starts at positive z.
-*/
 var THREE;
 (function (THREE) {
     var Spherical = (function () {
@@ -33,7 +24,6 @@ var THREE;
             this.theta = (other.theta);
             return this;
         };
-        // restrict phi to be betwee EPS and PI-EPS
         Spherical.prototype.makeSafe = function () {
             var EPS = 0.000001;
             this.phi = THREE.Math.max(EPS, THREE.Math.min(THREE.Math.PI - EPS, this.phi));
@@ -46,8 +36,8 @@ var THREE;
                 this.phi = 0;
             }
             else {
-                this.theta = THREE.Math.atan2(vec3.x, vec3.z); // equator angle around y-up axis
-                this.phi = THREE.Math.acos(THREE.Math.clamp(vec3.y / this.radius, -1, 1)); // polar angle
+                this.theta = THREE.Math.atan2(vec3.x, vec3.z);
+                this.phi = THREE.Math.acos(THREE.Math.clamp(vec3.y / this.radius, -1, 1));
             }
             return this;
         };

@@ -1,16 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author supereggbert / http://www.paulbrunt.co.uk/
- * @author philogb / http://blog.thejit.org/
- * @author jordi_ros / http://plattsoft.com
- * @author D1plo1d / http://github.com/D1plo1d
- * @author alteredq / http://alteredqualia.com/
- * @author mikael emtinger / http://gomo.se/
- * @author timknip / http://www.floorplanner.com/
- * @author bhouston / http://clara.io
- * @author WestLangley / http://github.com/WestLangley
- */
 var THREE;
 (function (THREE) {
     var Matrix4 = (function () {
@@ -172,11 +159,9 @@ var THREE;
                 te[6] = b * e;
                 te[10] = bd * f + ac;
             }
-            // last column
             te[3] = 0;
             te[7] = 0;
             te[11] = 0;
-            // bottom row
             te[12] = 0;
             te[13] = 0;
             te[14] = 0;
@@ -199,11 +184,9 @@ var THREE;
             te[2] = xz - wy;
             te[6] = yz + wx;
             te[10] = 1 - (xx + yy);
-            // last column
             te[3] = 0;
             te[7] = 0;
             te[11] = 0;
-            // bottom row
             te[12] = 0;
             te[13] = 0;
             te[14] = 0;
@@ -352,8 +335,6 @@ var THREE;
             var n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
             var n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
             var n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
-            //TODO: make this more efficient
-            //( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
             return (n41 * (+n14 * n23 * n32
                 - n13 * n24 * n32
                 - n14 * n22 * n33
@@ -410,7 +391,6 @@ var THREE;
             return this;
         };
         Matrix4.prototype.getInverse = function (m, throwOnDegenerate) {
-            // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
             var te = this.elements, me = m.elements, n11 = me[0], n21 = me[1], n31 = me[2], n41 = me[3], n12 = me[4], n22 = me[5], n32 = me[6], n42 = me[7], n13 = me[8], n23 = me[9], n33 = me[10], n43 = me[11], n14 = me[12], n24 = me[13], n34 = me[14], n44 = me[15], t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44, t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44, t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44, t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
             var det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
             if (det === 0) {
@@ -486,7 +466,6 @@ var THREE;
             return this;
         };
         Matrix4.prototype.makeRotationAxis = function (axis, angle) {
-            // Based on http://www.gamedev.net/reference/articles/article1199.asp
             var c = THREE.Math.cos(angle);
             var s = THREE.Math.sin(angle);
             var t = 1 - c;
@@ -514,7 +493,6 @@ var THREE;
                     var sx = vector.set(te[0], te[1], te[2]).length();
                     var sy = vector.set(te[4], te[5], te[6]).length();
                     var sz = vector.set(te[8], te[9], te[10]).length();
-                    // if determine is negative, we need to invert one scale
                     var det = this.determinant();
                     if (det < 0) {
                         sx = -sx;
@@ -522,8 +500,7 @@ var THREE;
                     position.x = te[12];
                     position.y = te[13];
                     position.z = te[14];
-                    // scale the rotation part
-                    matrix.elements.set(this.elements); // at this point matrix is incomplete so we can't use .copy()
+                    matrix.elements.set(this.elements);
                     var invSX = 1 / sx;
                     var invSY = 1 / sy;
                     var invSZ = 1 / sz;

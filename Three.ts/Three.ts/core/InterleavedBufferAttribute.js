@@ -1,6 +1,3 @@
-/*
-* @author benaadams / https://twitter.com/ben_a_adams
-*/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -12,9 +9,7 @@ var THREE;
         __extends(InterleavedBufferAttribute, _super);
         function InterleavedBufferAttribute(interleavedBuffer, itemSize, offset, normalized) {
             _super.call(this, null, itemSize);
-            //this.uuid = Math.generateUUID(); 
             this.data = interleavedBuffer;
-            //this.itemSize = itemSize;
             this.offset = offset;
             this.normalized = normalized === true;
         }

@@ -1,8 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-* @author bhouston / http://clara.io/
-* @author stephomi / http://stephaneginier.com/
-*/
 var THREE;
 (function (THREE) {
     var Raycaster = (function () {
@@ -16,7 +11,6 @@ var THREE;
             };
             this.linePrecision = 1;
             this.ray = new THREE.Ray(origin, direction);
-            // direction is assumed to be normalized (for accurate distance calculations)
             this.near = near || 0;
             this.far = far || Infinity;
         }
@@ -35,7 +29,6 @@ var THREE;
             }
         };
         Raycaster.prototype.set = function (origin, direction) {
-            // direction is assumed to be normalized (for accurate distance calculations)
             this.ray.set(origin, direction);
         };
         Raycaster.prototype.setFromCamera = function (coords, camera) {
@@ -44,7 +37,7 @@ var THREE;
                 this.ray.direction.set(coords.x, coords.y, 0.5).unproject(camera).sub(this.ray.origin).normalize();
             }
             else if (camera instanceof THREE.OrthographicCamera) {
-                this.ray.origin.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far)).unproject(camera); // set origin in plane of camera
+                this.ray.origin.set(coords.x, coords.y, (camera.near + camera.far) / (camera.near - camera.far)).unproject(camera);
                 this.ray.direction.set(0, 0, -1).transformDirection(camera.matrixWorld);
             }
             else {

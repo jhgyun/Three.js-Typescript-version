@@ -1,12 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author *kile / http://kile.stravaganza.org/
- * @author philogb / http://blog.thejit.org/
- * @author mikael emtinger / http://gomo.se/
- * @author egraether / http://egraether.com/
- * @author WestLangley / http://github.com/WestLangley
- */
 var THREE;
 (function (THREE) {
     var Vector3 = (function () {
@@ -165,7 +156,6 @@ var THREE;
             return this;
         };
         Vector3.prototype.applyMatrix4 = function (m) {
-            // input: THREE.Matrix4 affine matrix 
             var x = this.x, y = this.y, z = this.z;
             var e = m.elements;
             this.x = e[0] * x + e[4] * y + e[8] * z + e[12];
@@ -174,10 +164,9 @@ var THREE;
             return this;
         };
         Vector3.prototype.applyProjection = function (m) {
-            // input: THREE.Matrix4 projection matrix 
             var x = this.x, y = this.y, z = this.z;
             var e = m.elements;
-            var d = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]); // perspective divide
+            var d = 1 / (e[3] * x + e[7] * y + e[11] * z + e[15]);
             this.x = (e[0] * x + e[4] * y + e[8] * z + e[12]) * d;
             this.y = (e[1] * x + e[5] * y + e[9] * z + e[13]) * d;
             this.z = (e[2] * x + e[6] * y + e[10] * z + e[14]) * d;
@@ -186,12 +175,10 @@ var THREE;
         Vector3.prototype.applyQuaternion = function (q) {
             var x = this.x, y = this.y, z = this.z;
             var qx = q.x, qy = q.y, qz = q.z, qw = q.w;
-            // calculate quat * vector
             var ix = qw * x + qy * z - qz * y;
             var iy = qw * y + qz * x - qx * z;
             var iz = qw * z + qx * y - qy * x;
             var iw = -qx * x - qy * y - qz * z;
-            // calculate result * inverse quat
             this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
             this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
             this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
@@ -218,8 +205,6 @@ var THREE;
             return func.apply(this, arguments);
         };
         Vector3.prototype.transformDirection = function (m) {
-            // input: THREE.Matrix4 affine matrix
-            // vector interpreted as a direction 
             var x = this.x, y = this.y, z = this.z;
             var e = m.elements;
             this.x = e[0] * x + e[4] * y + e[8] * z;
@@ -249,7 +234,6 @@ var THREE;
             return this;
         };
         Vector3.prototype.clamp = function (min, max) {
-            // This function assumes min < max, if this assumption isn't true it will not operate correctly
             this.x = THREE.Math.max(min.x, THREE.Math.min(max.x, this.x));
             this.y = THREE.Math.max(min.y, THREE.Math.min(max.y, this.y));
             this.z = THREE.Math.max(min.z, THREE.Math.min(max.z, this.z));
@@ -367,7 +351,6 @@ var THREE;
         };
         Vector3.prototype.angleTo = function (v) {
             var theta = this.dot(v) / (THREE.Math.sqrt(this.lengthSq() * v.lengthSq()));
-            // clamp, to handle numerical problems 
             return THREE.Math.acos(THREE.Math.clamp(theta, -1, 1));
         };
         Vector3.prototype.distanceTo = function (v) {

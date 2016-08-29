@@ -1,7 +1,3 @@
-/// <reference path="eventdispatcher.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -27,10 +23,8 @@ var THREE;
             this.morphTargets = {};
             this.skinWeights = [];
             this.skinIndices = [];
-            // this.lineDistances = [];
             this.boundingBox = null;
             this.boundingSphere = null;
-            // update flags 
             this.verticesNeedUpdate = false;
             this.normalsNeedUpdate = false;
             this.colorsNeedUpdate = false;
@@ -63,7 +57,6 @@ var THREE;
             var faces = geometry.faces;
             for (var i = 0; i < faces.length; i++) {
                 var face = faces[i];
-                // materials
                 if (face.materialIndex !== materialIndex) {
                     materialIndex = face.materialIndex;
                     if (group !== undefined) {
@@ -88,7 +81,6 @@ var THREE;
             var faceVertexUvs = geometry.faceVertexUvs;
             var hasFaceVertexUv = faceVertexUvs[0] && faceVertexUvs[0].length > 0;
             var hasFaceVertexUv2 = faceVertexUvs[1] && faceVertexUvs[1].length > 0;
-            // morphs 
             var morphTargets = geometry.morphTargets;
             var morphTargetsLength = morphTargets.length;
             var morphTargetsPosition;
@@ -109,12 +101,10 @@ var THREE;
                 }
                 this.morphTargets.normal = morphTargetsNormal;
             }
-            // skins 
             var skinIndices = geometry.skinIndices;
             var skinWeights = geometry.skinWeights;
             var hasSkinIndices = skinIndices.length === vertices.length;
             var hasSkinWeights = skinWeights.length === vertices.length;
-            //
             for (var i = 0; i < faces.length; i++) {
                 var face = faces[i];
                 this.vertices.push(vertices[face.a], vertices[face.b], vertices[face.c]);
@@ -154,7 +144,6 @@ var THREE;
                         this.uvs2.push(new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2());
                     }
                 }
-                // morphs
                 for (var j = 0; j < morphTargetsLength; j++) {
                     var morphTarget = morphTargets[j].vertices;
                     morphTargetsPosition[j].push(morphTarget[face.a], morphTarget[face.b], morphTarget[face.c]);
@@ -163,7 +152,6 @@ var THREE;
                     var morphNormal = morphNormals[j].vertexNormals[i];
                     morphTargetsNormal[j].push(morphNormal.a, morphNormal.b, morphNormal.c);
                 }
-                // skins 
                 if (hasSkinIndices) {
                     this.skinIndices.push(skinIndices[face.a], skinIndices[face.b], skinIndices[face.c]);
                 }

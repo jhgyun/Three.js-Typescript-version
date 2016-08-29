@@ -1,6 +1,3 @@
-/*
-* @author benaadams / https://twitter.com/ben_a_adams
-*/
 var THREE;
 (function (THREE) {
     var InterleavedBuffer = (function () {

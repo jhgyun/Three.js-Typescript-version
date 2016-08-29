@@ -1,10 +1,3 @@
-/// <reference path="../core/object3d.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author alteredq / http://alteredqualia.com/
- * @author mikael emtinger / http://gomo.se/
- * @author jonobr1 / http://jonobr1.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -145,17 +138,14 @@ var THREE;
             var matrixWorld = this.matrixWorld;
             if (material === undefined)
                 return;
-            // Checking boundingSphere distance to ray 
             if (geometry.boundingSphere === null)
                 geometry.computeBoundingSphere();
             sphere.copy(geometry.boundingSphere);
             sphere.applyMatrix4(matrixWorld);
             if (raycaster.ray.intersectsSphere(sphere) === false)
                 return;
-            // 
             inverseMatrix.getInverse(matrixWorld);
             ray.copy(raycaster.ray).applyMatrix4(inverseMatrix);
-            // Check boundingBox before continuing 
             if (geometry.boundingBox !== null) {
                 if (ray.intersectsBox(geometry.boundingBox) === false)
                     return;
@@ -178,7 +168,7 @@ var THREE;
                         c = indices[i + 2];
                         intersection = Mesh.checkBufferGeometryIntersection(this, raycaster, ray, positions, uvs, a, b, c);
                         if (intersection) {
-                            intersection.faceIndex = THREE.Math.floor(i / 3); // triangle number in indices buffer semantics
+                            intersection.faceIndex = THREE.Math.floor(i / 3);
                             intersects.push(intersection);
                         }
                     }
@@ -190,7 +180,7 @@ var THREE;
                         c = a + 2;
                         intersection = Mesh.checkBufferGeometryIntersection(this, raycaster, ray, positions, uvs, a, b, c);
                         if (intersection) {
-                            intersection.index = a; // triangle number in positions buffer semantics
+                            intersection.index = a;
                             intersects.push(intersection);
                         }
                     }

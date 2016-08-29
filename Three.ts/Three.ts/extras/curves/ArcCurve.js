@@ -3,10 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="ellipsecurve.ts" />
-/* *************************************************************
- *	Arc curve
- **************************************************************/
 var THREE;
 (function (THREE) {
     var ArcCurve = (function (_super) {

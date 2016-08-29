@@ -1,16 +1,3 @@
-/// <reference path="../../math/vector4.ts" />
-/// <reference path="../../math/vector3.ts" />
-/// <reference path="../../math/vector2.ts" />
-/// <reference path="uniformsutils.ts" />
-/// <reference path="uniformslib.ts" />
-/// <reference path="shaderchunk.ts" />
-/*
- * Webgl Shader Library for three.js
- *
- * @author alteredq / http://alteredqualia.com/
- * @author mrdoob / http://mrdoob.com/
- * @author mikael emtinger / http://gomo.se/
- */
 var THREE;
 (function (THREE) {
     THREE.ShaderLib = {
@@ -117,9 +104,6 @@ var THREE;
             vertexShader: THREE.ShaderChunk['normal_vert'],
             fragmentShader: THREE.ShaderChunk['normal_frag']
         },
-        /* -------------------------------------------------------------------------
-        //	Cube map shader
-         ------------------------------------------------------------------------- */
         'cube': {
             uniforms: {
                 "tCube": { value: null },
@@ -129,9 +113,6 @@ var THREE;
             vertexShader: THREE.ShaderChunk['cube_vert'],
             fragmentShader: THREE.ShaderChunk['cube_frag']
         },
-        /* -------------------------------------------------------------------------
-        //	Cube map shader
-         ------------------------------------------------------------------------- */
         'equirect': {
             uniforms: {
                 "tEquirect": { value: null },

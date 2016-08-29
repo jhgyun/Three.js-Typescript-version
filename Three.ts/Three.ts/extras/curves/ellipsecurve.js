@@ -3,10 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../core/curve.ts" />
-/* *************************************************************
- *	Ellipse curve
- **************************************************************/
 var THREE;
 (function (THREE) {
     var EllipseCurve = (function (_super) {
@@ -42,7 +38,6 @@ var THREE;
                 var cos = THREE.Math.cos(this.aRotation);
                 var sin = THREE.Math.sin(this.aRotation);
                 var tx = x, ty = y;
-                // Rotate the point about the center of the ellipse.
                 x = (tx - this.aX) * cos - (ty - this.aY) * sin + this.aX;
                 y = (tx - this.aX) * sin + (ty - this.aY) * cos + this.aY;
             }

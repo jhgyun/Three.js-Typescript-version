@@ -1,8 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author bhouston / http://clara.io
- * @author WestLangley / http://github.com/WestLangley
- */
 var THREE;
 (function (THREE) {
     var Box3 = (function () {
@@ -62,8 +57,6 @@ var THREE;
             return func.apply(this, arguments);
         };
         Box3.prototype.setFromObject = function (object) {
-            // Computes the world-axis-aligned bounding box of an object (including its children),
-            // accounting for both the object's, and children's, world transforms
             var v1 = new THREE.Vector3();
             var func = Box3.prototype.setFromObject = function (object) {
                 var scope = this;
@@ -121,7 +114,6 @@ var THREE;
             return this;
         };
         Box3.prototype.isEmpty = function () {
-            // this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
             return (this.max.x < this.min.x) || (this.max.y < this.min.y) || (this.max.z < this.min.z);
         };
         Box3.prototype.center = function (optionalTarget) {
@@ -164,13 +156,10 @@ var THREE;
             return false;
         };
         Box3.prototype.getParameter = function (point, optionalTarget) {
-            // This can potentially have a divide by zero if the box
-            // has a size dimension of 0. 
             var result = optionalTarget || new THREE.Vector3();
             return result.set((point.x - this.min.x) / (this.max.x - this.min.x), (point.y - this.min.y) / (this.max.y - this.min.y), (point.z - this.min.z) / (this.max.z - this.min.z));
         };
         Box3.prototype.intersectsBox = function (box) {
-            // using 6 splitting planes to rule out intersections. 
             if (box.max.x < this.min.x || box.min.x > this.max.x ||
                 box.max.y < this.min.y || box.min.y > this.max.y ||
                 box.max.z < this.min.z || box.min.z > this.max.z) {
@@ -181,17 +170,13 @@ var THREE;
         Box3.prototype.intersectsSphere = function (sphere) {
             var closestPoint = new THREE.Vector3();
             var func = Box3.prototype.intersectsSphere = function (sphere) {
-                // Find the point on the AABB closest to the sphere center.
                 this.clampPoint(sphere.center, closestPoint);
-                // If that point is inside the sphere, the AABB and sphere intersect.
                 var result = closestPoint.distanceToSquared(sphere.center) <= (sphere.radius * sphere.radius);
                 return result;
             };
             return func.apply(this, arguments);
         };
         Box3.prototype.intersectsPlane = function (plane) {
-            // We compute the minimum and maximum dot product values. If those values
-            // are on the same side (back or front) of the plane, then there is no intersection.
             var min, max;
             if (plane.normal.x > 0) {
                 min = plane.normal.x * this.min.x;
@@ -239,7 +224,6 @@ var THREE;
         Box3.prototype.intersect = function (box) {
             this.min.max(box.min);
             this.max.min(box.max);
-            // ensure that if there is no overlap, the result is fully empty, not slightly empty with non-inf/+inf values that will cause subsequence intersects to erroneously return valid values.
             if (this.isEmpty())
                 this.makeEmpty();
             return this;
@@ -262,18 +246,16 @@ var THREE;
                     new THREE.Vector3()];
             }
             var points = Box3.applyMatrix4_points;
-            // transform of empty box is an empty box.
             if (this.isEmpty())
                 return this;
-            // NOTE: I am using a binary pattern to specify all 2^3 combinations below
-            points[0].set(this.min.x, this.min.y, this.min.z).applyMatrix4(matrix); // 000
-            points[1].set(this.min.x, this.min.y, this.max.z).applyMatrix4(matrix); // 001
-            points[2].set(this.min.x, this.max.y, this.min.z).applyMatrix4(matrix); // 010
-            points[3].set(this.min.x, this.max.y, this.max.z).applyMatrix4(matrix); // 011
-            points[4].set(this.max.x, this.min.y, this.min.z).applyMatrix4(matrix); // 100
-            points[5].set(this.max.x, this.min.y, this.max.z).applyMatrix4(matrix); // 101
-            points[6].set(this.max.x, this.max.y, this.min.z).applyMatrix4(matrix); // 110
-            points[7].set(this.max.x, this.max.y, this.max.z).applyMatrix4(matrix); // 111
+            points[0].set(this.min.x, this.min.y, this.min.z).applyMatrix4(matrix);
+            points[1].set(this.min.x, this.min.y, this.max.z).applyMatrix4(matrix);
+            points[2].set(this.min.x, this.max.y, this.min.z).applyMatrix4(matrix);
+            points[3].set(this.min.x, this.max.y, this.max.z).applyMatrix4(matrix);
+            points[4].set(this.max.x, this.min.y, this.min.z).applyMatrix4(matrix);
+            points[5].set(this.max.x, this.min.y, this.max.z).applyMatrix4(matrix);
+            points[6].set(this.max.x, this.max.y, this.min.z).applyMatrix4(matrix);
+            points[7].set(this.max.x, this.max.y, this.max.z).applyMatrix4(matrix);
             this.setFromPoints(points);
             return this;
         };

@@ -1,8 +1,3 @@
-/// <reference path="../../objects/linesegments.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author WestLangley / http://github.com/WestLangley
-*/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -10,9 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var THREE;
 (function (THREE) {
-    /**
-     *  FaceNormalsHelper only supports THREE.Geometry
-     */
     var FaceNormalsHelper = (function (_super) {
         __extends(FaceNormalsHelper, _super);
         function FaceNormalsHelper(object, size, hex, linewidth) {
@@ -30,7 +22,6 @@ var THREE;
                 console.warn('THREE.FaceNormalsHelper: only THREE.Geometry is supported. Use THREE.VertexNormalsHelper, instead.');
                 throw new Error('THREE.FaceNormalsHelper: only THREE.Geometry is supported. Use THREE.VertexNormalsHelper, instead.');
             }
-            // 
             var geometry = new THREE.BufferGeometry();
             var positions = new THREE.Float32Attribute(nNormals * 2 * 3, 3);
             geometry.addAttribute('position', positions);
@@ -52,7 +43,6 @@ var THREE;
             normalMatrix.getNormalMatrix(this.object.matrixWorld);
             var matrixWorld = this.object.matrixWorld;
             var position = this.geometry.attributes.position;
-            // 
             var objGeometry = this.object.geometry;
             var vertices = objGeometry.vertices;
             var faces = objGeometry.faces;

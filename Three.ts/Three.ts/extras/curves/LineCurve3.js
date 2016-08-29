@@ -1,7 +1,3 @@
-/// <reference path="../core/curve.ts" />
-/* *************************************************************
- *	Line3D
- **************************************************************/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -18,7 +14,7 @@ var THREE;
         }
         LineCurve3.prototype.getPoint = function (t) {
             var vector = new THREE.Vector3();
-            vector.subVectors(this.v2, this.v1); // diff
+            vector.subVectors(this.v2, this.v1);
             vector.multiplyScalar(t);
             vector.add(this.v1);
             return vector;

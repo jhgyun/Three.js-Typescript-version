@@ -1,7 +1,3 @@
-/// <reference path="../core/curve.ts" />
-/* *************************************************************
- *	Spline curve
- **************************************************************/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,7 +7,7 @@ var THREE;
 (function (THREE) {
     var SplineCurve = (function (_super) {
         __extends(SplineCurve, _super);
-        function SplineCurve(points /* array of Vector2 */) {
+        function SplineCurve(points) {
             _super.call(this);
             this.points = (points == undefined) ? [] : points;
         }

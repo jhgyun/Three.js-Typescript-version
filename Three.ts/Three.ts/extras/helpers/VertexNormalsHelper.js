@@ -1,8 +1,3 @@
-/// <reference path="../../objects/linesegments.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author WestLangley / http://github.com/WestLangley
-*/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -18,7 +13,6 @@ var THREE;
             this.size = (size !== undefined) ? size : 1;
             var color = (hex !== undefined) ? hex : 0xff0000;
             var width = (linewidth !== undefined) ? linewidth : 1;
-            //
             var nNormals = 0;
             var objGeometry = this.object.geometry;
             if (objGeometry instanceof THREE.Geometry) {
@@ -27,13 +21,11 @@ var THREE;
             else if (objGeometry instanceof THREE.BufferGeometry) {
                 nNormals = objGeometry.attributes.normal.count;
             }
-            //
             var geometry = new THREE.BufferGeometry();
             var positions = new THREE.Float32Attribute(nNormals * 2 * 3, 3);
             geometry.addAttribute('position', positions);
             this.geometry = geometry;
             this.material = new THREE.LineBasicMaterial({ color: color, linewidth: width });
-            // 
             this.matrixAutoUpdate = false;
             this.update();
         }
@@ -46,7 +38,6 @@ var THREE;
             normalMatrix.getNormalMatrix(this.object.matrixWorld);
             var matrixWorld = this.object.matrixWorld;
             var position = this.geometry.attributes.position;
-            //
             var objGeometry = this.object.geometry;
             if (objGeometry instanceof THREE.Geometry) {
                 var vertices = objGeometry.vertices;
@@ -70,7 +61,6 @@ var THREE;
                 var objPos = objGeometry.attributes.position;
                 var objNorm = objGeometry.attributes.normal;
                 var idx = 0;
-                // for simplicity, ignore index and drawcalls, and render every normal
                 for (var j_1 = 0, jl_1 = objPos.count; j_1 < jl_1; j_1++) {
                     v1.set(objPos.getX(j_1), objPos.getY(j_1), objPos.getZ(j_1)).applyMatrix4(matrixWorld);
                     v2.set(objNorm.getX(j_1), objNorm.getY(j_1), objNorm.getZ(j_1));

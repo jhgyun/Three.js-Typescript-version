@@ -1,6 +1,3 @@
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var THREE;
 (function (THREE) {
     var MaterialLoader = (function () {
@@ -74,12 +71,10 @@ var THREE;
                 material.wireframe = json.wireframe;
             if (json.wireframeLinewidth !== undefined)
                 material.wireframeLinewidth = json.wireframeLinewidth;
-            // for PointsMaterial
             if (json.size !== undefined)
                 material.size = json.size;
             if (json.sizeAttenuation !== undefined)
                 material.sizeAttenuation = json.sizeAttenuation;
-            // maps
             if (json.map !== undefined)
                 material.map = this.getTexture(json.map);
             if (json.alphaMap !== undefined) {
@@ -95,7 +90,6 @@ var THREE;
             if (json.normalScale !== undefined) {
                 var normalScale = json.normalScale;
                 if (Array.isArray(normalScale) === false) {
-                    // Blender exporter used to export a scalar. See #7459
                     normalScale = [normalScale, normalScale];
                 }
                 material.normalScale = new THREE.Vector2().fromArray(normalScale);
@@ -130,7 +124,6 @@ var THREE;
                 material.aoMap = this.getTexture(json.aoMap);
             if (json.aoMapIntensity !== undefined)
                 material.aoMapIntensity = json.aoMapIntensity;
-            // MultiMaterial
             if (json.materials !== undefined) {
                 for (var i = 0, l = json.materials.length; i < l; i++) {
                     material.materials.push(this.parse(json.materials[i]));

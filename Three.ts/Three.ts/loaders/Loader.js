@@ -1,6 +1,3 @@
-/*
- * @author alteredq / http://alteredqualia.com/
- */
 var THREE;
 (function (THREE) {
     var Loader = (function () {
@@ -38,7 +35,6 @@ var THREE;
             var color = Loader.color;
             var textureLoader = Loader.textureLoader;
             var materialLoader = Loader.materialLoader;
-            // convert from old material format
             var textures = {};
             function loadTexture(path, repeat, offset, wrap, anisotropy) {
                 var fullPath = texturePath + path;
@@ -78,7 +74,6 @@ var THREE;
                 textures[uuid] = texture;
                 return uuid;
             }
-            //
             var json = {
                 uuid: THREE.Math.generateUUID(),
                 type: 'MeshLambertMaterial'

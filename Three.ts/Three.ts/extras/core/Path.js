@@ -3,12 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="curvepath.ts" />
-/*
- * @author zz85 / http://www.lab4games.net/zz85/blog
- * Creates free form 2d path using series of points, lines or curves.
- *
- **/
 var THREE;
 (function (THREE) {
     var Path = (function (_super) {
@@ -21,8 +15,6 @@ var THREE;
             }
         }
         ;
-        // Create path using straight lines to connect all points
-        // - vectors: array of Vector2
         Path.prototype.fromPoints = function (vectors) {
             this.moveTo(vectors[0].x, vectors[0].y);
             for (var i = 1, l = vectors.length; i < l; i++) {
@@ -30,7 +22,7 @@ var THREE;
             }
         };
         Path.prototype.moveTo = function (x, y) {
-            this.currentPoint.set(x, y); // TODO consider referencing vectors instead of copying?
+            this.currentPoint.set(x, y);
         };
         Path.prototype.lineTo = function (x, y) {
             var curve = new THREE.LineCurve(this.currentPoint.clone(), new THREE.Vector2(x, y));
@@ -47,7 +39,7 @@ var THREE;
             this.curves.push(curve);
             this.currentPoint.set(aX, aY);
         };
-        Path.prototype.splineThru = function (pts /*Array of Vector*/) {
+        Path.prototype.splineThru = function (pts) {
             var npts = [this.currentPoint.clone()].concat(pts);
             var curve = new THREE.SplineCurve(npts);
             this.curves.push(curve);
@@ -69,7 +61,6 @@ var THREE;
         Path.prototype.absellipse = function (aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation) {
             var curve = new THREE.EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
             if (this.curves.length > 0) {
-                // if a previous curve is present, attempt to join
                 var firstPoint = curve.getPoint(0);
                 if (!firstPoint.equals(this.currentPoint)) {
                     this.lineTo(firstPoint.x, firstPoint.y);
@@ -82,7 +73,6 @@ var THREE;
         return Path;
     }(THREE.CurvePath));
     THREE.Path = Path;
-    // minimal class for proxing functions to Path. Replaces old "extractSubpaths()"
     var ShapePath = (function () {
         function ShapePath() {
             this.subPaths = [];
@@ -118,10 +108,6 @@ var THREE;
             }
             function isPointInsidePolygon(inPt, inPolygon) {
                 var polyLen = inPolygon.length;
-                // inPt on polygon contour => immediate success    or
-                // toggling of inside/outside at every single! intersection point of an edge
-                //  with the horizontal line through inPt, left of inPt
-                //  not counting lowerY endpoints of edges and whole edges on that line
                 var inside = false;
                 for (var p = polyLen - 1, q = 0; q < polyLen; p = q++) {
                     var edgeLowPt = inPolygon[p];
@@ -129,7 +115,6 @@ var THREE;
                     var edgeDx = edgeHighPt.x - edgeLowPt.x;
                     var edgeDy = edgeHighPt.y - edgeLowPt.y;
                     if (THREE.Math.abs(edgeDy) > Number.EPSILON) {
-                        // not parallel
                         if (edgeDy < 0) {
                             edgeLowPt = inPolygon[q];
                             edgeDx = -edgeDx;
@@ -140,25 +125,23 @@ var THREE;
                             continue;
                         if (inPt.y === edgeLowPt.y) {
                             if (inPt.x === edgeLowPt.x)
-                                return true; // inPt is on contour ?
+                                return true;
                         }
                         else {
                             var perpEdge = edgeDy * (inPt.x - edgeLowPt.x) - edgeDx * (inPt.y - edgeLowPt.y);
                             if (perpEdge === 0)
-                                return true; // inPt is on contour ?
+                                return true;
                             if (perpEdge < 0)
                                 continue;
-                            inside = !inside; // true intersection left of inPt
+                            inside = !inside;
                         }
                     }
                     else {
-                        // parallel or collinear
                         if (inPt.y !== edgeLowPt.y)
-                            continue; // parallel
-                        // edge lies on the same horizontal line as inPt
+                            continue;
                         if (((edgeHighPt.x <= inPt.x) && (inPt.x <= edgeLowPt.x)) ||
                             ((edgeLowPt.x <= inPt.x) && (inPt.x <= edgeHighPt.x)))
-                            return true; // inPt: Point on contour !
+                            return true;
                     }
                 }
                 return inside;
@@ -179,7 +162,6 @@ var THREE;
             }
             var holesFirst = !isClockWise(subPaths[0].getPoints());
             holesFirst = isCCW ? !holesFirst : holesFirst;
-            // console.log("Holes first", holesFirst);
             var betterShapeHoles = [];
             var newShapes = [];
             var newShapeHoles = [];
@@ -205,7 +187,6 @@ var THREE;
                     newShapeHoles[mainIdx].push({ h: tmpPath, p: tmpPoints[0] });
                 }
             }
-            // only Holes? -> probably all Shapes with wrong orientation
             if (!newShapes[0])
                 return toShapesNoHoles(subPaths);
             if (newShapes.length > 1) {
@@ -237,9 +218,7 @@ var THREE;
                         }
                     }
                 }
-                // console.log("ambiguous: ", ambiguous);
                 if (toChange.length > 0) {
-                    // console.log("to change: ", toChange);
                     if (!ambiguous)
                         newShapeHoles = betterShapeHoles;
                 }
@@ -253,7 +232,6 @@ var THREE;
                     tmpShape.holes.push(tmpHoles[j].h);
                 }
             }
-            //console.log("shape", shapes); 
             return shapes;
         };
         return ShapePath;

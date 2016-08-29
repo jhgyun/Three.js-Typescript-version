@@ -1,12 +1,3 @@
-/// <reference path="eventdispatcher.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author kile / http://kile.stravaganza.org/
- * @author alteredq / http://alteredqualia.com/
- * @author mikael emtinger / http://gomo.se/
- * @author zz85 / http://www.lab4games.net/zz85/blog
- * @author bhouston / http://clara.io
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -25,7 +16,7 @@ var THREE;
             this.vertices = [];
             this.colors = [];
             this.faces = [];
-            this.faceVertexUvs = [[]]; //0:uv1, 1:uv2
+            this.faceVertexUvs = [[]];
             this.morphTargets = [];
             this.morphNormals = [];
             this.skinWeights = [];
@@ -33,7 +24,6 @@ var THREE;
             this.lineDistances = [];
             this.boundingBox = null;
             this.boundingSphere = null;
-            // update flags 
             this.elementsNeedUpdate = false;
             this.verticesNeedUpdate = false;
             this.uvsNeedUpdate = false;
@@ -73,35 +63,30 @@ var THREE;
             return this;
         };
         Geometry.prototype.rotateX = function (angle) {
-            // rotate geometry around world x-axis  
             var m1 = Geometry[".rotateX.m1"] || (Geometry[".rotateX.m1"] = new THREE.Matrix4());
             m1.makeRotationX(angle);
             this.applyMatrix(m1);
             return this;
         };
         Geometry.prototype.rotateY = function (angle) {
-            // rotate geometry around world y-axis  
             var m1 = Geometry[".rotateY.m1"] || (Geometry[".rotateY.m1"] = new THREE.Matrix4());
             m1.makeRotationY(angle);
             this.applyMatrix(m1);
             return this;
         };
         Geometry.prototype.rotateZ = function (angle) {
-            // rotate geometry around world z-axis   
             var m1 = Geometry[".rotateZ.m1"] || (Geometry[".rotateZ.m1"] = new THREE.Matrix4());
             m1.makeRotationZ(angle);
             this.applyMatrix(m1);
             return this;
         };
         Geometry.prototype.translate = function (x, y, z) {
-            // translate geometry  
             var m1 = Geometry[".translate.m1"] || (Geometry[".translate.m1"] = new THREE.Matrix4());
             m1.makeTranslation(x, y, z);
             this.applyMatrix(m1);
             return this;
         };
         Geometry.prototype.scale = function (x, y, z) {
-            // scale geometry  
             var m1 = Geometry[".scale.m1"] || (Geometry[".scale.m1"] = new THREE.Matrix4());
             m1.makeScale(x, y, z);
             this.applyMatrix(m1);
@@ -224,8 +209,6 @@ var THREE;
                 vertices[v] = new THREE.Vector3();
             }
             if (areaWeighted) {
-                // vertex normals weighted by triangle areas
-                // http://www.iquilezles.org/www/articles/normals/normals.htm
                 var vA, vB, vC;
                 var cb = new THREE.Vector3(), ab = new THREE.Vector3();
                 for (f = 0, fl = this.faces.length; f < fl; f++) {
@@ -272,9 +255,6 @@ var THREE;
         };
         Geometry.prototype.computeMorphNormals = function () {
             var i, il, f, fl, face;
-            // save original normals
-            // - create temp variables on first access
-            //   otherwise just copy (for faster repeated calls)
             for (f = 0, fl = this.faces.length; f < fl; f++) {
                 face = this.faces[f];
                 if (!face.__originalFaceNormal) {
@@ -294,11 +274,9 @@ var THREE;
                     }
                 }
             }
-            // use temp geometry to compute face and vertex normals for each morph
             var tmpGeo = new Geometry();
             tmpGeo.faces = this.faces;
             for (i = 0, il = this.morphTargets.length; i < il; i++) {
-                // create on first access 
                 if (!this.morphNormals[i]) {
                     this.morphNormals[i] = {};
                     this.morphNormals[i].faceNormals = [];
@@ -315,12 +293,9 @@ var THREE;
                     }
                 }
                 var morphNormals = this.morphNormals[i];
-                // set vertices to morph target 
                 tmpGeo.vertices = this.morphTargets[i].vertices;
-                // compute morph normals 
                 tmpGeo.computeFaceNormals();
                 tmpGeo.computeVertexNormals();
-                // store morph normals 
                 var faceNormal;
                 var vertexNormals;
                 for (f = 0, fl = this.faces.length; f < fl; f++) {
@@ -333,7 +308,6 @@ var THREE;
                     vertexNormals.c.copy(face.vertexNormals[2]);
                 }
             }
-            // restore original normals
             for (f = 0, fl = this.faces.length; f < fl; f++) {
                 face = this.faces[f];
                 face.normal = face.__originalFaceNormal;
@@ -368,7 +342,6 @@ var THREE;
             if (matrix !== undefined) {
                 normalMatrix = new THREE.Matrix3().getNormalMatrix(matrix);
             }
-            // vertices 
             for (var i = 0, il = vertices2.length; i < il; i++) {
                 var vertex = vertices2[i];
                 var vertexCopy = vertex.clone();
@@ -376,7 +349,6 @@ var THREE;
                     vertexCopy.applyMatrix4(matrix);
                 vertices1.push(vertexCopy);
             }
-            // faces 
             for (i = 0, il = faces2.length; i < il; i++) {
                 var face = faces2[i], faceCopy, normal, color, faceVertexNormals = face.vertexNormals, faceVertexColors = face.vertexColors;
                 faceCopy = new THREE.Face3(face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset);
@@ -399,7 +371,6 @@ var THREE;
                 faceCopy.materialIndex = face.materialIndex + materialIndexOffset;
                 faces1.push(faceCopy);
             }
-            // uvs 
             for (i = 0, il = uvs2.length; i < il; i++) {
                 var uv = uvs2[i], uvCopy = [];
                 if (uv === undefined) {
@@ -415,16 +386,11 @@ var THREE;
             mesh.matrixAutoUpdate && mesh.updateMatrix();
             this.merge(mesh.geometry, mesh.matrix);
         };
-        /*
-         * Checks for duplicate vertices with hashmap.
-         * Duplicated vertices are removed
-         * and faces' vertices are updated.
-         */
         Geometry.prototype.mergeVertices = function () {
-            var verticesMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
+            var verticesMap = {};
             var unique = [], changes = [];
             var v, key;
-            var precisionPoints = 4; // number of decimal points, e.g. 4 for epsilon of 0.0001
+            var precisionPoints = 4;
             var precision = THREE.Math.pow(10, precisionPoints);
             var i, il, face;
             var indices, j, jl;
@@ -437,12 +403,9 @@ var THREE;
                     changes[i] = unique.length - 1;
                 }
                 else {
-                    //console.log('Duplicate vertex found. ', i, ' could be using ', verticesMap[key]);
                     changes[i] = changes[verticesMap[key]];
                 }
             }
-            // if faces are completely degenerate after merging vertices, we
-            // have to remove them from the geometry.
             var faceIndicesToRemove = [];
             for (i = 0, il = this.faces.length; i < il; i++) {
                 face = this.faces[i];
@@ -451,8 +414,6 @@ var THREE;
                 face.c = changes[face.c];
                 indices = [face.a, face.b, face.c];
                 var dupIndex = -1;
-                // if any duplicate vertices are found in a Face3
-                // we have to remove the face as nothing can be saved
                 for (var n = 0; n < 3; n++) {
                     if (indices[n] === indices[(n + 1) % 3]) {
                         dupIndex = n;
@@ -468,7 +429,6 @@ var THREE;
                     this.faceVertexUvs[j].splice(idx, 1);
                 }
             }
-            // Use unique set of vertices
             var diff = this.vertices.length - unique.length;
             this.vertices = unique;
             return diff;
@@ -476,16 +436,13 @@ var THREE;
         Geometry.prototype.sortFacesByMaterialIndex = function () {
             var faces = this.faces;
             var length = faces.length;
-            // tag faces
             for (var i = 0; i < length; i++) {
                 faces[i]._id = i;
             }
-            // sort faces 
             function materialIndexSort(a, b) {
                 return a.materialIndex - b.materialIndex;
             }
             faces.sort(materialIndexSort);
-            // sort uvs
             var uvs1 = this.faceVertexUvs[0];
             var uvs2 = this.faceVertexUvs[1];
             var newUvs1, newUvs2;
@@ -517,7 +474,6 @@ var THREE;
                     generator: 'Geometry.toJSON'
                 }
             };
-            // standard Geometry serialization
             data.uuid = this.uuid;
             data.type = this.type;
             if (this.name !== '')
@@ -545,14 +501,14 @@ var THREE;
             for (var i = 0; i < this.faces.length; i++) {
                 var face = this.faces[i];
                 var hasMaterial = true;
-                var hasFaceUv = false; // deprecated
+                var hasFaceUv = false;
                 var hasFaceVertexUv = this.faceVertexUvs[0][i] !== undefined;
                 var hasFaceNormal = face.normal.length() > 0;
                 var hasFaceVertexNormal = face.vertexNormals.length > 0;
                 var hasFaceColor = face.color.r !== 1 || face.color.g !== 1 || face.color.b !== 1;
                 var hasFaceVertexColor = face.vertexColors.length > 0;
                 var faceType = 0;
-                faceType = setBit(faceType, 0, false); // isQuad
+                faceType = setBit(faceType, 0, false);
                 faceType = setBit(faceType, 1, hasMaterial);
                 faceType = setBit(faceType, 2, hasFaceUv);
                 faceType = setBit(faceType, 3, hasFaceVertexUv);
@@ -618,7 +574,7 @@ var THREE;
             if (colors.length > 0)
                 data.data.colors = colors;
             if (uvs.length > 0)
-                data.data.uvs = [uvs]; // temporal backward compatibility
+                data.data.uvs = [uvs];
             data.data.faces = faces;
             return data;
         };

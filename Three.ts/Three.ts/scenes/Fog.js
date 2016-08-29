@@ -1,7 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-* @author alteredq / http://alteredqualia.com/
-*/
 var THREE;
 (function (THREE) {
     var Fog = (function () {

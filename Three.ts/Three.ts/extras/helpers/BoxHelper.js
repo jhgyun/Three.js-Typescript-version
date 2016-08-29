@@ -1,7 +1,3 @@
-/// <reference path="../../objects/linesegments.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -39,21 +35,6 @@ var THREE;
                 return;
             var min = box.min;
             var max = box.max;
-            /*
-              5____4
-            1/___0/|
-            | 6__|_7
-            2/___3/
-    
-            0: max.x, max.y, max.z
-            1: min.x, max.y, max.z
-            2: min.x, min.y, max.z
-            3: max.x, min.y, max.z
-            4: max.x, max.y, min.z
-            5: min.x, max.y, min.z
-            6: min.x, min.y, min.z
-            7: max.x, min.y, min.z
-            */
             var position = this.geometry.attributes.position;
             var array = position.array;
             array[0] = max.x;

@@ -1,7 +1,3 @@
-/// <reference path="../core/curve.ts" />
-/* *************************************************************
- *	Line
- **************************************************************/
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -23,7 +19,6 @@ var THREE;
             return point;
         };
         ;
-        /** Line curve is linear, so we can overwrite default getPointAt */
         LineCurve.prototype.getPointAt = function (u) {
             return this.getPoint(u);
         };

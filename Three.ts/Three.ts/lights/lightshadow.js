@@ -1,6 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var LightShadow = (function () {

@@ -1,14 +1,3 @@
-/// <reference path="../core/curve.ts" />
-/*
- * @author zz85 https://github.com/zz85
- *
- * Centripetal CatmullRom Curve - which is useful for avoiding
- * cusps and self-intersections in non-uniform catmull rom curves.
- * http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf
- *
- * curve.type accepts centripetal(default), chordal and catmullrom
- * curve.tension is used for catmullrom which defaults to 0.5
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -24,14 +13,6 @@ var THREE;
                 return this.c0 + this.c1 * t + this.c2 * t2 + this.c3 * t3;
             };
         }
-        /*
-         * Compute coefficients for a cubic polynomial
-         *   p(s) = c0 + c1*s + c2*s^2 + c3*s^3
-         * such that
-         *   p(0) = x0, p(1) = x1
-         *  and
-         *   p'(0) = t0, p'(1) = t1.
-         */
         CubicPoly.prototype.init = function (x0, x1, t0, t1) {
             this.c0 = x0;
             this.c1 = t0;
@@ -40,17 +21,13 @@ var THREE;
         };
         ;
         CubicPoly.prototype.initNonuniformCatmullRom = function (x0, x1, x2, x3, dt0, dt1, dt2) {
-            // compute tangents when parameterized in [t1,t2]
             var t1 = (x1 - x0) / dt0 - (x2 - x0) / (dt0 + dt1) + (x2 - x1) / dt1;
             var t2 = (x2 - x1) / dt1 - (x3 - x1) / (dt1 + dt2) + (x3 - x2) / dt2;
-            // rescale tangents for parametrization in [0,1]
             t1 *= dt1;
             t2 *= dt1;
-            // initCubicPoly
             this.init(x1, x2, t1, t2);
         };
         ;
-        // standard Catmull-Rom spline: interpolate between x1 and x2 with previous/following points x1/x4
         CubicPoly.prototype.initCatmullRom = function (x0, x1, x2, x3, tension) {
             this.init(x1, x2, tension * (x2 - x0), tension * (x3 - x1));
         };
@@ -59,7 +36,7 @@ var THREE;
     }());
     var CatmullRomCurve3 = (function (_super) {
         __extends(CatmullRomCurve3, _super);
-        function CatmullRomCurve3(p /* array of Vector3 */) {
+        function CatmullRomCurve3(p) {
             _super.call(this);
             this.points = p || [];
             this.closed = false;
@@ -89,12 +66,11 @@ var THREE;
                 intPoint = l - 2;
                 weight = 1;
             }
-            var p0, p1, p2, p3; // 4 points
+            var p0, p1, p2, p3;
             if (this.closed || intPoint > 0) {
                 p0 = points[(intPoint - 1) % l];
             }
             else {
-                // extrapolate first point
                 tmp.subVectors(points[0], points[1]).add(points[0]);
                 p0 = tmp;
             }
@@ -104,17 +80,14 @@ var THREE;
                 p3 = points[(intPoint + 2) % l];
             }
             else {
-                // extrapolate last point
                 tmp.subVectors(points[l - 1], points[l - 2]).add(points[l - 1]);
                 p3 = tmp;
             }
             if (this.type === undefined || this.type === 'centripetal' || this.type === 'chordal') {
-                // init Centripetal / Chordal Catmull-Rom
                 var pow = this.type === 'chordal' ? 0.5 : 0.25;
                 var dt0 = THREE.Math.pow(p0.distanceToSquared(p1), pow);
                 var dt1 = THREE.Math.pow(p1.distanceToSquared(p2), pow);
                 var dt2 = THREE.Math.pow(p2.distanceToSquared(p3), pow);
-                // safety check for repeated points
                 if (dt1 < 1e-4)
                     dt1 = 1.0;
                 if (dt0 < 1e-4)

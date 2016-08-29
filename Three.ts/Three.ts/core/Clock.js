@@ -1,6 +1,3 @@
-/*
-* @author alteredq / http://alteredqualia.com/
-*/
 var THREE;
 (function (THREE) {
     var Clock = (function () {

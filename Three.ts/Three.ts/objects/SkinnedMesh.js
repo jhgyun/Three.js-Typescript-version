@@ -1,9 +1,3 @@
-/// <reference path="mesh.ts" />
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author ikerr / http://verold.com
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -19,9 +13,6 @@ var THREE;
             this.bindMode = "attached";
             this.bindMatrix = new THREE.Matrix4();
             this.bindMatrixInverse = new THREE.Matrix4();
-            // init bones
-            // TODO: remove bone creation as there is no reason (other than
-            // convenience) for THREE.SkinnedMesh to do this.
             var bones = [];
             if (this.geometry && this.geometry["bones"] !== undefined) {
                 var gbones = this.geometry["bones"];
@@ -75,7 +66,7 @@ var THREE;
                         sw.multiplyScalar(scale);
                     }
                     else {
-                        sw.set(1, 0, 0, 0); // do something reasonable 
+                        sw.set(1, 0, 0, 0);
                     }
                 }
             }
@@ -92,7 +83,7 @@ var THREE;
                         vec.multiplyScalar(scale);
                     }
                     else {
-                        vec.set(1, 0, 0, 0); // do something reasonable 
+                        vec.set(1, 0, 0, 0);
                     }
                     skinWeight.setXYZW(i, vec.x, vec.y, vec.z, vec.w);
                 }

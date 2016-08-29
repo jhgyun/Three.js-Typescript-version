@@ -1,19 +1,3 @@
-/// <reference path="../../core/object3d.ts" />
-/*
- * @author WestLangley / http://github.com/WestLangley
- * @author zz85 / http://github.com/zz85
- * @author bhouston / http://clara.io
- *
- * Creates an arrow for visualizing directions
- *
- * Parameters:
- *  dir - Vector3
- *  origin - Vector3
- *  length - Number
- *  color - color in hex value
- *  headLength - Number
- *  headWidth - Number
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -35,7 +19,6 @@ var THREE;
                 coneGeometry = ArrowHelper.coneGeometry = new THREE.CylinderBufferGeometry(0, 0.5, 1, 5, 1);
                 coneGeometry.translate(0, -0.5, 0);
             }
-            // dir is assumed to be normalized 
             if (color === undefined)
                 color = 0xffff00;
             if (length === undefined)
@@ -58,7 +41,6 @@ var THREE;
             var axis = ArrowHelper["setDirection_axis"]
                 || (ArrowHelper["setDirection_axis"] = new THREE.Vector3());
             var radians;
-            // dir is assumed to be normalized
             if (dir.y > 0.99999) {
                 this.quaternion.set(0, 0, 0, 1);
             }

@@ -1,14 +1,8 @@
-/*
- * @author Nikos M. / https://github.com/foo123/
- *
- * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
- */
 var THREE;
 (function (THREE) {
     var BinaryTextureLoader = (function () {
         function BinaryTextureLoader(manager) {
             this.manager = (manager !== undefined) ? manager : THREE.DefaultLoadingManager;
-            // override in sub classes
             this._parser = null;
         }
         ;

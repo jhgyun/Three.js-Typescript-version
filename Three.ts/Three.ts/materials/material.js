@@ -1,8 +1,3 @@
-/// <reference path="../core/eventdispatcher.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author alteredq / http://alteredqualia.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -22,13 +17,7 @@ var THREE;
             this.lights = true;
             this.blending = THREE.NormalBlending;
             this.side = THREE.FrontSide;
-            /**
-            * THREE.FlatShading, THREE.SmoothShading
-            */
             this.shading = THREE.SmoothShading;
-            /**
-            * THREE.NoColors, THREE.VertexColors, THREE.FaceColors
-            */
             this.vertexColors = THREE.NoColors;
             this.opacity = 1;
             this.transparent = false;
@@ -44,13 +33,13 @@ var THREE;
             this.clippingPlanes = null;
             this.clipShadows = false;
             this.colorWrite = true;
-            this.precision = null; // override the renderer's default precision for this material
+            this.precision = null;
             this.polygonOffset = false;
             this.polygonOffsetFactor = 0;
             this.polygonOffsetUnits = 0;
             this.alphaTest = 0;
             this.premultipliedAlpha = false;
-            this.overdraw = 0; // Overdrawn pixels (typically between 0 and 1) for fixing antialiasing gaps in CanvasRenderer
+            this.overdraw = 0;
             this.visible = true;
             this._needsUpdate = true;
         }
@@ -95,7 +84,6 @@ var THREE;
                     currentValue.copy(newValue);
                 }
                 else if (key === 'overdraw') {
-                    // ensure overdraw is backwards-compatible with legacy boolean type
                     this[key] = Number(newValue);
                 }
                 else {
@@ -118,7 +106,6 @@ var THREE;
                     generator: 'Material.toJSON'
                 }
             };
-            // standard Material serialization
             data.uuid = this.uuid;
             data.type = this.type;
             if (this.name !== '')
@@ -164,7 +151,7 @@ var THREE;
                 data.specularMap = this.specularMap.toJSON(meta).uuid;
             if (this.envMap instanceof THREE.Texture) {
                 data.envMap = this.envMap.toJSON(meta).uuid;
-                data.reflectivity = this.reflectivity; // Scale behind envMap 
+                data.reflectivity = this.reflectivity;
             }
             if (this.size !== undefined)
                 data.size = this.size;
@@ -190,7 +177,6 @@ var THREE;
                 data.wireframe = this.wireframe;
             if (this.wireframeLinewidth > 1)
                 data.wireframeLinewidth = this.wireframeLinewidth;
-            // TODO: Copied from Object3D.toJSON
             function extractFromCache(cache) {
                 var values = [];
                 for (var key in cache) {

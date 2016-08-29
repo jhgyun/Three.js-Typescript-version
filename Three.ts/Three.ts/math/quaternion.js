@@ -1,10 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author bhouston / http://clara.io
- */
 var THREE;
 (function (THREE) {
     var Quaternion = (function () {
@@ -82,9 +75,6 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromEuler = function (euler, update) {
-            // http://www.mathworks.com/matlabcentral/fileexchange/
-            // 	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
-            //	content/SpinCalc.m
             var c1 = THREE.Math.cos(euler._x / 2);
             var c2 = THREE.Math.cos(euler._y / 2);
             var c3 = THREE.Math.cos(euler._z / 2);
@@ -133,8 +123,6 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromAxisAngle = function (axis, angle) {
-            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
-            // assumes axis is normalized 
             var halfAngle = angle / 2, s = THREE.Math.sin(halfAngle);
             this._x = axis.x * s;
             this._y = axis.y * s;
@@ -144,8 +132,6 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromRotationMatrix = function (m) {
-            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
-            // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled) 
             var te = m.elements, m11 = te[0], m12 = te[4], m13 = te[8], m21 = te[1], m22 = te[5], m23 = te[9], m31 = te[2], m32 = te[6], m33 = te[10], trace = m11 + m22 + m33, s;
             if (trace > 0) {
                 s = 0.5 / THREE.Math.sqrt(trace + 1.0);
@@ -179,8 +165,6 @@ var THREE;
             return this;
         };
         Quaternion.prototype.setFromUnitVectors = function (vFrom, vTo) {
-            // http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final 
-            // assumes direction vectors vFrom and vTo are normalized 
             var v1, r;
             var EPS = 0.000001;
             var func = Quaternion.prototype.setFromUnitVectors = function setFromUnitVectors(vFrom, vTo) {
@@ -251,7 +235,6 @@ var THREE;
             return this.multiplyQuaternions(q, this);
         };
         Quaternion.prototype.multiplyQuaternions = function (a, b) {
-            // from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
             var qax = a._x, qay = a._y, qaz = a._z, qaw = a._w;
             var qbx = b._x, qby = b._y, qbz = b._z, qbw = b._w;
             this._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby;
@@ -267,7 +250,6 @@ var THREE;
             if (t === 1)
                 return this.copy(qb);
             var x = this._x, y = this._y, z = this._z, w = this._w;
-            // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
             var cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z;
             if (cosHalfTheta < 0) {
                 this._w = -qb._w;
@@ -341,11 +323,9 @@ var THREE;
             return qm.copy(qa).slerp(qb, t);
         };
         Quaternion.slerpFlat = function (dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t) {
-            // fuzz-free, array-based Quaternion SLERP operation 
             var x0 = src0[srcOffset0 + 0], y0 = src0[srcOffset0 + 1], z0 = src0[srcOffset0 + 2], w0 = src0[srcOffset0 + 3], x1 = src1[srcOffset1 + 0], y1 = src1[srcOffset1 + 1], z1 = src1[srcOffset1 + 2], w1 = src1[srcOffset1 + 3];
             if (w0 !== w1 || x0 !== x1 || y0 !== y1 || z0 !== z1) {
                 var s = 1 - t, cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1, dir = (cos >= 0 ? 1 : -1), sqrSin = 1 - cos * cos;
-                // Skip the Slerp for tiny steps to avoid numeric problems:
                 if (sqrSin > Number.EPSILON) {
                     var sin = THREE.Math.sqrt(sqrSin), len = THREE.Math.atan2(sin, cos * dir);
                     s = THREE.Math.sin(s * len) / sin;
@@ -356,7 +336,6 @@ var THREE;
                 y0 = y0 * s + y1 * tDir;
                 z0 = z0 * s + z1 * tDir;
                 w0 = w0 * s + w1 * tDir;
-                // Normalize in case we just did a lerp:
                 if (s === 1 - t) {
                     var f = 1 / THREE.Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0);
                     x0 *= f;

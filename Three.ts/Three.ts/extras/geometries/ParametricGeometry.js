@@ -1,12 +1,3 @@
-/// <reference path="../../core/geometry.ts" />
-/*
- * @author zz85 / https://github.com/zz85
- * Parametric Surfaces Geometry
- * based on the brilliant article by @prideout http://prideout.net/blog/?p=44
- *
- * new THREE.ParametricGeometry( parametricFunction, uSegments, ySegements );
- *
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -56,10 +47,6 @@ var THREE;
                     uvs.push([uvb.clone(), uvc, uvd.clone()]);
                 }
             }
-            // console.log(this);
-            // magic bullet
-            // var diff = this.mergeVertices();
-            // console.log('removed ', diff, ' vertices by merging');
             this.computeFaceNormals();
             this.computeVertexNormals();
         }

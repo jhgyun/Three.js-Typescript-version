@@ -1,7 +1,3 @@
-/*
- * @author zz85 / http://www.lab4games.net/zz85/blog
- * @author mrdoob / http://mrdoob.com/
- */
 var THREE;
 (function (THREE) {
     var Font = (function () {
@@ -85,7 +81,6 @@ var THREE;
                 }
                 return { offset: glyph.ha * scale, path: path };
             }
-            //
             if (size === undefined)
                 size = 100;
             if (divisions === undefined)

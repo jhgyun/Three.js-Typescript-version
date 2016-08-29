@@ -1,8 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-* @author alteredq / http://alteredqualia.com/
-* @author bhouston / http://clara.io
-*/
 var THREE;
 (function (THREE) {
     var Frustum = (function () {
@@ -100,7 +95,6 @@ var THREE;
                     p2.z = plane.normal.z > 0 ? box.max.z : box.min.z;
                     var d1 = plane.distanceToPoint(p1);
                     var d2 = plane.distanceToPoint(p2);
-                    // if both outside plane, no intersection
                     if (d1 < 0 && d2 < 0) {
                         return false;
                     }

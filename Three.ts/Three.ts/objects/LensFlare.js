@@ -1,8 +1,3 @@
-/// <reference path="../core/object3d.ts" />
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -51,14 +46,10 @@ var THREE;
                 rotation: 0,
                 opacity: opacity,
                 color: color,
-                blending: blending // blending
+                blending: blending
             });
             return this;
         };
-        /*
-         * Update lens flares update positions on all flares based on the screen position
-         * Set myLensFlare.customUpdateCallback to alter the flares in your project specific way.
-         */
         LensFlare.prototype.updateLensFlares = function () {
             var f, fl = this.lensFlares.length;
             var flare;

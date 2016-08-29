@@ -14,8 +14,6 @@ var THREE;
         WebGLClipping.prototype.init = function (planes, enableLocalClipping, camera) {
             var enabled = planes.length !== 0 ||
                 enableLocalClipping ||
-                // enable state of previous frame - the clipping code has to
-                // run another frame in order to reset the state:
                 this.numGlobalPlanes !== 0 ||
                 this.localClippingEnabled;
             this.localClippingEnabled = enableLocalClipping;
@@ -38,9 +36,7 @@ var THREE;
             if (!this.localClippingEnabled ||
                 planes === null || planes.length === 0 ||
                 this.renderingShadows && !clipShadows) {
-                // there's no local clipping 
                 if (this.renderingShadows) {
-                    // there's no global clipping 
                     this.projectPlanes(null);
                 }
                 else {
@@ -49,7 +45,7 @@ var THREE;
             }
             else {
                 var nGlobal = this.renderingShadows ? 0 : this.numGlobalPlanes, lGlobal = nGlobal * 4, dstArray = cache.clippingState || null;
-                this.uniform.value = dstArray; // ensure unique state
+                this.uniform.value = dstArray;
                 dstArray = this.projectPlanes(planes, camera, lGlobal, fromCache);
                 for (var i = 0; i !== lGlobal; ++i) {
                     dstArray[i] = this.globalState[i];

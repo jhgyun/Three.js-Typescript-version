@@ -1,7 +1,3 @@
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- */
 var THREE;
 (function (THREE) {
     var SpritePlugin = (function () {
@@ -146,7 +142,6 @@ var THREE;
             var sprites = this.sprites;
             if (sprites.length === 0)
                 return;
-            // setup gl
             if (this.program === undefined) {
                 this.init();
             }
@@ -195,14 +190,12 @@ var THREE;
                 oldFogType = 0;
                 sceneFogType = 0;
             }
-            // update positions and sort
             for (var i = 0, l = sprites.length; i < l; i++) {
                 var sprite = sprites[i];
                 sprite.modelViewMatrix.multiplyMatrices(camera.matrixWorldInverse, sprite.matrixWorld);
                 sprite.z = -sprite.modelViewMatrix.elements[14];
             }
             sprites.sort(this.painterSortStable);
-            // render all sprites 
             var scale = [];
             var spritePosition = this.spritePosition;
             var spriteRotation = this.spriteRotation;
@@ -248,7 +241,6 @@ var THREE;
                 }
                 gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
             }
-            // restore gl
             state.enable(gl.CULL_FACE);
             this.renderer.resetGLState();
         };

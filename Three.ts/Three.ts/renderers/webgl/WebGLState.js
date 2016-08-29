@@ -1,6 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var WebGLState = (function () {
@@ -46,7 +43,7 @@ var THREE;
         ;
         WebGLState.prototype.createTexture = function (type, target, count) {
             var gl = this.gl;
-            var data = new Uint8Array(4); // 4 is required to match default unpack alignment of 4.
+            var data = new Uint8Array(4);
             var texture = gl.createTexture();
             gl.bindTexture(type, texture);
             gl.texParameteri(type, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -120,7 +117,7 @@ var THREE;
             }
             else {
                 this.disable(gl.BLEND);
-                this.currentBlending = blending; // no blending, that is
+                this.currentBlending = blending;
                 return;
             }
             if (blending !== this.currentBlending || premultipliedAlpha !== this.currentPremultipledAlpha) {

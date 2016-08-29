@@ -1,17 +1,3 @@
-/// <reference path="../../core/geometry.ts" />
-/*
- * @author WestLangley / https://github.com/WestLangley
- * @author zz85 / https://github.com/zz85
- * @author miningold / https://github.com/miningold
- * @author jonobr1 / https://github.com/jonobr1
- *
- * Modified from the TorusKnotGeometry by @oosmoxiecode
- *
- * Creates a tube which extrudes along a 3d spline
- *
- * Uses parallel transport frames as described in
- * http://www.cs.indiana.edu/pub/techreports/TR425.pdf
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -40,14 +26,12 @@ var THREE;
             var grid = [];
             var scope = this, tangent, normal, binormal, numpoints = segments + 1, u, v, r, cx, cy, pos, pos2 = new THREE.Vector3(), i, j, ip, jp, a, b, c, d, uva, uvb, uvc, uvd;
             var frames = new TubeGeometry.FrenetFrames(path, segments, closed), tangents = frames.tangents, normals = frames.normals, binormals = frames.binormals;
-            // proxy internals
             this.tangents = tangents;
             this.normals = normals;
             this.binormals = binormals;
             function vert(x, y, z) {
                 return scope.vertices.push(new THREE.Vector3(x, y, z)) - 1;
             }
-            // construct the grid
             for (i = 0; i < numpoints; i++) {
                 grid[i] = [];
                 u = i / (numpoints - 1);
@@ -58,7 +42,7 @@ var THREE;
                 r = radius * taper(u);
                 for (j = 0; j < radialSegments; j++) {
                     v = j / radialSegments * 2 * THREE.Math.PI;
-                    cx = -r * THREE.Math.cos(v); // TODO: Hack: Negating it so it faces outside.
+                    cx = -r * THREE.Math.cos(v);
                     cy = r * THREE.Math.sin(v);
                     pos2.copy(pos);
                     pos2.x += cx * normal.x + cy * binormal.x;
@@ -67,12 +51,11 @@ var THREE;
                     grid[i][j] = vert(pos2.x, pos2.y, pos2.z);
                 }
             }
-            // construct the mesh
             for (i = 0; i < segments; i++) {
                 for (j = 0; j < radialSegments; j++) {
                     ip = (closed) ? (i + 1) % segments : i + 1;
                     jp = (j + 1) % radialSegments;
-                    a = grid[i][j]; // *** NOT NECESSARILY PLANAR ! ***
+                    a = grid[i][j];
                     b = grid[ip][j];
                     c = grid[ip][jp];
                     d = grid[i][jp];
@@ -96,46 +79,18 @@ var THREE;
         TubeGeometry.SinusoidalTaper = function (u) {
             return THREE.Math.sin(THREE.Math.PI * u);
         };
-        // For computing of Frenet frames, exposing the tangents, normals and binormals the spline
         TubeGeometry.FrenetFrames = function (path, segments, closed) {
             var normal = new THREE.Vector3(), tangents = [], normals = [], binormals = [], vec = new THREE.Vector3(), mat = new THREE.Matrix4(), numpoints = segments + 1, theta, smallest, tx, ty, tz, i, u;
-            // expose internals
             this.tangents = tangents;
             this.normals = normals;
             this.binormals = binormals;
-            // compute the tangent vectors for each segment on the path
             for (i = 0; i < numpoints; i++) {
                 u = i / (numpoints - 1);
                 tangents[i] = path.getTangentAt(u);
                 tangents[i].normalize();
             }
             initialNormal3();
-            /*
-            function initialNormal1(lastBinormal) {
-                // fixed start binormal. Has dangers of 0 vectors
-                normals[ 0 ] = new THREE.Vector3();
-                binormals[ 0 ] = new THREE.Vector3();
-                if (lastBinormal===undefined) lastBinormal = new THREE.Vector3( 0, 0, 1 );
-                normals[ 0 ].crossVectors( lastBinormal, tangents[ 0 ] ).normalize();
-                binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] ).normalize();
-            }
-        
-            function initialNormal2() {
-        
-                // This uses the Frenet-Serret formula for deriving binormal
-                var t2 = path.getTangentAt( epsilon );
-        
-                normals[ 0 ] = new THREE.Vector3().subVectors( t2, tangents[ 0 ] ).normalize();
-                binormals[ 0 ] = new THREE.Vector3().crossVectors( tangents[ 0 ], normals[ 0 ] );
-        
-                normals[ 0 ].crossVectors( binormals[ 0 ], tangents[ 0 ] ).normalize(); // last binormal x tangent
-                binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] ).normalize();
-        
-            }
-            */
             function initialNormal3() {
-                // select an initial normal vector perpendicular to the first tangent vector,
-                // and in the direction of the smallest tangent xyz component
                 normals[0] = new THREE.Vector3();
                 binormals[0] = new THREE.Vector3();
                 smallest = Number.MAX_VALUE;
@@ -157,19 +112,17 @@ var THREE;
                 normals[0].crossVectors(tangents[0], vec);
                 binormals[0].crossVectors(tangents[0], normals[0]);
             }
-            // compute the slowly-varying normal and binormal vectors for each segment on the path
             for (i = 1; i < numpoints; i++) {
                 normals[i] = normals[i - 1].clone();
                 binormals[i] = binormals[i - 1].clone();
                 vec.crossVectors(tangents[i - 1], tangents[i]);
                 if (vec.length() > Number.EPSILON) {
                     vec.normalize();
-                    theta = THREE.Math.acos(THREE.Math.clamp(tangents[i - 1].dot(tangents[i]), -1, 1)); // clamp for floating pt errors
+                    theta = THREE.Math.acos(THREE.Math.clamp(tangents[i - 1].dot(tangents[i]), -1, 1));
                     normals[i].applyMatrix4(mat.makeRotationAxis(vec, theta));
                 }
                 binormals[i].crossVectors(tangents[i], normals[i]);
             }
-            // if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
             if (closed) {
                 theta = THREE.Math.acos(THREE.Math.clamp(normals[0].dot(normals[numpoints - 1]), -1, 1));
                 theta /= (numpoints - 1);
@@ -177,7 +130,6 @@ var THREE;
                     theta = -theta;
                 }
                 for (i = 1; i < numpoints; i++) {
-                    // twist a little...
                     normals[i].applyMatrix4(mat.makeRotationAxis(tangents[i], theta * i));
                     binormals[i].crossVectors(tangents[i], normals[i]);
                 }

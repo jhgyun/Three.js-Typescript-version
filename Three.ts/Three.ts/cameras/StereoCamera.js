@@ -1,7 +1,3 @@
-/// <reference path="perspectivecamera.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var THREE;
 (function (THREE) {
     var StereoCamera = (function () {
@@ -31,23 +27,18 @@ var THREE;
                 var aspect = _static.aspect = camera.aspect * this.aspect;
                 var near = _static.near = camera.near;
                 var far = _static.far = camera.far;
-                // Off-axis stereoscopic effect based on
-                // http://paulbourke.net/stereographics/stereorender/
                 var projectionMatrix = camera.projectionMatrix.clone();
                 var eyeSep = 0.064 / 2;
                 var eyeSepOnProjection = eyeSep * near / focus;
                 var ymax = near * THREE.Math.tan(THREE.Math.DEG2RAD * fov * 0.5);
                 var xmin, xmax;
-                // translate xOffset
                 eyeLeft.elements[12] = -eyeSep;
                 eyeRight.elements[12] = eyeSep;
-                // for left eye
                 xmin = -ymax * aspect + eyeSepOnProjection;
                 xmax = ymax * aspect + eyeSepOnProjection;
                 projectionMatrix.elements[0] = 2 * near / (xmax - xmin);
                 projectionMatrix.elements[8] = (xmax + xmin) / (xmax - xmin);
                 this.cameraL.projectionMatrix.copy(projectionMatrix);
-                // for right eye
                 xmin = -ymax * aspect - eyeSepOnProjection;
                 xmax = ymax * aspect - eyeSepOnProjection;
                 projectionMatrix.elements[0] = 2 * near / (xmax - xmin);

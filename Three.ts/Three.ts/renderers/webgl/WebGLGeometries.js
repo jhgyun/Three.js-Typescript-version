@@ -1,6 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var WebGLGeometries = (function () {
@@ -21,7 +18,6 @@ var THREE;
             this.deleteAttributes(buffergeometry.attributes);
             geometry.removeEventListener('dispose', this.onGeometryDispose, this);
             delete geometries[geometry.id];
-            // TODO
             var property = properties.get(geometry);
             if (property.wireframe) {
                 this.deleteAttribute(property.wireframe);
@@ -32,7 +28,6 @@ var THREE;
                 this.deleteAttribute(bufferproperty.wireframe);
             }
             properties.delete(buffergeometry);
-            //
             this.info.memory.geometries--;
         };
         WebGLGeometries.prototype.getAttributeBuffer = function (attribute) {

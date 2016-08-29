@@ -1,7 +1,3 @@
-/// <reference path="../core/object3d.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -36,7 +32,6 @@ var THREE;
             var precisionSq = precision * precision;
             var geometry = this.geometry;
             var matrixWorld = this.matrixWorld;
-            // Checking boundingSphere distance to ray
             if (geometry.boundingSphere === null)
                 geometry.computeBoundingSphere();
             sphere.copy(geometry.boundingSphere);
@@ -64,14 +59,12 @@ var THREE;
                         var distSq = ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
                         if (distSq > precisionSq)
                             continue;
-                        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+                        interRay.applyMatrix4(this.matrixWorld);
                         var distance = raycaster.ray.origin.distanceTo(interRay);
                         if (distance < raycaster.near || distance > raycaster.far)
                             continue;
                         intersects.push({
                             distance: distance,
-                            // What do we want? intersection point on the ray or on the segment??
-                            // point: raycaster.ray.at( distance ),
                             point: interSegment.clone().applyMatrix4(this.matrixWorld),
                             index: i,
                             face: null,
@@ -87,14 +80,12 @@ var THREE;
                         var distSq = ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment);
                         if (distSq > precisionSq)
                             continue;
-                        interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+                        interRay.applyMatrix4(this.matrixWorld);
                         var distance = raycaster.ray.origin.distanceTo(interRay);
                         if (distance < raycaster.near || distance > raycaster.far)
                             continue;
                         intersects.push({
                             distance: distance,
-                            // What do we want? intersection point on the ray or on the segment??
-                            // point: raycaster.ray.at( distance ),
                             point: interSegment.clone().applyMatrix4(this.matrixWorld),
                             index: i,
                             face: null,
@@ -111,14 +102,12 @@ var THREE;
                     var distSq = ray.distanceSqToSegment(vertices[i], vertices[i + 1], interRay, interSegment);
                     if (distSq > precisionSq)
                         continue;
-                    interRay.applyMatrix4(this.matrixWorld); //Move back to world space for distance calculation
+                    interRay.applyMatrix4(this.matrixWorld);
                     var distance = raycaster.ray.origin.distanceTo(interRay);
                     if (distance < raycaster.near || distance > raycaster.far)
                         continue;
                     intersects.push({
                         distance: distance,
-                        // What do we want? intersection point on the ray or on the segment??
-                        // point: raycaster.ray.at( distance ),
                         point: interSegment.clone().applyMatrix4(this.matrixWorld),
                         index: i,
                         face: null,

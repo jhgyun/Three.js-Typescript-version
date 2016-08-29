@@ -1,10 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author alteredq / http://alteredqualia.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author bhouston / http://clara.io
- * @author tschw
- */
 var THREE;
 (function (THREE) {
     var Matrix3 = (function () {

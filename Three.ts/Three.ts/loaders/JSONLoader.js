@@ -1,7 +1,3 @@
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author alteredq / http://alteredqualia.com/
- */
 var THREE;
 (function (THREE) {
     var JSONLoader = (function () {
@@ -57,7 +53,6 @@ var THREE;
                 }
                 var i, j, fi, offset, zLength, colorIndex, normalIndex, uvIndex, materialIndex, type, isQuad, hasMaterial, hasFaceVertexUv, hasFaceNormal, hasFaceVertexNormal, hasFaceColor, hasFaceVertexColor, vertex, face, faceA, faceB, hex, normal, uvLayer, uv, u, v, faces = json.faces, vertices = json.vertices, normals = json.normals, colors = json.colors, nUvLayers = 0;
                 if (json.uvs !== undefined) {
-                    // disregard empty arrays
                     for (i = 0; i < json.uvs.length; i++) {
                         if (json.uvs[i].length)
                             nUvLayers++;
@@ -86,7 +81,6 @@ var THREE;
                     hasFaceVertexNormal = isBitSet(type, 5);
                     hasFaceColor = isBitSet(type, 6);
                     hasFaceVertexColor = isBitSet(type, 7);
-                    // console.log("type", type, "bits", isQuad, hasMaterial, hasFaceVertexUv, hasFaceNormal, hasFaceVertexNormal, hasFaceColor, hasFaceVertexColor);
                     if (isQuad) {
                         faceA = new THREE.Face3();
                         faceA.a = faces[offset];
@@ -102,7 +96,6 @@ var THREE;
                             faceA.materialIndex = materialIndex;
                             faceB.materialIndex = materialIndex;
                         }
-                        // to get face <=> uv index correspondence
                         fi = geometry.faces.length;
                         if (hasFaceVertexUv) {
                             for (i = 0; i < nUvLayers; i++) {
@@ -164,7 +157,6 @@ var THREE;
                             materialIndex = faces[offset++];
                             face.materialIndex = materialIndex;
                         }
-                        // to get face <=> uv index correspondence
                         fi = geometry.faces.length;
                         if (hasFaceVertexUv) {
                             for (i = 0; i < nUvLayers; i++) {
@@ -258,7 +250,6 @@ var THREE;
             }
             function parseAnimations() {
                 var outputAnimations = [];
-                // parse old style Bone/Hierarchy animations
                 var animations = [];
                 if (json.animation !== undefined) {
                     animations.push(json.animation);
@@ -276,9 +267,7 @@ var THREE;
                     if (clip)
                         outputAnimations.push(clip);
                 }
-                // parse implicit morph animations
                 if (geometry.morphTargets) {
-                    // TODO: Figure out what an appropraite FPS is for morph target animations -- defaulting to 10, but really it is completely arbitrary.
                     var morphAnimationClips = THREE.AnimationClip.CreateClipsFromMorphTargetSequences(geometry.morphTargets, 10);
                     outputAnimations = outputAnimations.concat(morphAnimationClips);
                 }

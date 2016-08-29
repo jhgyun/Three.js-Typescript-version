@@ -1,6 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var WebGLObjects = (function () {
@@ -35,7 +32,6 @@ var THREE;
             var gl = this.gl;
             gl.bindBuffer(bufferType, attributeProperties.__webglBuffer);
             if (data.dynamic === false || data.updateRange.count === -1) {
-                // Not using update ranges 
                 gl.bufferSubData(bufferType, 0, data.array);
             }
             else if (data.updateRange.count === 0) {
@@ -43,7 +39,7 @@ var THREE;
             }
             else {
                 gl.bufferSubData(bufferType, data.updateRange.offset * data.array.BYTES_PER_ELEMENT, data.array.subarray(data.updateRange.offset, data.updateRange.offset + data.updateRange.count));
-                data.updateRange.count = 0; // reset range 
+                data.updateRange.count = 0;
             }
             attributeProperties.version = data.version;
         };
@@ -83,7 +79,6 @@ var THREE;
             var index = geometry.index;
             var attributes = geometry.attributes;
             var position = attributes.position;
-            // console.time( 'wireframe' );
             if (index !== null) {
                 var edges = {};
                 var array = index.array;
@@ -108,7 +103,6 @@ var THREE;
                     indices.push(a, b, b, c, c, a);
                 }
             }
-            // console.timeEnd( 'wireframe' ); 
             var TypeArray = position.count > 65535 ? Uint32Array : Uint16Array;
             var attribute = new THREE.BufferAttribute(new TypeArray(indices), 1);
             this.updateAttribute(attribute, gl.ELEMENT_ARRAY_BUFFER);
@@ -116,7 +110,6 @@ var THREE;
             return attribute;
         };
         WebGLObjects.prototype.update = function (object) {
-            // TODO: Avoid updating twice (when using shadowMap). Maybe add frame counter.
             var gl = this.gl;
             var geometry = this.geometries.get(object);
             if (object.geometry instanceof THREE.Geometry) {
@@ -130,7 +123,6 @@ var THREE;
             for (var name in attributes) {
                 this.updateAttribute(attributes[name], gl.ARRAY_BUFFER);
             }
-            // morph targets
             var morphAttributes = geometry.morphAttributes;
             for (var name in morphAttributes) {
                 var array = morphAttributes[name];

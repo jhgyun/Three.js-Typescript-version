@@ -1,30 +1,3 @@
-/// <reference path="math/vector2.ts" />
-/// <reference path="math/vector3.ts" />
-/// <reference path="math/vector4.ts" />
-/// <reference path="math/box2.ts" />
-/// <reference path="math/box3.ts" />
-/// <reference path="math/matrix3.ts" />
-/// <reference path="math/matrix4.ts" />
-/// <reference path="math/quaternion.ts" />
-/// <reference path="math/ray.ts" /> 
-/// <reference path="math/plane.ts" />
-/// <reference path="objects/lod.ts" />
-/// <reference path="three.ts" />
-/// <reference path="cameras/perspectivecamera.ts" />
-/// <reference path="lights/light.ts" />
-/// <reference path="core/bufferattribute.ts" />
-/// <reference path="core/buffergeometry.ts" />
-/// <reference path="materials/material.ts" />
-/// <reference path="materials/meshphongmaterial.ts" />
-/// <reference path="materials/shadermaterial.ts" />
-/// <reference path="renderers/webglrenderer.ts" />
-/// <reference path="renderers/webgl/webglshadowmap.ts" />
-/// <reference path="renderers/webglrendertarget.ts" />
-/// <reference path="audio/audio.ts" />
-/// <reference path="audio/audioanalyser.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var THREE;
 (function (THREE) {
     Object.assign(THREE, {
@@ -61,7 +34,6 @@ var THREE;
             return new THREE.Vector3(x, y, z);
         }
     });
-    //
     Object.assign(THREE.Box2.prototype, {
         empty: function () {
             console.warn('THREE.Box2: .empty() has been renamed to .isEmpty().');
@@ -187,7 +159,6 @@ var THREE;
             return this.setFromMatrixColumn(matrix, index);
         }
     });
-    //
     Object.assign(THREE.Object3D.prototype, {
         getChildByName: function (name) {
             console.warn('THREE.Object3D: .getChildByName() has been renamed to .getObjectByName().');
@@ -229,7 +200,6 @@ var THREE;
             }
         }
     });
-    //
     THREE.PerspectiveCamera.prototype["setLens"] = function (focalLength, filmGauge) {
         console.warn("THREE.PerspectiveCamera.setLens is deprecated. " +
             "Use .setFocalLength and .filmGauge for a photographic setup.");
@@ -237,7 +207,6 @@ var THREE;
             this.filmGauge = filmGauge;
         this.setFocalLength(focalLength);
     };
-    //
     Object.defineProperties(THREE.Light.prototype, {
         onlyShadow: {
             set: function (value) {
@@ -315,7 +284,6 @@ var THREE;
             }
         }
     });
-    //
     Object.defineProperties(THREE.BufferAttribute.prototype, {
         length: {
             get: function () {
@@ -361,7 +329,6 @@ var THREE;
             }
         }
     });
-    //
     Object.defineProperties(THREE.Material.prototype, {
         wrapAround: {
             get: function () {
@@ -401,9 +368,7 @@ var THREE;
             }
         }
     });
-    //
     THREE.EventDispatcher.prototype = Object.assign(Object.create({
-        // Note: Extra base ensures these properties are not 'assign'ed.
         constructor: THREE.EventDispatcher,
         apply: function (target) {
             console.warn("THREE.EventDispatcher: .apply is deprecated, " +
@@ -411,7 +376,6 @@ var THREE;
             Object.assign(target, this);
         }
     }), THREE.EventDispatcher.prototype);
-    //
     Object.assign(THREE.WebGLRenderer.prototype, {
         supportsFloatTextures: function () {
             console.warn('THREE.WebGLRenderer: .supportsFloatTextures() is now .extensions.get( \'OES_texture_float\' ).');
@@ -448,10 +412,6 @@ var THREE;
             console.warn('THREE.WebGLRenderer: .enableScissorTest() is now .setScissorTest().');
             this.setScissorTest(boolean);
         },
-        //initMaterial: function ()
-        //{
-        //    console.warn('THREE.WebGLRenderer: .initMaterial() has been removed.');
-        //},
         addPrePlugin: function () {
             console.warn('THREE.WebGLRenderer: .addPrePlugin() has been removed.');
         },
@@ -503,7 +463,6 @@ var THREE;
             }
         }
     });
-    //
     Object.defineProperties(THREE.WebGLRenderTarget.prototype, {
         wrapS: {
             get: function () {
@@ -606,7 +565,6 @@ var THREE;
             }
         }
     });
-    //
     Object.assign(THREE.Audio.prototype, {
         load: function (file) {
             console.warn('THREE.Audio: .load has been deprecated. Please use THREE.AudioLoader.');
@@ -624,7 +582,6 @@ var THREE;
             return this.getFrequencyData();
         }
     });
-    //
     THREE.GeometryUtils = {
         merge: function (geometry1, geometry2, materialIndexOffset) {
             console.warn('THREE.GeometryUtils: .merge() has been moved to Geometry. Use geometry.merge( geometry2, matrix, materialIndexOffset ) instead.');

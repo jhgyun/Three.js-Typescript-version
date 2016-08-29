@@ -38,12 +38,6 @@ var THREE;
                 return 1024;
             }
             else {
-                // default for when object is not specified
-                // ( for example when prebuilding shader to be used with multiple objects )
-                //
-                //  - leave some extra space for other uniforms
-                //  - limit here is ANGLE's 254 max uniform vectors
-                //    (up to 54 should be safe)
                 var nVertexUniforms = capabilities.maxVertexUniforms;
                 var nVertexMatrices = THREE.Math.floor((nVertexUniforms - 20) / 4);
                 var maxBones = nVertexMatrices;
@@ -68,7 +62,6 @@ var THREE;
                 console.warn("THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead.");
                 encoding = map.texture.encoding;
             }
-            // add backwards compatibility for WebGLRenderer.gammaInput/gammaOutput parameter, should probably be removed at some point.
             if (encoding === THREE.LinearEncoding && gammaOverrideLinear) {
                 encoding = THREE.GammaEncoding;
             }
@@ -79,8 +72,6 @@ var THREE;
             var shaderIDs = this.shaderIDs;
             var capabilities = this.capabilities;
             var shaderID = shaderIDs[material.type];
-            // heuristics to create shader parameters according to lights in the scene
-            // (not to blow over maxLights budget)
             var maxBones = this.allocateBones(object);
             var precision = renderer.getPrecision();
             if (material.precision !== null) {
@@ -171,7 +162,6 @@ var THREE;
             var programs = this.programs;
             var program;
             var renderer = this.renderer;
-            // Check if code has been already compiled
             for (var p = 0, pl = programs.length; p < pl; p++) {
                 var programInfo = programs[p];
                 if (programInfo.code === code) {
@@ -189,11 +179,9 @@ var THREE;
         WebGLPrograms.prototype.releaseProgram = function (program) {
             var programs = this.programs;
             if (--program.usedTimes === 0) {
-                // Remove from unordered set
                 var i = programs.indexOf(program);
                 programs[i] = programs[programs.length - 1];
                 programs.pop();
-                // Free WebGL resources
                 program.destroy();
             }
         };

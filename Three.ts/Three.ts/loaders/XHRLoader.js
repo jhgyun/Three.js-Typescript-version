@@ -1,6 +1,3 @@
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var THREE;
 (function (THREE) {
     var XHRLoader = (function () {
@@ -34,8 +31,6 @@ var THREE;
                     scope.manager.itemEnd(url);
                 }
                 else if (this.status === 0) {
-                    // Some browsers return HTTP Status 0 when using non-http protocol
-                    // e.g. 'file://' or 'data://'. Handle as success.
                     console.warn('THREE.XHRLoader: HTTP Status 0 received.');
                     if (onLoad)
                         onLoad(response);

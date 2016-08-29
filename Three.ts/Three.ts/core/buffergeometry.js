@@ -1,9 +1,3 @@
-/// <reference path="eventdispatcher.ts" />
-/// <reference path="geometry.ts" />
-/*
- * @author alteredq / http://alteredqualia.com/
- * @author mrdoob / http://mrdoob.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,21 +5,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var THREE;
 (function (THREE) {
-    var BufferGeometryAttributeNames = (function () {
-        function BufferGeometryAttributeNames() {
-        }
-        BufferGeometryAttributeNames.position = "position";
-        BufferGeometryAttributeNames.normal = "normal";
-        BufferGeometryAttributeNames.color = "color";
-        BufferGeometryAttributeNames.uv = "uv";
-        BufferGeometryAttributeNames.uv2 = "uv2";
-        BufferGeometryAttributeNames.lineDistance = "lineDistance";
-        BufferGeometryAttributeNames.skinWeight = "skinWeight";
-        BufferGeometryAttributeNames.vertices = "vertices";
-        BufferGeometryAttributeNames.vertexNormals = "vertexNormals";
-        return BufferGeometryAttributeNames;
-    }());
-    THREE.BufferGeometryAttributeNames = BufferGeometryAttributeNames;
     var BufferGeometry = (function (_super) {
         __extends(BufferGeometry, _super);
         function BufferGeometry() {
@@ -107,27 +86,23 @@ var THREE;
         };
         BufferGeometry.prototype.rotateY = function (angle) {
             var m1 = BufferGeometry[".rotateY.m1"] || (BufferGeometry[".rotateY.m1"] = new THREE.Matrix4());
-            // rotate geometry around world y-axis  
             m1.makeRotationY(angle);
             this.applyMatrix(m1);
             return this;
         };
         BufferGeometry.prototype.rotateZ = function (angle) {
             var m1 = BufferGeometry[".rotateZ.m1"] || (BufferGeometry[".rotateZ.m1"] = new THREE.Matrix4());
-            // rotate geometry around world z-axis   
             m1.makeRotationZ(angle);
             this.applyMatrix(m1);
             return this;
         };
         BufferGeometry.prototype.translate = function (x, y, z) {
-            // translate geometry 
             var m1 = BufferGeometry[".translate.m1"] || (BufferGeometry[".translate.m1"] = new THREE.Matrix4());
             m1.makeTranslation(x, y, z);
             this.applyMatrix(m1);
             return this;
         };
         BufferGeometry.prototype.scale = function (x, y, z) {
-            // scale geometry  
             var m1 = BufferGeometry[".scale.m1"] || (BufferGeometry[".scale.m1"] = new THREE.Matrix4());
             m1.makeScale(x, y, z);
             this.applyMatrix(m1);
@@ -146,7 +121,6 @@ var THREE;
             return offset;
         };
         BufferGeometry.prototype.setFromObject = function (object) {
-            // console.log( 'THREE.BufferGeometry.setFromObject(). Converting', object, this ); 
             var geometry = object.geometry;
             if (object instanceof THREE.Points || object instanceof THREE.Line) {
                 var positions = new THREE.Float32Attribute(geometry.vertices.length * 3, 3);
@@ -267,9 +241,7 @@ var THREE;
                 var indices = new TypeArray(geometry.indices.length * 3);
                 this.setIndex(new THREE.BufferAttribute(indices, 1).copyIndicesArray(geometry.indices));
             }
-            // groups 
             this.groups = geometry.groups;
-            // morphs
             for (var name in geometry.morphTargets) {
                 var array = [];
                 var morphTargets = geometry.morphTargets[name];
@@ -280,7 +252,6 @@ var THREE;
                 }
                 this.morphAttributes[name] = array;
             }
-            // skinning
             if (geometry.skinIndices.length > 0) {
                 var skinIndices = new THREE.Float32Attribute(geometry.skinIndices.length * 4, 4);
                 this.addAttribute('skinIndex', skinIndices.copyVector4sArray(geometry.skinIndices));
@@ -289,7 +260,6 @@ var THREE;
                 var skinWeights = new THREE.Float32Attribute(geometry.skinWeights.length * 4, 4);
                 this.addAttribute('skinWeight', skinWeights.copyVector4sArray(geometry.skinWeights));
             }
-            // 
             if (geometry.boundingSphere !== null) {
                 this.boundingSphere = geometry.boundingSphere.clone();
             }
@@ -328,8 +298,6 @@ var THREE;
                     var center = this.boundingSphere.center;
                     box.setFromArray(array);
                     box.center(center);
-                    // hoping to find a boundingSphere with a radius smaller than the
-                    // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
                     var maxRadiusSq = 0;
                     for (var i = 0, il = array.length; i < il; i += 3) {
                         vector.fromArray(array, i);
@@ -344,7 +312,6 @@ var THREE;
             func.call(this);
         };
         BufferGeometry.prototype.computeFaceNormals = function () {
-            // backwards compatibility 
         };
         BufferGeometry.prototype.computeVertexNormals = function () {
             var index = this.index;
@@ -356,7 +323,6 @@ var THREE;
                     this.addAttribute('normal', new THREE.BufferAttribute(new Float32Array(positions.length), 3));
                 }
                 else {
-                    // reset existing normals to zero 
                     var array = attributes.normal.array;
                     for (var i = 0, il = array.length; i < il; i++) {
                         array[i] = 0;
@@ -364,7 +330,6 @@ var THREE;
                 }
                 var normals = attributes.normal.array;
                 var vA, vB, vC, pA = new THREE.Vector3(), pB = new THREE.Vector3(), pC = new THREE.Vector3(), cb = new THREE.Vector3(), ab = new THREE.Vector3();
-                // indexed elements
                 if (index) {
                     var indices = index.array;
                     if (groups.length === 0) {
@@ -397,7 +362,6 @@ var THREE;
                     }
                 }
                 else {
-                    // non-indexed elements (unconnected triangle soup)
                     for (var i = 0, il = positions.length; i < il; i += 9) {
                         pA.fromArray(positions, i);
                         pB.fromArray(positions, i + 3);
@@ -482,7 +446,6 @@ var THREE;
                     generator: 'BufferGeometry.toJSON'
                 }
             };
-            // standard BufferGeometry serialization
             data.uuid = this.uuid;
             data.type = this.type;
             if (this.name !== '')

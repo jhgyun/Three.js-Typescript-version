@@ -60,11 +60,8 @@ var THREE;
                 }
             }
             var gammaFactorDefine = (renderer.gammaFactor > 0) ? renderer.gammaFactor : 1.0;
-            // console.log( 'building new program ' ); 
-            // 
             var customExtensions = WebGLProgram.generateExtensions(extensions, parameters, renderer.extensions);
             var customDefines = WebGLProgram.generateDefines(defines);
-            //
             var program = gl.createProgram();
             var prefixVertex;
             var prefixFragment;
@@ -207,18 +204,14 @@ var THREE;
             }
             var vertexGlsl = prefixVertex + vertexShader;
             var fragmentGlsl = prefixFragment + fragmentShader;
-            // console.log( '*VERTEX*', vertexGlsl );
-            // console.log( '*FRAGMENT*', fragmentGlsl );
             var glVertexShader = THREE.WebGLShader(gl, gl.VERTEX_SHADER, vertexGlsl);
             var glFragmentShader = THREE.WebGLShader(gl, gl.FRAGMENT_SHADER, fragmentGlsl);
             gl.attachShader(program, glVertexShader);
             gl.attachShader(program, glFragmentShader);
-            // Force a particular attribute to index 0.
             if (material.index0AttributeName !== undefined) {
                 gl.bindAttribLocation(program, 0, material.index0AttributeName);
             }
             else if (parameters.morphTargets === true) {
-                // programs with morphTargets displace position out of attribute 0
                 gl.bindAttribLocation(program, 0, 'position');
             }
             gl.linkProgram(program);
@@ -227,8 +220,6 @@ var THREE;
             var fragmentLog = gl.getShaderInfoLog(glFragmentShader);
             var runnable = true;
             var haveDiagnostics = true;
-            // console.log( '**VERTEX**', gl.getExtension( 'WEBGL_debug_shaders' ).getTranslatedShaderSource( glVertexShader ) );
-            // console.log( '**FRAGMENT**', gl.getExtension( 'WEBGL_debug_shaders' ).getTranslatedShaderSource( glFragmentShader ) );
             if (gl.getProgramParameter(program, gl.LINK_STATUS) === false) {
                 runnable = false;
                 console.error('THREE.WebGLProgram: shader error: ', gl.getError(), 'gl.VALIDATE_STATUS', gl.getProgramParameter(program, gl.VALIDATE_STATUS), 'gl.getProgramInfoLog', programLog, vertexLog, fragmentLog);
@@ -254,7 +245,6 @@ var THREE;
                     }
                 };
             }
-            // clean up
             gl.deleteShader(glVertexShader);
             gl.deleteShader(glFragmentShader);
             this.code = code;
@@ -337,7 +327,6 @@ var THREE;
             for (var i = 0; i < n; i++) {
                 var info = gl.getActiveAttrib(program, i);
                 var name = info.name;
-                // console.log("THREE.WebGLProgram: ACTIVE VERTEX ATTRIBUTE:", name, i ); 
                 attributes[name] = gl.getAttribLocation(program, name);
             }
             return attributes;

@@ -1,6 +1,3 @@
-/*
- * @author bhouston / http://clara.io/
- */
 var THREE;
 (function (THREE) {
     var AnimationLoader = (function () {

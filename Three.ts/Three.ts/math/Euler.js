@@ -1,9 +1,3 @@
-/// <reference path="../three.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author bhouston / http://clara.io
- */
 var THREE;
 (function (THREE) {
     var Euler = (function () {
@@ -83,7 +77,6 @@ var THREE;
         };
         Euler.prototype.setFromRotationMatrix = function (m, order, update) {
             var clamp = THREE.Math.clamp;
-            // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
             var te = m.elements;
             var m11 = te[0], m12 = te[4], m13 = te[8];
             var m21 = te[1], m22 = te[5], m23 = te[9];

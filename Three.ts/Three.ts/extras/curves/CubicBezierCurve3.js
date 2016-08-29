@@ -3,10 +3,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="../core/curve.ts" />
-/* *************************************************************
- *	Cubic Bezier 3D curve
- **************************************************************/
 var THREE;
 (function (THREE) {
     var CubicBezierCurve3 = (function (_super) {

@@ -1,7 +1,3 @@
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- */
 var THREE;
 (function (THREE) {
     var LensFlarePlugin = (function () {
@@ -19,7 +15,6 @@ var THREE;
                 0, 1, 2,
                 0, 2, 3
             ]);
-            // buffers
             var gl = this.renderer.context;
             var state = this.renderer.state;
             var vertexBuffer = this.vertexBuffer = gl.createBuffer();
@@ -28,7 +23,6 @@ var THREE;
             gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer);
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, faces, gl.STATIC_DRAW);
-            // textures
             var tempTexture = this.tempTexture = gl.createTexture();
             var occlusionTexture = this.occlusionTexture = gl.createTexture();
             state.bindTexture(gl.TEXTURE_2D, tempTexture);
@@ -85,13 +79,10 @@ var THREE;
                     "varying vec2 vUV;",
                     "varying float vVisibility;",
                     "void main() {",
-                    // pink square
                     "if ( renderType == 0 ) {",
                     "gl_FragColor = vec4( 1.0, 0.0, 1.0, 0.0 );",
-                    // restore
                     "} else if ( renderType == 1 ) {",
                     "gl_FragColor = texture2D( map, vUV );",
-                    // flare
                     "} else {",
                     "vec4 texture = texture2D( map, vUV );",
                     "texture.a *= opacity * vVisibility;",
@@ -132,11 +123,6 @@ var THREE;
             gl.linkProgram(program);
             return program;
         };
-        /**
-           * Render lens flares
-           * Method: renders 16x16 0xff00ff-colored points scattered over the light source area,
-           *         reads these back and calculates occlusion.
-           */
         LensFlarePlugin.prototype.render = function (scene, camera, viewport) {
             var flares = this.renderer.lensFlares;
             if (flares.length === 0)
@@ -164,8 +150,6 @@ var THREE;
             state.enableAttribute(attributes.vertex);
             state.enableAttribute(attributes.uv);
             state.disableUnusedAttributes();
-            // loop through all lens flares to update their occlusion and positions
-            // setup gl and common used attribs/uniforms
             gl.uniform1i(uniforms.occlusionMap, 0);
             gl.uniform1i(uniforms.map, 1);
             gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -177,42 +161,33 @@ var THREE;
             for (var i = 0, l = flares.length; i < l; i++) {
                 size = 16 / viewport.w;
                 scale.set(size * invAspect, size);
-                // calc object screen position
                 var flare = flares[i];
                 tempPosition.set(flare.matrixWorld.elements[12], flare.matrixWorld.elements[13], flare.matrixWorld.elements[14]);
                 tempPosition.applyMatrix4(camera.matrixWorldInverse);
                 tempPosition.applyProjection(camera.projectionMatrix);
-                // setup arrays for gl programs
                 screenPosition.copy(tempPosition);
-                // horizontal and vertical coordinate of the lower left corner of the pixels to copy
                 screenPositionPixels.x = viewport.x + (screenPosition.x * halfViewportWidth) + halfViewportWidth - 8;
                 screenPositionPixels.y = viewport.y + (screenPosition.y * halfViewportHeight) + halfViewportHeight - 8;
-                // screen cull
                 if (validArea.containsPoint(screenPositionPixels) === true) {
-                    // save current RGB to temp texture
                     state.activeTexture(gl.TEXTURE0);
                     state.bindTexture(gl.TEXTURE_2D, null);
                     state.activeTexture(gl.TEXTURE1);
                     state.bindTexture(gl.TEXTURE_2D, this.tempTexture);
                     gl.copyTexImage2D(gl.TEXTURE_2D, 0, gl.RGB, screenPositionPixels.x, screenPositionPixels.y, 16, 16, 0);
-                    // render pink quad
                     gl.uniform1i(uniforms.renderType, 0);
                     gl.uniform2f(uniforms.scale, scale.x, scale.y);
                     gl.uniform3f(uniforms.screenPosition, screenPosition.x, screenPosition.y, screenPosition.z);
                     state.disable(gl.BLEND);
                     state.enable(gl.DEPTH_TEST);
                     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-                    // copy result to occlusionMap
                     state.activeTexture(gl.TEXTURE0);
                     state.bindTexture(gl.TEXTURE_2D, this.occlusionTexture);
                     gl.copyTexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, screenPositionPixels.x, screenPositionPixels.y, 16, 16, 0);
-                    // restore graphics
                     gl.uniform1i(uniforms.renderType, 1);
                     state.disable(gl.DEPTH_TEST);
                     state.activeTexture(gl.TEXTURE1);
                     state.bindTexture(gl.TEXTURE_2D, this.tempTexture);
                     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-                    // update object positions
                     flare.positionScreen.copy(screenPosition);
                     if (flare.customUpdateCallback) {
                         flare.customUpdateCallback(flare);
@@ -220,7 +195,6 @@ var THREE;
                     else {
                         flare.updateLensFlares();
                     }
-                    // render flares
                     gl.uniform1i(uniforms.renderType, 2);
                     state.enable(gl.BLEND);
                     for (var j = 0, jl = flare.lensFlares.length; j < jl; j++) {
@@ -244,7 +218,6 @@ var THREE;
                     }
                 }
             }
-            // restore gl 
             state.enable(gl.CULL_FACE);
             state.enable(gl.DEPTH_TEST);
             state.setDepthWrite(true);

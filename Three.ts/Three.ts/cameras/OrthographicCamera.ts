@@ -58,7 +58,7 @@ namespace THREE
 
         }
 
-        setViewOffset(fullWidth, fullHeight, x, y, width, height)
+        setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number)
         {
             this.view = {
                 fullWidth: fullWidth,

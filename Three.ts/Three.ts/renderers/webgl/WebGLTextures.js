@@ -1,6 +1,3 @@
-/*
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var WebGLTextures = (function () {
@@ -18,8 +15,6 @@ var THREE;
         ;
         WebGLTextures.prototype.clampToMaxSize = function (image, maxSize) {
             if (image.width > maxSize || image.height > maxSize) {
-                // Warning: Scaling through the canvas will only work with images that use
-                // premultiplied alpha.
                 var scale = maxSize / THREE.Math.max(image.width, image.height);
                 var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
                 canvas.width = THREE.Math.floor(image.width * scale);
@@ -76,16 +71,13 @@ var THREE;
             var properties = this.properties;
             var textureProperties = properties.get(texture);
             if (texture.image && textureProperties.__image__webglTextureCube) {
-                // cube texture 
                 _gl.deleteTexture(textureProperties.__image__webglTextureCube);
             }
             else {
-                // 2D texture 
                 if (textureProperties.__webglInit === undefined)
                     return;
                 _gl.deleteTexture(textureProperties.__webglTexture);
             }
-            // remove all webgl properties
             properties.delete(texture);
         };
         WebGLTextures.prototype.deallocateRenderTarget = function (renderTarget) {
@@ -176,7 +168,6 @@ var THREE;
             this.setTextureParameters(_gl.TEXTURE_2D, texture, isPowerOfTwoImage);
             var mipmap, mipmaps = texture.mipmaps;
             if (texture instanceof THREE.DepthTexture) {
-                // populate depth texture with dummy data 
                 var internalFormat = _gl.DEPTH_COMPONENT;
                 if (texture.type === THREE.FloatType) {
                     if (!_isWebGL2)
@@ -184,15 +175,11 @@ var THREE;
                     internalFormat = _gl["DEPTH_COMPONENT32F"];
                 }
                 else if (_isWebGL2) {
-                    // WebGL 2.0 requires signed internalformat for glTexImage2D
                     internalFormat = _gl.DEPTH_COMPONENT16;
                 }
                 state.texImage2D(_gl.TEXTURE_2D, 0, internalFormat, image.width, image.height, 0, glFormat, glType, null);
             }
             else if (texture instanceof THREE.DataTexture) {
-                // use manually created mipmaps if available
-                // if there are no manual mipmaps
-                // set 0 level mipmap and then use GL to generate other mipmap levels
                 if (mipmaps.length > 0 && isPowerOfTwoImage) {
                     for (var i = 0, il = mipmaps.length; i < il; i++) {
                         mipmap = mipmaps[i];
@@ -221,10 +208,6 @@ var THREE;
                 }
             }
             else {
-                // regular Texture (image, video, canvas)
-                // use manually created mipmaps if available
-                // if there are no manual mipmaps
-                // set 0 level mipmap and then use GL to generate other mipmap levels
                 if (mipmaps.length > 0 && isPowerOfTwoImage) {
                     for (var i = 0, il = mipmaps.length; i < il; i++) {
                         mipmap = mipmaps[i];
@@ -242,7 +225,6 @@ var THREE;
             if (texture.onUpdate)
                 texture.onUpdate(texture);
         };
-        // Setup storage for target texture and bind it to correct framebuffer
         WebGLTextures.prototype.setupFrameBufferTexture = function (framebuffer, renderTarget, attachment, textureTarget) {
             var glFormat = THREE.paramThreeToGL(this._renderer, renderTarget.texture.format);
             var glType = THREE.paramThreeToGL(this._renderer, renderTarget.texture.type);
@@ -251,7 +233,6 @@ var THREE;
             this._gl.framebufferTexture2D(this._gl.FRAMEBUFFER, attachment, textureTarget, this.properties.get(renderTarget.texture).__webglTexture, 0);
             this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, null);
         };
-        // Setup storage for internal depth/stencil buffers and bind to correct framebuffer
         WebGLTextures.prototype.setupRenderBufferStorage = function (renderbuffer, renderTarget) {
             var _gl = this._gl;
             _gl.bindRenderbuffer(_gl.RENDERBUFFER, renderbuffer);
@@ -264,12 +245,10 @@ var THREE;
                 _gl.framebufferRenderbuffer(_gl.FRAMEBUFFER, _gl.DEPTH_STENCIL_ATTACHMENT, _gl.RENDERBUFFER, renderbuffer);
             }
             else {
-                // FIXME: We don't support !depth !stencil
                 _gl.renderbufferStorage(_gl.RENDERBUFFER, _gl.RGBA4, renderTarget.width, renderTarget.height);
             }
             _gl.bindRenderbuffer(_gl.RENDERBUFFER, null);
         };
-        // Setup resources for a Depth Texture for a FBO (needs an extension)
         WebGLTextures.prototype.setupDepthTexture = function (framebuffer, renderTarget) {
             var _gl = this._gl;
             var properties = this.properties;
@@ -280,7 +259,6 @@ var THREE;
             if (!(renderTarget.depthTexture instanceof THREE.DepthTexture)) {
                 throw new Error('renderTarget.depthTexture must be an instance of THREE.DepthTexture');
             }
-            // upload an empty depth texture with framebuffer size
             if (!properties.get(renderTarget.depthTexture).__webglTexture ||
                 renderTarget.depthTexture.image.width !== renderTarget.width ||
                 renderTarget.depthTexture.image.height !== renderTarget.height) {
@@ -292,7 +270,6 @@ var THREE;
             var webglDepthTexture = properties.get(renderTarget.depthTexture).__webglTexture;
             _gl.framebufferTexture2D(_gl.FRAMEBUFFER, _gl.DEPTH_ATTACHMENT, _gl.TEXTURE_2D, webglDepthTexture, 0);
         };
-        // Setup GL resources for a non-texture depth buffer
         WebGLTextures.prototype.setupDepthRenderbuffer = function (renderTarget) {
             var properties = this.properties;
             var _gl = this._gl;
@@ -427,7 +404,6 @@ var THREE;
             _infoMemory.textures++;
             var isCube = (renderTarget instanceof THREE.WebGLRenderTargetCube);
             var isTargetPowerOfTwo = this.isPowerOfTwo(renderTarget);
-            // Setup framebuffer
             if (isCube) {
                 renderTargetProperties.__webglFramebuffer = [];
                 for (var i = 0; i < 6; i++) {
@@ -437,7 +413,6 @@ var THREE;
             else {
                 renderTargetProperties.__webglFramebuffer = _gl.createFramebuffer();
             }
-            // Setup color buffer 
             if (isCube) {
                 state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture);
                 this.setTextureParameters(_gl.TEXTURE_CUBE_MAP, renderTarget.texture, isTargetPowerOfTwo);
@@ -456,7 +431,6 @@ var THREE;
                     _gl.generateMipmap(_gl.TEXTURE_2D);
                 state.bindTexture(_gl.TEXTURE_2D, null);
             }
-            // Setup depth and stencil buffers 
             if (renderTarget.depthBuffer) {
                 this.setupDepthRenderbuffer(renderTarget);
             }

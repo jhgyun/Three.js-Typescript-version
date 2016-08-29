@@ -1,7 +1,3 @@
-/*
-* @author alteredq / http://alteredqualia.com/
-* @author mrdoob / http://mrdoob.com/
-*/
 var THREE;
 (function (THREE) {
     var WebGLShadowMap = (function () {
@@ -37,7 +33,6 @@ var THREE;
                 new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4(),
                 new THREE.Vector4(), new THREE.Vector4(), new THREE.Vector4()
             ];
-            // init 
             var depthMaterialTemplate = this.depthMaterialTemplate = new THREE.MeshDepthMaterial();
             depthMaterialTemplate.depthPacking = THREE.RGBADepthPacking;
             depthMaterialTemplate.clipping = true;
@@ -63,7 +58,6 @@ var THREE;
                 });
                 this._distanceMaterials[i] = distanceMaterial;
             }
-            //
             this.enabled = false;
             this.autoUpdate = true;
             this.needsUpdate = false;
@@ -112,8 +106,6 @@ var THREE;
             if (_renderer.localClippingEnabled &&
                 material.clipShadows === true &&
                 material.clippingPlanes.length !== 0) {
-                // in this case we need a unique material instance reflecting the
-                // appropriate state
                 var keyA = result.uuid, keyB = material.uuid;
                 var materialsForVariant = _materialCache[keyA];
                 if (materialsForVariant === undefined) {
@@ -189,12 +181,10 @@ var THREE;
                 return;
             if (_lightShadows.length === 0)
                 return;
-            // Set GL state for depth map.
             _state.clearColor(1, 1, 1, 1);
             _state.disable(_gl.BLEND);
             _state.setDepthTest(true);
             _state.setScissorTest(false);
-            // render depth map
             var faceCount;
             var isPointLight;
             for (var i = 0, il = _lightShadows.length; i < il; i++) {
@@ -212,29 +202,11 @@ var THREE;
                     isPointLight = true;
                     var vpWidth = _shadowMapSize.x;
                     var vpHeight = _shadowMapSize.y;
-                    // These viewports map a cube-map onto a 2D texture with the
-                    // following orientation:
-                    //
-                    //  xzXZ
-                    //   y Y
-                    //
-                    // X - Positive x direction
-                    // x - Negative x direction
-                    // Y - Positive y direction
-                    // y - Negative y direction
-                    // Z - Positive z direction
-                    // z - Negative z direction
-                    // positive X
                     cube2DViewPorts[0].set(vpWidth * 2, vpHeight, vpWidth, vpHeight);
-                    // negative X
                     cube2DViewPorts[1].set(0, vpHeight, vpWidth, vpHeight);
-                    // positive Z
                     cube2DViewPorts[2].set(vpWidth * 3, vpHeight, vpWidth, vpHeight);
-                    // negative Z
                     cube2DViewPorts[3].set(vpWidth, vpHeight, vpWidth, vpHeight);
-                    // positive Y
                     cube2DViewPorts[4].set(vpWidth * 3, 0, vpWidth, vpHeight);
-                    // negative Y
                     cube2DViewPorts[5].set(vpWidth, 0, vpWidth, vpHeight);
                     _shadowMapSize.x *= 4.0;
                     _shadowMapSize.y *= 2.0;
@@ -261,8 +233,6 @@ var THREE;
                 shadowCamera.position.copy(_lightPositionWorld);
                 _renderer.setRenderTarget(shadowMap);
                 _renderer.clear();
-                // render shadow map for each cube face (if omni-directional) or
-                // run a single pass if not
                 for (var face = 0; face < faceCount; face++) {
                     if (isPointLight) {
                         _lookTarget.copy(shadowCamera.position);
@@ -278,18 +248,13 @@ var THREE;
                     }
                     shadowCamera.updateMatrixWorld();
                     shadowCamera.matrixWorldInverse.getInverse(shadowCamera.matrixWorld);
-                    // compute shadow matrix
                     shadowMatrix.set(0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0);
                     shadowMatrix.multiply(shadowCamera.projectionMatrix);
                     shadowMatrix.multiply(shadowCamera.matrixWorldInverse);
-                    // update camera matrices and frustum
                     _projScreenMatrix.multiplyMatrices(shadowCamera.projectionMatrix, shadowCamera.matrixWorldInverse);
                     _frustum.setFromMatrix(_projScreenMatrix);
-                    // set object matrices & frustum culling
                     _renderList.length = 0;
                     this.projectObject(scene, camera, shadowCamera);
-                    // render shadow map
-                    // render regular objects
                     for (var j = 0, jl = _renderList.length; j < jl; j++) {
                         var object = _renderList[j];
                         var geometry = _objects.update(object);
@@ -313,7 +278,6 @@ var THREE;
                     }
                 }
             }
-            // Restore GL state.
             var clearColor = _renderer.getClearColor();
             var clearAlpha = _renderer.getClearAlpha();
             _renderer.setClearColor(clearColor, clearAlpha);

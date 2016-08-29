@@ -2,7 +2,6 @@ if (Math.DEG2RAD === undefined) {
     Math.DEG2RAD = Math.PI / 180;
     Math.RAD2DEG = 180 / Math.PI;
     Math.generateUUID = function () {
-        // http://www.broofa.com/Tools/Math.uuid.htm
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
         var uuid = new Array(36);
         var rnd = 0, r;
@@ -34,7 +33,6 @@ if (Math.DEG2RAD === undefined) {
     Math.mapLinear = function (x, a1, a2, b1, b2) {
         return b1 + (x - a1) * (b2 - b1) / (a2 - a1);
     };
-    // http://en.wikipedia.org/wiki/Smoothstep 
     Math.smoothstep = function (x, min, max) {
         if (x <= min)
             return 0;
@@ -51,15 +49,12 @@ if (Math.DEG2RAD === undefined) {
         x = (x - min) / (max - min);
         return x * x * x * (x * (x * 6 - 15) + 10);
     };
-    // Random integer from <low, high> interval 
     Math.randInt = function (low, high) {
         return low + Math.floor(Math.random() * (high - low + 1));
     };
-    // Random float from <low, high> interval 
     Math.randFloat = function (low, high) {
         return low + Math.random() * (high - low);
     };
-    // Random float from <-range/2, range/2> interval 
     Math.randFloatSpread = function (range) {
         return range * (0.5 - Math.random());
     };

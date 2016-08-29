@@ -1,7 +1,3 @@
-/// <reference path="../../core/buffergeometry.ts" />
-/*
- * @author benaadams / https://twitter.com/ben_a_adams
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -28,7 +24,6 @@ var THREE;
             var positions = new Float32Array(vertices * 3);
             var normals = new Float32Array(vertices * 3);
             var uvs = new Float32Array(vertices * 2);
-            // center data is already zero, but need to set a few extras
             normals[2] = 1.0;
             uvs[0] = 0.5;
             uvs[1] = 0.5;
@@ -36,7 +31,7 @@ var THREE;
                 var segment = thetaStart + s / segments * thetaLength;
                 positions[i] = radius * THREE.Math.cos(segment);
                 positions[i + 1] = radius * THREE.Math.sin(segment);
-                normals[i + 2] = 1; // normal z
+                normals[i + 2] = 1;
                 uvs[ii] = (positions[i] / radius + 1) / 2;
                 uvs[ii + 1] = (positions[i + 1] / radius + 1) / 2;
             }

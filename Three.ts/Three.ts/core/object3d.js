@@ -1,22 +1,3 @@
-/// <reference path="eventdispatcher.ts" />
-/// <reference path="../math/matrix3.ts" />
-/// <reference path="../math/matrix4.ts" />
-/// <reference path="../math/vector2.ts" />
-/// <reference path="../math/vector3.ts" />
-/// <reference path="../math/vector4.ts" />
-/// <reference path="../math/color.ts" />
-/// <reference path="../math/box2.ts" />
-/// <reference path="../math/box3.ts" />
-/// <reference path="../math/sphere.ts" />
-/// <reference path="../math/spherical.ts" />
-/// <reference path="../math/triangle.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author WestLangley / http://github.com/WestLangley
- * @author elephantatwork / www.elephantatwork.ch
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -115,26 +96,21 @@ var THREE;
             this.matrix.decompose(this.position, this.quaternion, this.scale);
         };
         Object3D.prototype.setRotationFromAxisAngle = function (axis, angle) {
-            // assumes axis is normalized 
             this.quaternion.setFromAxisAngle(axis, angle);
         };
         Object3D.prototype.setRotationFromEuler = function (euler) {
             this.quaternion.setFromEuler(euler, true);
         };
         Object3D.prototype.setRotationFromMatrix = function (m) {
-            // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled) 
             this.quaternion.setFromRotationMatrix(m);
         };
         Object3D.prototype.setRotationFromQuaternion = function (q) {
-            // assumes q is normalized 
             this.quaternion.copy(q);
         };
         Object3D.prototype.rotateOnAxis = function (axis, angle) {
             var q1 = new THREE.Quaternion();
             var func = Object3D.prototype.rotateOnAxis
                 = function (axis, angle) {
-                    // rotate object on axis in object space
-                    // axis is assumed to be normalized 
                     q1.setFromAxisAngle(axis, angle);
                     this.quaternion.multiply(q1);
                     return this;
@@ -165,8 +141,6 @@ var THREE;
             return func.apply(this, arguments);
         };
         Object3D.prototype.translateOnAxis = function (axis, distance) {
-            // translate object by distance along axis in object space
-            // axis is assumed to be normalized
             var v1 = new THREE.Vector3();
             var func = Object3D.prototype.translateOnAxis = function (axis, distance) {
                 v1.copy(axis).applyQuaternion(this.quaternion);
@@ -207,7 +181,6 @@ var THREE;
             return func.apply(this, arguments);
         };
         Object3D.prototype.lookAt = function (vector) {
-            // This routine does not support objects with rotated and/or translated parent(s)
             var m1 = new THREE.Matrix4();
             var func = Object3D.prototype.lookAt = function (vector) {
                 m1.lookAt(vector, this.position, this.up);
@@ -364,20 +337,14 @@ var THREE;
                 this.matrixWorldNeedsUpdate = false;
                 force = true;
             }
-            // update children
             for (var i = 0, l = this.children.length; i < l; i++) {
                 this.children[i].updateMatrixWorld(force);
             }
         };
         Object3D.prototype.toJSON = function (meta) {
-            // meta is '' when called from JSON.stringify
             var isRootObject = (meta === undefined || meta === '');
             var output = {};
-            // meta is a hash used to collect geometries, materials.
-            // not providing it implies that this is the root object
-            // being serialized.
             if (isRootObject) {
-                // initialize meta obj
                 meta = {
                     geometries: {},
                     materials: {},
@@ -390,7 +357,6 @@ var THREE;
                     generator: 'Object3D.toJSON'
                 };
             }
-            // standard Object3D serialization
             var object = {};
             object.uuid = this.uuid;
             object.type = this.type;
@@ -405,7 +371,6 @@ var THREE;
             if (this.visible === false)
                 object.visible = false;
             object.matrix = this.matrix.toArray();
-            //
             if (this.geometry !== undefined) {
                 if (meta.geometries[this.geometry.uuid] === undefined) {
                     meta.geometries[this.geometry.uuid] = this.geometry.toJSON(meta);
@@ -418,7 +383,6 @@ var THREE;
                 }
                 object.material = this.material.uuid;
             }
-            //
             if (this.children.length > 0) {
                 object.children = [];
                 for (var i = 0; i < this.children.length; i++) {
@@ -441,9 +405,6 @@ var THREE;
             }
             output.object = object;
             return output;
-            // extract data from the cache hash
-            // remove metadata on each item
-            // and return as array
             function extractFromCache(cache) {
                 var values = [];
                 for (var key in cache) {

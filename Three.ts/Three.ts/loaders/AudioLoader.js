@@ -1,6 +1,3 @@
-/*
- * @author Reece Aaron Lecrivain / http://reecenotes.com/
- */
 var THREE;
 (function (THREE) {
     var AudioLoader = (function () {

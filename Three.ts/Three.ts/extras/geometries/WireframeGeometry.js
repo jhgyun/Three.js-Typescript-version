@@ -1,7 +1,3 @@
-/// <reference path="../../core/buffergeometry.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -22,7 +18,6 @@ var THREE;
                 var vertices_1 = geometry.vertices;
                 var faces = geometry.faces;
                 var numEdges_1 = 0;
-                // allocate maximal size
                 var edges = new Uint32Array(6 * faces.length);
                 for (var i = 0, l = faces.length; i < l; i++) {
                     var face = faces[i];
@@ -53,7 +48,6 @@ var THREE;
             }
             else if (geometry instanceof THREE.BufferGeometry) {
                 if (geometry.index !== null) {
-                    // Indexed BufferGeometry
                     var indices = geometry.index.array;
                     var vertices_2 = geometry.attributes.position;
                     var groups = geometry.groups;
@@ -61,7 +55,6 @@ var THREE;
                     if (groups.length === 0) {
                         geometry.addGroup(0, indices.length);
                     }
-                    // allocate maximal size
                     var edges = new Uint32Array(2 * indices.length);
                     for (var o = 0, ol = groups.length; o < ol; ++o) {
                         var group = groups[o];
@@ -95,7 +88,6 @@ var THREE;
                     this.addAttribute('position', new THREE.BufferAttribute(coords, 3));
                 }
                 else {
-                    // non-indexed BufferGeometry 
                     var vertices = geometry.attributes.position.array;
                     var numEdges = vertices.length / 3;
                     var numTris = numEdges / 3;

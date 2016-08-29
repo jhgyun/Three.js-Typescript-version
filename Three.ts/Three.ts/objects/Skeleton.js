@@ -1,10 +1,3 @@
-/// <reference path="../core/object3d.ts" />
-/*
- * @author mikael emtinger / http://gomo.se/
- * @author alteredq / http://alteredqualia.com/
- * @author michael guerrero / http://realitymeltdown.com
- * @author ikerr / http://verold.com
- */
 var THREE;
 (function (THREE) {
     var Skeleton = (function () {
@@ -12,29 +5,20 @@ var THREE;
             this.identityMatrix = new THREE.Matrix4();
             this.useVertexTexture = useVertexTexture !== undefined ? useVertexTexture : true;
             this.identityMatrix = new THREE.Matrix4();
-            // copy the bone array 
             bones = bones || [];
             this.bones = bones.slice(0);
-            // create a bone texture or an array of floats 
             if (this.useVertexTexture) {
-                // layout (1 matrix = 4 pixels)
-                //      RGBA RGBA RGBA RGBA (=> column1, column2, column3, column4)
-                //  with  8x8  pixel texture max   16 bones * 4 pixels =  (8 * 8)
-                //       16x16 pixel texture max   64 bones * 4 pixels = (16 * 16)
-                //       32x32 pixel texture max  256 bones * 4 pixels = (32 * 32)
-                //       64x64 pixel texture max 1024 bones * 4 pixels = (64 * 64) 
-                var size = THREE.Math.sqrt(this.bones.length * 4); // 4 pixels needed for 1 matrix
+                var size = THREE.Math.sqrt(this.bones.length * 4);
                 size = THREE.Math.nextPowerOfTwo(THREE.Math.ceil(size));
                 size = THREE.Math.max(size, 4);
                 this.boneTextureWidth = size;
                 this.boneTextureHeight = size;
-                this.boneMatrices = new Float32Array(this.boneTextureWidth * this.boneTextureHeight * 4); // 4 floats per RGBA pixel
+                this.boneMatrices = new Float32Array(this.boneTextureWidth * this.boneTextureHeight * 4);
                 this.boneTexture = new THREE.DataTexture(this.boneMatrices, this.boneTextureWidth, this.boneTextureHeight, THREE.RGBAFormat, THREE.FloatType);
             }
             else {
                 this.boneMatrices = new Float32Array(16 * this.bones.length);
             }
-            // use the supplied bone inverses or calculate the inverses
             if (boneInverses === undefined) {
                 this.calculateInverses();
             }
@@ -64,14 +48,12 @@ var THREE;
         };
         Skeleton.prototype.pose = function () {
             var bone;
-            // recover the bind-time world matrices 
             for (var b = 0, bl = this.bones.length; b < bl; b++) {
                 bone = this.bones[b];
                 if (bone) {
                     bone.matrixWorld.getInverse(this.boneInverses[b]);
                 }
             }
-            // compute the local matrices, positions, rotations and scales
             for (var b = 0, bl = this.bones.length; b < bl; b++) {
                 bone = this.bones[b];
                 if (bone) {
@@ -88,9 +70,7 @@ var THREE;
         };
         Skeleton.prototype.update = function () {
             var offsetMatrix = Skeleton.update_offsetMatrix;
-            // flatten bone matrices to array
             for (var b = 0, bl = this.bones.length; b < bl; b++) {
-                // compute the offset between the current and the original transform 
                 var matrix = this.bones[b] ? this.bones[b].matrixWorld : this.identityMatrix;
                 offsetMatrix.multiplyMatrices(matrix, this.boneInverses[b]);
                 offsetMatrix.toArray(this.boneMatrices, b * 16);

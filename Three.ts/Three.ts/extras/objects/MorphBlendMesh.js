@@ -1,7 +1,3 @@
-/// <reference path="../../objects/mesh.ts" />
-/*
- * @author alteredq / http://alteredqualia.com/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -35,8 +31,6 @@ var THREE;
             };
             this.animationsMap = {};
             this.animationsList = [];
-            // prepare default animation
-            // (all frames played together in 1 second)
             var numFrames = this.geometry.morphTargets.length;
             var name = "__default";
             var startFrame = 0;

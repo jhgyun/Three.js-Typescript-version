@@ -1,13 +1,3 @@
-/// <reference path="../../objects/linesegments.ts" />
-/*
- * @author WestLangley / http://github.com/WestLangley
- * @param object THREE.Mesh whose geometry will be used
- * @param hex line color
- * @param thresholdAngle the minimum angle (in degrees),
- * between the face normals of adjacent faces,
- * that is required to render an edge. A value of 10 means
- * an edge is only rendered if the angle is at least 10 degrees.
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

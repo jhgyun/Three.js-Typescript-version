@@ -1,13 +1,8 @@
-/// <reference path="../../objects/mesh.ts" />
-/*
- * @author WestLangley / http://github.com/WestLangley
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-// a helper to show the world-axis-aligned bounding box for an object
 var THREE;
 (function (THREE) {
     var BoundingBoxHelper = (function (_super) {

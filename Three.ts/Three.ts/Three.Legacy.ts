@@ -824,7 +824,7 @@ namespace THREE
 
         crossOrigin: undefined,
 
-        loadTexture: function (url, mapping, onLoad, onError)
+        loadTexture: function (url, mapping?, onLoad?, onError?)
         {
             console.warn('THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead.');
 
@@ -839,7 +839,7 @@ namespace THREE
 
         },
 
-        loadTextureCube: function (urls, mapping, onLoad, onError)
+        loadTextureCube: function (urls, mapping?, onLoad?, onError?)
         {
             console.warn('THREE.ImageUtils.loadTextureCube has been deprecated. Use THREE.CubeTextureLoader() instead.');
 

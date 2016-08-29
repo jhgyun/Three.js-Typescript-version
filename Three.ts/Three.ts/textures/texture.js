@@ -1,9 +1,3 @@
-/// <reference path="../core/eventdispatcher.ts" />
-/*
- * @author mrdoob / http://mrdoob.com/
- * @author alteredq / http://alteredqualia.com/
- * @author szimek / https://github.com/szimek/
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -25,10 +19,7 @@ var THREE;
             this.generateMipmaps = true;
             this.premultiplyAlpha = false;
             this.flipY = true;
-            /**
-            * 1, 2, 4, 8
-            */
-            this.unpackAlignment = 4; //// valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+            this.unpackAlignment = 4;
             this.version = 0;
             this.onUpdate = null;
             this.image = image !== undefined ? image : Texture.DEFAULT_IMAGE;
@@ -40,10 +31,6 @@ var THREE;
             this.anisotropy = anisotropy !== undefined ? anisotropy : 1;
             this.format = format !== undefined ? format : THREE.RGBAFormat;
             this.type = type !== undefined ? type : THREE.UnsignedByteType;
-            // Values of encoding !== THREE.LinearEncoding only supported on map, envMap and emissiveMap.
-            //
-            // Also changing the encoding after already used by a Material will not automatically make the Material
-            // update.  You need to explicitly call Material.needsUpdate to trigger it to recompile.
             this.encoding = encoding !== undefined ? encoding : THREE.LinearEncoding;
         }
         Object.defineProperty(Texture.prototype, "id", {
@@ -125,10 +112,9 @@ var THREE;
                 flipY: this.flipY
             };
             if (this.image !== undefined) {
-                // TODO: Move to THREE.Image
                 var image = this.image;
                 if (image.uuid === undefined) {
-                    image.uuid = THREE.Math.generateUUID(); // UGH 
+                    image.uuid = THREE.Math.generateUUID();
                 }
                 if (meta.images[image.uuid] === undefined) {
                     meta.images[image.uuid] = {
